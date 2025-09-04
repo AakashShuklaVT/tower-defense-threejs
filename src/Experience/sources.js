@@ -31,5 +31,40 @@ export default [
         name: 'archerTower',
         type: 'gltfModel',
         path: 'models/Towers/archer-tower.glb'
-    }
+    },
+    {
+        name: 'tree1',
+        type: 'gltfModel',
+        path: 'models/Trees/Tree-1.glb'
+    },
+    {
+        name: 'tree2',
+        type: 'gltfModel',
+        path: 'models/Trees/Tree-2.glb'
+    },
+    {
+        name: 'tree3',
+        type: 'gltfModel',
+        path: 'models/Trees/Tree-3.glb'
+    },
+    {
+        name: 'stone1',
+        type: 'gltfModel',
+        path: 'models/Stones/Stone-1.glb'
+    },
+    {
+        name: 'stone2',
+        type: 'gltfModel',
+        path: 'models/Stones/Stone-2.glb'
+    },
+    {
+        name: 'stone3',
+        type: 'gltfModel',
+        path: 'models/Stones/Stone-3.glb'
+    },
+    {
+        name: 'castle',
+        type: 'gltfModel',
+        path: 'models/Castle/Castle.glb'
+    },
 ]

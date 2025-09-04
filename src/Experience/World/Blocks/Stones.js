@@ -1,8 +1,13 @@
 import * as THREE from 'three'
-import Experience from '../Experience.js'
-
-export default class Tower {
-    constructor({position = { x: 0, z: 0 }}) {
+import Experience from '../../Experience.js'
+import Grass from './Grass.js'
+const STONE_SCALING = {
+    0: 1.5,
+    1: 0.001,
+    2: 0.9,
+}
+export default class Stones {
+    constructor({ position = { x: 0, z: 0 } }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
@@ -10,33 +15,36 @@ export default class Tower {
         this.debug = this.experience.debug
 
         this.position = position
-        console.log(this.position);
-        
-
 
         // Debug
         if (this.debug.active) {
-            this.debugFolder = this.debug.ui.addFolder('Tower')
+            this.debugFolder = this.debug.ui.addFolder('Trees')
         }
-
         // Resource
-        this.resource = this.resources.items.archerTower
-
+        this.stoneTypes = ['stone1', 'stone2', 'stone3']
+        this.selectedStone = Math.floor(Math.random() * this.stoneTypes.length)
+        this.stoneType = this.stoneTypes[this.selectedStone]
+        this.resource = this.resources.items[this.stoneType]
+        this.setGround()
         this.setModel()
-        // this.setAnimation()
+    }
+
+    setGround() {
+        this.ground = new Grass({ position: { x: this.position.x, z: this.position.z } })
     }
 
     setModel() {
-        this.model = this.resource.scene.clone() 
-        this.model.position.set(this.position.x, 0, this.position.z)
-        console.log(this.position.x, this.position.z);
-        this.model.scale.set(0.35, 0.35, 0.35)
+        this.model = this.resource.scene.clone()
+        this.model.position.set(this.position.x, this.selectedStone !== 1 ? 0 : -0.2, this.position.z)
+        this.model.rotation.set(0, Math.floor(Math.PI * 2 * Math.random()), 0)
+        this.model.scale.set(STONE_SCALING[this.selectedStone], STONE_SCALING[this.selectedStone], STONE_SCALING[this.selectedStone])
         this.scene.add(this.model)
 
         this.model.traverse((child) => {
             if (child instanceof THREE.Mesh) {
                 child.castShadow = true
                 child.receiveShadow = true
+                child.material.color = new THREE.Color(0xaaaaaa)
             }
         })
     }
