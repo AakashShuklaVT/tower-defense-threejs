@@ -1250,6 +1250,20 @@
     },
     {
       "position": {
+        "x": 18,
+        "z": 8
+      },
+      "type": "castle"
+    },
+    {
+      "position": {
+        "x": 19,
+        "z": 8
+      },
+      "type": "grass"
+    },
+    {
+      "position": {
         "x": 0,
         "z": 9
       },
@@ -1366,6 +1380,13 @@
         "z": 9
       },
       "type": "base"
+    },
+    {
+      "position": {
+        "x": 17,
+        "z": 9
+      },
+      "type": "grass"
     },
     {
       "position": {
@@ -1376,6 +1397,13 @@
     },
     {
       "position": {
+        "x": 19,
+        "z": 9
+      },
+      "type": "grass"
+    },
+    {
+      "position": {
         "x": 0,
         "z": 10
       },
@@ -1495,6 +1523,27 @@
     },
     {
       "position": {
+        "x": 17,
+        "z": 10
+      },
+      "type": "grass"
+    },
+    {
+      "position": {
+        "x": 18,
+        "z": 10
+      },
+      "type": "grass"
+    },
+    {
+      "position": {
+        "x": 19,
+        "z": 10
+      },
+      "type": "grass"
+    },
+    {
+      "position": {
         "x": 0,
         "z": 11
       },
@@ -1611,6 +1660,27 @@
         "z": 11
       },
       "type": "base"
+    },
+    {
+      "position": {
+        "x": 17,
+        "z": 11
+      },
+      "type": "grass"
+    },
+    {
+      "position": {
+        "x": 18,
+        "z": 11
+      },
+      "type": "grass"
+    },
+    {
+      "position": {
+        "x": 19,
+        "z": 11
+      },
+      "type": "grass"
     },
     {
       "position": {
@@ -2171,6 +2241,74 @@
         "z": 15
       },
       "type": "base"
+    }
+  ],
+  "pathPoints": [
+    {
+      "x": 14,
+      "z": 0,
+      "number": 1,
+      "angle": 0
+    },
+    {
+      "x": 14,
+      "z": 4,
+      "number": 2,
+      "angle": -90
+    },
+    {
+      "x": 2,
+      "z": 4,
+      "number": 3,
+      "angle": 0
+    },
+    {
+      "x": 2,
+      "z": 11,
+      "number": 4,
+      "angle": 90
+    },
+    {
+      "x": 7,
+      "z": 11,
+      "number": 5,
+      "angle": 180
+    },
+    {
+      "x": 7,
+      "z": 9,
+      "number": 6,
+      "angle": 90
+    },
+    {
+      "x": 10,
+      "z": 9,
+      "number": 7,
+      "angle": 0
+    },
+    {
+      "x": 10,
+      "z": 14,
+      "number": 8,
+      "angle": 90
+    },
+    {
+      "x": 14,
+      "z": 14,
+      "number": 9,
+      "angle": 180
+    },
+    {
+      "x": 14,
+      "z": 10,
+      "number": 10,
+      "angle": 90
+    },
+    {
+      "x": 16,
+      "z": 10,
+      "number": 11,
+      "angle": 90
     }
   ]
 }

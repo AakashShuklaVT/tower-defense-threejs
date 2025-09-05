@@ -67,4 +67,29 @@ export default [
         type: 'gltfModel',
         path: 'models/Castle/Castle.glb'
     },
+    {
+        name: 'skeleton',
+        type: 'gltfModel',
+        path: 'models/Enemies/skeleton.glb'
+    },
+    {
+        name: 'redPanther',
+        type: 'gltfModel',
+        path: 'models/Enemies/red-panther-enemy.glb'
+    },
+    {
+        name: 'gaurdamon',
+        type: 'gltfModel',
+        path: 'models/Enemies/gaurdamon-enemy.glb'
+    },
+    {
+        name: 'goblimon',
+        type: 'gltfModel',
+        path: 'models/Enemies/goblimon-enemy.glb'
+    },
+    {
+        name: 'bomberman',
+        type: 'gltfModel',
+        path: 'models/Enemies/bomberman-devil-enemy.glb'
+    },
 ]

@@ -75,7 +75,7 @@ export default class Grass {
         if (Grass.instances.length === 0) return null
 
         const first = Grass.instances[0]
-
+        
         // Shared geometry + material (you could pick one or clone)
         const geometry = first.geometry.clone()
         const material = first.material.clone()
@@ -94,9 +94,10 @@ export default class Grass {
             dummy.scale.copy(grass.mesh.scale)
             dummy.rotation.copy(grass.mesh.rotation)
             dummy.updateMatrix()
-
+            
             instancedMesh.setMatrixAt(i, dummy.matrix)
             instancedMesh.name = "GRASS_INSTANCE"
+            
             // Remove old mesh from scene and dispose
             grass.scene.remove(grass.mesh)
             grass.geometry.dispose()
