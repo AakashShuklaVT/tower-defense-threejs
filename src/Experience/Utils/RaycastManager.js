@@ -1,0 +1,40 @@
+import * as THREE from 'three'
+import Experience from '../Experience.js'
+
+export default class RaycastManager {
+    constructor() {
+        this.experience = new Experience()
+        this.sizes = this.experience.sizes
+        this.scene = this.experience.scene
+        this.canvas = this.experience.canvas
+        this.camera = this.experience.camera.instance
+        this.renderer = this.experience.renderer.instance
+        this.time = this.experience.time
+        this.debug = this.experience.debug
+
+        this.intializeRaycaster()
+        this.setupEventListners()
+    }
+
+    intializeRaycaster() {
+        this.raycaster = new THREE.Raycaster()
+        this.pointer = new THREE.Vector2()
+    }
+
+    setupEventListners() {
+        window.addEventListener('click', (e) => {
+            this.pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+            this.pointer.y = - (e.clientY / window.innerHeight) * 2 + 1;
+            this.handleRaycast()
+        })
+    }
+
+    handleRaycast() {
+        this.raycaster.setFromCamera(this.pointer, this.camera)
+        const intersects = this.raycaster.intersectObjects(this.experience.triggerableObjects);
+        for (let i = 0; i < intersects.length; i++) {
+            // intersects[0].object.material.color.set(0xff0000);
+            intersects[0].object.script.disposeObject()
+        }
+    }
+}

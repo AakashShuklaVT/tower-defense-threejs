@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import gsap from 'gsap'
 import Experience from '../../Experience.js'
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 
 export default class SkeletonEnemy {
     constructor({ resourceName = 'enemyModel', position = { x: 0, y: 0, z: 0 }, scale = 0.2, movePath, speed, levelData }) {
@@ -26,7 +27,7 @@ export default class SkeletonEnemy {
     }
 
     setModel(position, scale) {
-        this.model = this.resource.scene.clone()
+        this.model = clone(this.resource.scene)
 
         this.model.scale.set(scale, scale, scale)
         this.model.position.set(position.x, position.y, position.z)
@@ -87,7 +88,7 @@ export default class SkeletonEnemy {
         }
     }
 
-     startMoving(pathPoints, levelData) {
+    startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
         console.log("Path points:", pathPoints);
 
@@ -130,7 +131,7 @@ export default class SkeletonEnemy {
                 onComplete: () => {
                     i++;
                     moveToNext();
-                    if(next.angle !== undefined){
+                    if (next.angle !== undefined) {
                         // Rotate toward next direction first
                         gsap.to(this.model.rotation, {
                             y: THREE.MathUtils.degToRad(next.angle),

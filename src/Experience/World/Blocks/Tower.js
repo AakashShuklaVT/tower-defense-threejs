@@ -2,6 +2,7 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Grass from './Grass.js'
+import FireWizard from '../Defenders/FireWizard.js'
 
 export default class Tower {
     static allTowers = [] // store all created towers
@@ -20,6 +21,13 @@ export default class Tower {
 
         // store this tower for later batching
         Tower.allTowers.push(this)
+
+        this.fireWizard = new FireWizard({
+            attackRange: 4,
+            positionX: this.position.x,
+            positionZ: this.position.z,
+            scale: 0.25
+        })
     }
 
     setGround() {
@@ -28,8 +36,8 @@ export default class Tower {
 
     setModel() {
         this.model = this.resource.scene.clone(true)
-        this.model.position.set(this.position.x, 0, this.position.z)
-        this.model.scale.set(0.35, 0.35, 0.35)
+        this.model.position.set(this.position.x, 0, this.position.z - 0.3)
+        this.model.scale.set(0.2, 0.2, 0.2)
         this.scene.add(this.model)
 
         this.model.traverse((child) => {
@@ -101,5 +109,9 @@ export default class Tower {
 
         Tower.allTowers = [] // clear memory
         return instancedMeshes
+    }
+
+    update(){
+        this.fireWizard && this.fireWizard.update()
     }
 }

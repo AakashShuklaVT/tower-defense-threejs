@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import gsap from 'gsap'
 import Experience from '../../Experience.js'
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 
 export default class GoblimonEnemy {
     constructor({ resourceName = 'goblimon', position = { x: 0, y: 0, z: 0 }, scale = 0.15, movePath, speed, levelData }) {
@@ -26,7 +27,7 @@ export default class GoblimonEnemy {
     }
 
     setModel(position, scale) {
-        this.model = this.resource.scene
+        this.model = clone(this.resource.scene)
 
         this.model.scale.set(scale, scale, scale)
         this.model.position.set(position.x, position.y, position.z)

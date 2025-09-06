@@ -1,4 +1,4 @@
-import { extractMovingPath } from '../Utils/PathExtractor.js'
+// import { extractMovingPath } from '../Utils/PathExtractor.js'
 
 export default class LevelManager {
     constructor() {

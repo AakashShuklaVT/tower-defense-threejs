@@ -5,6 +5,7 @@ import Tower from './Blocks/Tower.js'
 import Trees from './Blocks/Trees.js'
 import Stones from './Blocks/Stones.js'
 import Castle from './Blocks/Castle.js'
+import Foundation from './Blocks/Foundation.js'
 
 export default class MapGenerator {
     constructor(levelData) {
@@ -20,7 +21,7 @@ export default class MapGenerator {
         const offsetX = this.levelData.width / 2
         const offsetZ = this.levelData.height / 2
         const trees = []
-
+        this.towers = []
         // --- Build map objects ---
         this.paths.forEach(path => {
             const worldX = path.position.x - offsetX + 0.5
@@ -30,7 +31,7 @@ export default class MapGenerator {
                 new StraightPath({ position: { x: worldX, z: worldZ } })
             }
             else if (path.type === 'tower') {
-                new Tower({ position: { x: worldX, z: worldZ } })
+                this.towers.push(new Tower({ position: { x: worldX, z: worldZ } }))
             }
             else if (path.type === 'tree') {
                 trees.push(new Trees({ position: { x: worldX, z: worldZ } }))
@@ -49,7 +50,14 @@ export default class MapGenerator {
         // --- Instancing (performance) ---
         Grass.combineIntoInstancedMesh()
         StraightPath.combineIntoInstancedMesh(this.experience.scene)
-        Tower.combineIntoInstancedMesh(this.experience.scene)
+        // Tower.combineIntoInstancedMesh(this.experience.scene)
         // Trees.combineIntoInstancedMeshes(trees, this.experience.scene)
+    }
+
+    update() {
+        // Tower.allTowers.forEach(tower => {
+        //     tower.update()
+        // })
+        this.towers.forEach(tower => tower.update())
     }
 }

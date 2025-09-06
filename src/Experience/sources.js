@@ -3,14 +3,14 @@ export default [
         name: 'environmentMapTexture',
         type: 'cubeTexture',
         path:
-        [
-            'textures/environmentMap/px.jpg',
-            'textures/environmentMap/nx.jpg',
-            'textures/environmentMap/py.jpg',
-            'textures/environmentMap/ny.jpg',
-            'textures/environmentMap/pz.jpg',
-            'textures/environmentMap/nz.jpg'
-        ]
+            [
+                'textures/environmentMap/px.jpg',
+                'textures/environmentMap/nx.jpg',
+                'textures/environmentMap/py.jpg',
+                'textures/environmentMap/ny.jpg',
+                'textures/environmentMap/pz.jpg',
+                'textures/environmentMap/nz.jpg'
+            ]
     },
     {
         name: 'grassColorTexture',
@@ -30,7 +30,7 @@ export default [
     {
         name: 'archerTower',
         type: 'gltfModel',
-        path: 'models/Towers/archer-tower.glb'
+        path: 'models/Towers/castle-tower.glb'
     },
     {
         name: 'tree1',
@@ -92,4 +92,14 @@ export default [
         type: 'gltfModel',
         path: 'models/Enemies/bomberman-devil-enemy.glb'
     },
+    {
+        name: 'prince_green',
+        type: 'gltfModel',
+        path: 'models/prince_green.glb'
+    },
+    {
+        name: 'foundation',
+        type: 'gltfModel',
+        path: 'models/Foundation/Foundation.glb'
+    }
 ]
