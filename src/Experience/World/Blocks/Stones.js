@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
-import Grass from './Grass.js'
 import mergeModelToSingleGeometry from '../../Utils/UtilityFunctions.js'
 import { STONE_SCALING } from '../../Configs/GameConfig.js'
 

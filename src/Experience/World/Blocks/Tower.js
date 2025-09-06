@@ -1,7 +1,6 @@
 // Tower.js
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
-import Grass from './Grass.js'
 import FireWizard from '../Defenses/FireWizard.js'
 import CannonDefense from '../Defenses/CannonDefense.js'
 import FreezeDefense from '../Defenses/FreezeDefense.js'

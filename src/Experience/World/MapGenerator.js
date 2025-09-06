@@ -1,12 +1,14 @@
 import StraightPath from './Blocks/StraightPath.js'
 import Experience from '../Experience.js'
-import Grass from './Blocks/Grass.js'
+import Ground from './Blocks/Ground.js'
 import Tower from './Blocks/Tower.js'
 import Trees from './Blocks/Trees.js'
 import Stones from './Blocks/Stones.js'
 import Castle from './Blocks/Castle.js'
 import Foundation from './Blocks/Foundation.js'
 import Boundary from './Blocks/Boundary.js'
+import Grass from './Blocks/Grass.js'
+import House from './Blocks/Houses.js'
 
 export default class MapGenerator {
     constructor(levelData) {
@@ -25,11 +27,10 @@ export default class MapGenerator {
         const offsetX = this.levelData.width / 2
         const offsetZ = this.levelData.height / 2
         const trees = []
-        const stones = []
-        const boundaries = []
         this.towers = []
         this.foundations = []
-        let yes = true
+        const pathPositions = [] // collect path positions
+        let isCastleCreated = false;
         // --- Build map objects ---
         this.paths.forEach(path => {
             const worldX = path.position.x - offsetX + 0.5
@@ -37,6 +38,7 @@ export default class MapGenerator {
 
             if (path.type === 'path') {
                 new StraightPath({ position: { x: worldX, z: worldZ } })
+                pathPositions.push({ x: worldX, z: worldZ }) // 🚫 store for exclusion
             }
             else if (path.type === 'tower') {
                 this.foundations.push(new Foundation({ position: { x: worldX, z: worldZ } }))
@@ -48,7 +50,12 @@ export default class MapGenerator {
                 new Stones({ position: { x: worldX, z: worldZ } })
             }
             else if (path.type === 'castle') {
-                new Castle({ position: { x: worldX, z: worldZ } })
+                if(!isCastleCreated){
+                    isCastleCreated = true;
+                    new Castle({ position: { x: worldX, z: worldZ } })
+                }
+            } else if (path.type === "home") {
+                new House({ position: { x: worldX, z: worldZ } })
             }
             else if (path.type === 'base') {
                 if ((path.position.x === 0 && path.position.z === 0) ||
@@ -94,8 +101,10 @@ export default class MapGenerator {
         //         new Grass({ position: { x: worldX, z: worldZ } })
         //     }
         // }
-        new Grass({ position: { x: 0, z: 0 } })
+        new Ground({ position: { x: 0, z: 0 } });
+        new Grass(1000, pathPositions);
         // Grass.combineIntoInstancedMesh()
+        Grass.combineIntoInstancedMeshes(this.experience.scene)
         StraightPath.combineIntoInstancedMesh(this.experience.scene)
         Trees.combineIntoInstancedMeshes(trees, this.experience.scene)
         Stones.combineIntoInstancedMeshes(this.experience.scene)

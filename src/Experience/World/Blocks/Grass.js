@@ -1,118 +1,110 @@
-import * as THREE from 'three'
-import Experience from '../../Experience'
-
+// Grass.js
+import * as THREE from "three"
+import Experience from "../../Experience.js"
 
 export default class Grass {
-    static instances = []   // keep track of all created Grass meshes
-    constructor({ length = 100, width = 100, height = 0.1, position = { x: 0, z: 0 }, color = 0x00f00, textureRepeat = { x: 1.5, y: 1.5 } }) {
+    static instances = [] // track all spawned grass models
+
+    constructor(count = 100, excludePositions = []) {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
+        this.debug = this.experience.debug
 
-        this.length = length
-        this.width = width
-        this.height = height
-        this.position = position
-        this.color = color
-        this.textureRepeat = textureRepeat
+        this.resource = this.resources.items.grass // grass model in resources
 
-        this.setGeometry()
-        this.setTextures()
-        this.setMaterial()
-        this.setMesh()
-
-        // Keep track of instance
-        Grass.instances.push(this)
-    }
-
-    setGeometry() {
-        this.geometry = new THREE.BoxGeometry(this.length, this.height, this.width)
-    }
-
-    setTextures() {
-        this.textures = {}
-
-        if (this.resources.items.grassColorTexture) {
-            this.textures.color = this.resources.items.grassColorTexture
-            this.textures.color.colorSpace = THREE.SRGBColorSpace
-            this.textures.color.repeat.set(this.textureRepeat.x, this.textureRepeat.y)
-            this.textures.color.wrapS = THREE.RepeatWrapping
-            this.textures.color.wrapT = THREE.RepeatWrapping
+        if (this.debug.active) {
+            this.debugFolder = this.debug.ui.addFolder("Grass")
         }
-
-        if (this.resources.items.grassNormalTexture) {
-            this.textures.normal = this.resources.items.grassNormalTexture
-            this.textures.normal.repeat.set(this.textureRepeat.x, this.textureRepeat.y)
-            this.textures.normal.wrapS = THREE.RepeatWrapping
-            this.textures.normal.wrapT = THREE.RepeatWrapping
-        }
-    }
-
-    setMaterial() {
-        this.material = new THREE.MeshStandardMaterial({
-            color: this.color
-        })
-    }
-
-    setMesh() {
-        this.mesh = new THREE.Mesh(this.geometry, this.material)
-        this.mesh.name = "Grass"
-        this.mesh.position.set(
-            this.position.x,
-            0,
-            this.position.z
-        )
-
-        this.mesh.castShadow = true
-        this.mesh.receiveShadow = true
-        this.scene.add(this.mesh)
+        this.setModel(count, excludePositions)
     }
 
     /**
-     * Combine all Grass meshes into one InstancedMesh
+     * Generate many grasses at once
+     * @param {number} count number of grasses to spawn
+     * @param {Array} excludePositions array of {x, z} objects where grass should NOT spawn
      */
-    static combineIntoInstancedMesh(name = 'ground') {
-        if (Grass.instances.length === 0) return null
+    setModel(count = 100, excludePositions = []) {
+        const exclusionSet = new Set(
+            excludePositions.map(pos => `${Math.round(pos.x)}_${Math.round(pos.z)}`)
+        )
 
-        const first = Grass.instances[0]
+        for (let i = 0; i < count; i++) {
+            const x = THREE.MathUtils.randFloat(-25, 25)
+            const z = THREE.MathUtils.randFloat(-25, 25)
 
-        // Shared geometry + material (you could pick one or clone)
-        const geometry = first.geometry.clone()
-        const material = first.material.clone()
-        const count = Grass.instances.length
+            // 🚫 Skip spawning grass if it’s too close to excluded positions
+            if (exclusionSet.has(`${Math.round(x)}_${Math.round(z)}`)) {
+                continue
+            }
 
-        const instancedMesh = new THREE.InstancedMesh(geometry, material, count)
-        instancedMesh.name = name
-        instancedMesh.castShadow = true
-        instancedMesh.receiveShadow = true
+            const model = this.resource.scene.clone()
+            const scale = 0.005
+
+            model.position.set(x, 0.05, z)
+            model.scale.set(scale, scale, scale)
+            model.rotation.x = -Math.PI / 2
+
+            this.scene.add(model)
+
+            model.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
+                    child.castShadow = true
+                    child.receiveShadow = true
+                    child.material.map = this.resources.items.grassTexture
+                    child.material.color = new THREE.Color(0x00ff00)
+                }
+            })
+
+            Grass.instances.push({ model, resource: this.resource })
+        }
+    }
+
+    static combineIntoInstancedMeshes(scene) {
+        if (Grass.instances.length === 0) return
+
+        const original = Grass.instances[0].resource.scene.clone()
+        let mergedGeometry = null
+        let mergedMaterial = null
+
+        original.traverse((child) => {
+            if (child.isMesh) {
+                if (!mergedGeometry) mergedGeometry = child.geometry.clone()
+                if (!mergedMaterial) mergedMaterial = child.material.clone()
+            }
+        })
+
+        if (!mergedGeometry || !mergedMaterial) return
+
+        const instancedMesh = new THREE.InstancedMesh(
+            mergedGeometry,
+            mergedMaterial,
+            Grass.instances.length
+        )
 
         const dummy = new THREE.Object3D()
-
         Grass.instances.forEach((grass, i) => {
-            // Apply each mesh's transform
-            dummy.position.copy(grass.mesh.position)
-            dummy.scale.copy(grass.mesh.scale)
-            dummy.rotation.copy(grass.mesh.rotation)
+            grass.model.updateMatrixWorld(true)
+            dummy.position.copy(grass.model.position)
+            dummy.quaternion.copy(grass.model.quaternion)
+            dummy.scale.copy(grass.model.scale)
             dummy.updateMatrix()
 
             instancedMesh.setMatrixAt(i, dummy.matrix)
-            instancedMesh.name = "GRASS_INSTANCE"
 
-            // Remove old mesh from scene and dispose
-            grass.scene.remove(grass.mesh)
-            grass.geometry.dispose()
-            grass.material.dispose()
+            scene.remove(grass.model)
+            grass.model.traverse((child) => {
+                if (child.isMesh) {
+                    child.geometry.dispose()
+                    if (child.material.map) child.material.map.dispose()
+                    child.material.dispose()
+                }
+            })
         })
 
         instancedMesh.instanceMatrix.needsUpdate = true
-
-        // Add to scene
-        first.scene.add(instancedMesh)
-
-        // Clear the old list
-        Grass.instances = []
-
-
-        return instancedMesh
+        instancedMesh.castShadow = true
+        instancedMesh.receiveShadow = true
+        scene.add(instancedMesh)
     }
 }

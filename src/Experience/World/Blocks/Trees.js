@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
-import Grass from './Grass.js'
 import { TREES_SCALING } from '../../Configs/GameConfig.js'
 import mergeModelToSingleGeometry from '../../Utils/UtilityFunctions.js'
 export default class Trees {

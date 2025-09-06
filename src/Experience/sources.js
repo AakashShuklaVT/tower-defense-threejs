@@ -80,7 +80,12 @@ export default [
     {
         name: 'castle',
         type: 'gltfModel',
-        path: 'models/Castle/Castle.glb'
+        path: 'models/Buildings/castle.glb'
+    },
+    {
+        name: 'castleTower',
+        type: 'gltfModel',
+        path: 'models/Buildings/castle-tower.glb'
     },
     {
         name: 'skeleton',
@@ -173,5 +178,25 @@ export default [
         name: 'cornerBoundary',
         type: 'gltfModel',
         path: 'models/Buildings/corner-wall.glb'
+    },
+    {
+        name: 'grass',
+        type: 'gltfModel',
+        path: 'models/Grass/grass_with_flowers_low-poly/scene.gltf'
+    },
+    {
+        name: 'grassTexture',
+        type: 'texture',
+        path: 'models/Grass/grass_with_flowers_low-poly/Material.001_diffuse.png'
+    },
+    {
+        name: 'house',
+        type: 'gltfModel',
+        path: 'models/Buildings/house.glb'
+    },
+    {
+        name: 'door',
+        type: 'gltfModel',
+        path: 'models/Door.glb'
     },
 ]
