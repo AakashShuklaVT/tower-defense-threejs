@@ -23,5 +23,29 @@
             "Attack Speed: Medium",
             "Maximum Level: 3"
         ]
+    },
+    "freezeDefense": {
+        "title": "Freeze Defense Tower",
+        "price": 75,
+        "image": "./assets/fireWizard.png",
+        "description": "Freeze Tower delivers precise ranged attacks...",
+        "features": [
+            "Arrow Damage: 30",
+            "Range: Long",
+            "Attack Speed: Medium",
+            "Maximum Level: 3"
+        ]
+    },
+    "xBowDefense": {
+        "title": "X-Bow Defense Tower",
+        "price": 75,
+        "image": "./assets/fireWizard.png",
+        "description": "Freeze Tower delivers precise ranged attacks...",
+        "features": [
+            "Arrow Damage: 30",
+            "Range: Long",
+            "Attack Speed: Medium",
+            "Maximum Level: 3"
+        ]
     }
 }

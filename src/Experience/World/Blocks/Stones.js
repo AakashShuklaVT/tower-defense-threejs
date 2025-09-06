@@ -1,11 +1,9 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Grass from './Grass.js'
-const STONE_SCALING = {
-    0: 1.5,
-    1: 0.001,
-    2: 0.9,
-}
+import mergeModelToSingleGeometry from '../../Utils/UtilityFunctions.js'
+import { STONE_SCALING } from '../../Configs/GameConfig.js'
+
 export default class Stones {
     constructor({ position = { x: 0, z: 0 } }) {
         this.experience = new Experience()
@@ -25,12 +23,7 @@ export default class Stones {
         this.selectedStone = Math.floor(Math.random() * this.stoneTypes.length)
         this.stoneType = this.stoneTypes[this.selectedStone]
         this.resource = this.resources.items[this.stoneType]
-        this.setGround()
         this.setModel()
-    }
-
-    setGround() {
-        this.ground = new Grass({ position: { x: this.position.x, z: this.position.z } })
     }
 
     setModel() {
@@ -49,49 +42,66 @@ export default class Stones {
         })
     }
 
-    setAnimation() {
-        this.animation = {}
+    static combineIntoInstancedMeshes(trees, scene) {
+        if (trees.length === 0) return;
 
-        // Mixer
-        this.animation.mixer = new THREE.AnimationMixer(this.model)
+        // Group by treeType
+        const grouped = {};
+        trees.forEach((tree) => {
+            if (!grouped[tree.treeType]) grouped[tree.treeType] = [];
+            grouped[tree.treeType].push(tree);
+        });
 
-        // Actions
-        this.animation.actions = {}
-        this.animation.actions.idle = this.animation.mixer.clipAction(this.resource.animations[0])
-        this.animation.actions.walking = this.animation.mixer.clipAction(this.resource.animations[1])
-        this.animation.actions.running = this.animation.mixer.clipAction(this.resource.animations[2])
+        Object.entries(grouped).forEach(([treeType, group]) => {
+            const original = group[0].resource.scene;
+            const mergedGeometry = mergeModelToSingleGeometry(original);
 
-        this.animation.actions.current = this.animation.actions.idle
-        this.animation.actions.current.play()
+            if (!mergedGeometry) return;
 
-        // Play the action
-        this.animation.play = (name) => {
-            const newAction = this.animation.actions[name]
-            const oldAction = this.animation.actions.current
+            // Use first material (assumes all share)
+            let mergedMaterial = null;
+            original.traverse((child) => {
+                if (child.isMesh && !mergedMaterial) mergedMaterial = child.material.clone();
+            });
 
-            newAction.reset()
-            newAction.play()
-            newAction.crossFadeFrom(oldAction, 1)
+            const instancedMesh = new THREE.InstancedMesh(
+                mergedGeometry,
+                mergedMaterial,
+                group.length
+            );
 
-            this.animation.actions.current = newAction
-        }
+            const dummy = new THREE.Object3D();
+            group.forEach((tree, i) => {
+                tree.model.updateMatrixWorld(true);
+                dummy.position.copy(tree.model.position);
+                dummy.quaternion.copy(tree.model.quaternion);
+                dummy.scale.copy(tree.model.scale);
+                dummy.updateMatrix();
 
-        // Debug
-        if (this.debug.active) {
-            const debugObject = {
-                playIdle: () => { this.animation.play('idle') },
-                playWalking: () => { this.animation.play('walking') },
-                playRunning: () => { this.animation.play('running') }
-            }
-            this.debugFolder.add(debugObject, 'playIdle')
-            this.debugFolder.add(debugObject, 'playWalking')
-            this.debugFolder.add(debugObject, 'playRunning')
-        }
-    }
+                instancedMesh.setMatrixAt(i, dummy.matrix);
 
-    update() {
-        // if (this.animation?.mixer) {
-        //     this.animation.mixer.update(this.time.delta * 0.001)
-        // }
+                // 🔥 Cleanup old models
+                scene.remove(tree.model);
+                tree.model.traverse((child) => {
+                    if (child.isMesh) {
+                        child.geometry.dispose();
+                        if (child.material.map) child.material.map.dispose();
+                        child.material.dispose();
+                    }
+                });
+
+                // 🔥 Cleanup grass ground too
+                if (tree.ground && tree.ground.mesh) {
+                    scene.remove(tree.ground.mesh);
+                    tree.ground.geometry.dispose();
+                    tree.ground.material.dispose();
+                }
+            });
+
+            instancedMesh.instanceMatrix.needsUpdate = true;
+            instancedMesh.castShadow = true;
+            instancedMesh.receiveShadow = true;
+            scene.add(instancedMesh);
+        });
     }
 }

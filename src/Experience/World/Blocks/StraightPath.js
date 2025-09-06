@@ -64,7 +64,7 @@ export default class StraightPath {
 
     setMesh() {
         this.mesh = new THREE.Mesh(this.geometry, this.material)
-        this.mesh.position.set(this.position.x, 0, this.position.z)
+        this.mesh.position.set(this.position.x, 0.01, this.position.z)
         this.mesh.castShadow = true
         this.mesh.receiveShadow = true
         this.scene.add(this.mesh)

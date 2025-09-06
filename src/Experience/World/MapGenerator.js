@@ -47,26 +47,30 @@ export default class MapGenerator {
             else if (path.type === 'castle') {
                 new Castle({ position: { x: worldX, z: worldZ } })
             }
-            else {
-                new Grass({ position: { x: worldX, z: worldZ } })
-            }
         })
 
         // --- Instancing (performance) ---
+        for (let i = 0; i < 100; i++) {
+            for (let j = 0; j < 100; j++) {
+                const worldX = i - 100 / 2 + 0.5
+                const worldZ = j - 100 / 2 + 0.5
+                new Grass({ position: { x: worldX, z: worldZ } })
+            }
+        }
         Grass.combineIntoInstancedMesh()
         StraightPath.combineIntoInstancedMesh(this.experience.scene)
+        Trees.combineIntoInstancedMeshes(trees, this.experience.scene)
     }
 
     setupTower(position, previosTower, name) {
         // ✅ Convert position into a unique key
         const key = `${position.x}_${position.z}`
-        console.log(key);
-        
+
         if (!this.placedTowers.has(key)) {
             this.placedTowers.add(key) // store it
             previosTower.script.disposeObject()
 
-            const newTower = new Tower({ position, name})
+            const newTower = new Tower({ position, name })
             this.towers.push(newTower)
             // ✅ Add enemies only to this new tower
             if (newTower?.fireWizard) {
@@ -82,14 +86,12 @@ export default class MapGenerator {
     }
 
     setupFoundation(position) {
-        console.log(position);
-        
         const key = `${position.position.x}_${position.position.z}`
         console.log(key);
-        
+
         this.placedTowers.delete(key) // remove tower if any
-        this.foundations.push(new Foundation( position ))
-    }    
+        this.foundations.push(new Foundation(position))
+    }
 
     update() {
         this.towers.forEach(tower => tower.update())

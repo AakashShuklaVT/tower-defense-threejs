@@ -1,17 +1,8 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Grass from './Grass.js'
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
-
-const TREES_SCALING = {
-    0: 0.5,
-    1: 0.5,
-    2: 0.5,
-    3: 0.5,
-    4: 0.5,
-    5: 0.5
-}
-
+import { TREES_SCALING } from '../../Configs/GameConfig.js'
+import mergeModelToSingleGeometry from '../../Utils/UtilityFunctions.js'
 export default class Trees {
     static instances = [] // keep track of all created Trees
 
@@ -29,7 +20,7 @@ export default class Trees {
         }
 
         // Tree type
-        this.treeTypes = ['tree1', 'tree2', 'tree3', 'tree4', 'tree5', 'tree6']
+        this.treeTypes = ['tree1', 'tree2', 'tree5']
         this.selectedTree = Math.floor(Math.random() * this.treeTypes.length)
         this.treeType = this.treeTypes[this.selectedTree]
         this.resource = this.resources.items[this.treeType]
@@ -129,45 +120,4 @@ export default class Trees {
             scene.add(instancedMesh);
         });
     }
-}
-function mergeModelToSingleGeometry(root) {
-    root.updateMatrixWorld(true);
-
-    const geoms = [];
-    root.traverse((child) => {
-        if (child.isMesh) {
-            const g = child.geometry.clone();
-
-            // ✅ bake world transform relative to root
-            const relativeMatrix = new THREE.Matrix4();
-            relativeMatrix.copy(child.matrixWorld).premultiply(new THREE.Matrix4().copy(root.matrixWorld).invert());
-
-            g.applyMatrix4(relativeMatrix);
-
-            geoms.push(g);
-        }
-    });
-
-    if (geoms.length === 0) return null;
-
-    // normalize attributes
-    const attrItemSize = {};
-    geoms.forEach((g) => {
-        for (const name in g.attributes) {
-            if (!(name in attrItemSize)) attrItemSize[name] = g.attributes[name].itemSize;
-        }
-    });
-
-    geoms.forEach((g) => {
-        const vertexCount = g.attributes.position.count;
-        for (const name in attrItemSize) {
-            if (!g.attributes[name]) {
-                const itemSize = attrItemSize[name];
-                const array = new Float32Array(vertexCount * itemSize);
-                g.setAttribute(name, new THREE.BufferAttribute(array, itemSize));
-            }
-        }
-    });
-
-    return mergeGeometries(geoms, true);
 }

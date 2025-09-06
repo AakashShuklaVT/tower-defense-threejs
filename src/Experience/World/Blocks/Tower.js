@@ -4,6 +4,8 @@ import Experience from '../../Experience.js'
 import Grass from './Grass.js'
 import FireWizard from '../Defenses/FireWizard.js'
 import CannonDefense from '../Defenses/CannonDefense.js'
+import FreezeDefense from '../Defenses/FreezeDefense.js'
+import XBowDefense from '../Defenses/XBowDefense.js'
 
 export default class Tower {
     static allTowers = [] // store all created towers
@@ -23,7 +25,7 @@ export default class Tower {
         // store this tower for later batching
         Tower.allTowers.push(this)
 
-        if(name === 'fireWizard'){
+        if (name === 'fireWizard') {
             this.fireWizard = new FireWizard({
                 attackRange: 5,
                 positionX: this.position.x,
@@ -34,8 +36,24 @@ export default class Tower {
                 this.disposeTower()
             }, 5000) // delay for 1 secon
         }
-        else if(name === 'cannonDefense') {
+        else if (name === 'cannonDefense') {
             this.cannonDefense = new CannonDefense({
+                attackRange: 5,
+                positionX: this.position.x,
+                positionZ: this.position.z,
+                scale: 0.25
+            })
+        }
+        else if (name === 'freezeDefense') {
+            this.freezeDefense = new FreezeDefense({
+                attackRange: 5,
+                positionX: this.position.x,
+                positionZ: this.position.z,
+                scale: 0.25
+            })
+        }
+        else if (name === 'xBowDefense') {
+            this.xBowDefense = new XBowDefense({
                 attackRange: 5,
                 positionX: this.position.x,
                 positionZ: this.position.z,
@@ -75,7 +93,7 @@ export default class Tower {
         Tower.allTowers = Tower.allTowers.filter(tower => tower !== this)
         this.fireWizard?.dispose()
         this.fireWizard = null
-        this.experience.world.mapGenerator.setupFoundation({position : this.position})
+        this.experience.world.mapGenerator.setupFoundation({ position: this.position })
     }
 
     // 🔹 Static method to batch all towers
