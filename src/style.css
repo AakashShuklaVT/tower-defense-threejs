@@ -1,19 +1,185 @@
-*
-{
+/* Reset */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 html,
-body
-{
+body {
+    height: 100%;
     overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    background-color: #111827;
 }
 
-.webgl
-{
+/* WebGL canvas */
+.webgl {
     position: fixed;
     top: 0;
     left: 0;
     outline: none;
+}
+
+/* Card container: 2x2 grid full screen */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 20px;
+    width: 100vw;
+    max-width: 1200px;
+    height: 100vh;
+    padding: 20px;
+    justify-content: center;
+    justify-items: center;
+    /* center cards horizontally */
+    align-items: center;
+    z-index: 10;
+    position: relative;
+    /* center cards vertically in cells */
+}
+
+/* Card style */
+.card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 500px;
+    /* keeps width reasonable */
+    height: 100%;
+    /* fill grid cell */
+    padding: 12px;
+    background-color: rgba(100, 50, 20, 0.70);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 28px;
+    color: #E5E7EB;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 190, 120, 0.20) inset;
+    overflow: hidden;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+/* Left side: Image */
+.card-left {
+    flex: 0.8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+/* Right side: Info */
+.card-right {
+    flex: 1.7;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Text and fonts */
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #F9FAFB;
+    margin-bottom: 6px;
+}
+
+.card-price {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+}
+
+.card-price .currency {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #FDBA74;
+    vertical-align: super;
+    margin-right: 4px;
+}
+
+.card-description {
+    font-size: 0.85rem;
+    color: #B0B6BF;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 12px;
+}
+
+.features-list li {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+    color: #D1D5DB;
+}
+
+/* Rotating SVG discs */
+.rotating-disc-svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    animation: spin 3s linear infinite;
+}
+
+.rotating-disc-svg circle {
+    stroke: #FDBA74;
+    stroke-width: 2;
+    stroke-dasharray: 10 5;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* CTA Button */
+.cta-button {
+    background-color: rgba(255, 150, 80, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px 0;
+    width: 100%;
+    border: 1px solid rgba(255, 190, 120, 0.3);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 100, 0, 0.25);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cta-button:hover {
+    background-color: rgba(255, 160, 90, 0.40);
+    border-color: rgba(255, 200, 140, 0.4);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 7px 20px rgba(255, 100, 0, 0.35);
+}
+
+.cta-button:active {
+    transform: translateY(-1px) scale(0.98);
+    background-color: rgba(255, 140, 70, 0.45);
 }
