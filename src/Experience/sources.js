@@ -108,9 +108,14 @@ export default [
         path: 'models/Enemies/goblimon-enemy.glb'
     },
     {
-        name: 'bomberman',
+        name: 'demogorgon',
         type: 'gltfModel',
         path: 'models/Enemies/bomberman-devil-enemy.glb'
+    },
+    {
+        name: 'floramon',
+        type: 'gltfModel',
+        path: 'models/Enemies/bomberman-flower-enemy.glb'
     },
     {
         name: 'prince_green',

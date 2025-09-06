@@ -2,16 +2,20 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
+import HealthBar from '../HealthBar/HealthBar.js';
+import { RED_PANTHER_HEALTH } from '../../Configs/GameConfig.js';
 
 export default class RedPantherEnemy {
-    constructor({ resourceName = 'redPantherModel', position = { x: 0, y: 0, z: 0 }, scale = 0.15, movePath, speed, levelData}) {
+    static spawnedEnemies = 0;
+    constructor({ resourceName = 'redPantherModel', position = { x: 0, y: 0, z: 0 }, scale = 0.15, movePath, speed, levelData }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.speed = speed
-        this.health = 100
+        this.health = RED_PANTHER_HEALTH
+        this.type = 'RedPanther'
 
         // Debug
         if (this.debug.active) {
@@ -24,12 +28,19 @@ export default class RedPantherEnemy {
         this.setModel(position, scale)
         this.setScriptInstanceInModel()
         this.movePath = movePath
-        this.startMoving(this.movePath, levelData) 
+        this.startMoving(this.movePath, levelData)
         this.setAnimation()
     }
 
     setModel(position, scale) {
         this.model = clone(this.resource.scene)
+
+        this.healthBar = new HealthBar({
+            maxHealth: this.health,
+            camera: this.experience.camera.instance,
+            target: this.model,
+            scene: this.experience.scene
+        })
 
         this.model.scale.set(scale, scale, scale)
         this.model.position.set(position.x, position.y, position.z)
@@ -48,8 +59,7 @@ export default class RedPantherEnemy {
 
     takeDamage(damage) {
         this.health -= damage;
-        //('red panther',this.health);
-        
+        this.healthBar.takeDamage(damage);
         if (this.health <= 0) {
             this.die()
         }
@@ -58,41 +68,36 @@ export default class RedPantherEnemy {
     die() {
         if (this.isDead) return;
         this.isDead = true;
-    
+
         //("Red Panther is dying...");
-    
+
         // Stop movement timeline if exists
         if (this.moveTimeline) {
             this.moveTimeline.kill();
             this.moveTimeline = null;
         }
-    
-        // Play death animation once
-        const deathAction = this.animation.actions.death
-        deathAction.reset();
-        deathAction.setLoop(THREE.LoopOnce);
-        deathAction.clampWhenFinished = true;
-        deathAction.play();
-    
+
+        this.animation.play('death');
+
         // Dispose when death anim finishes
         this.animation.mixer.addEventListener("finished", (e) => {
-            if (e.action === deathAction) {
+            if (this.animation.actions.current === this.animation.actions.death) {
                 //("Disposing Red Panther...");
                 this.disposeModel();
             }
         });
     }
-    
-    
-    
+
+
+
     disposeModel() {
         if (this.model) {
             this.scene.remove(this.model);
-    
+
             this.model.traverse((child) => {
                 if (child.isMesh) {
                     child.geometry.dispose();
-    
+
                     if (child.material.isMaterial) {
                         this.disposeMaterial(child.material);
                     } else if (Array.isArray(child.material)) {
@@ -100,12 +105,12 @@ export default class RedPantherEnemy {
                     }
                 }
             });
-    
+
             this.model = null;
         }
         //("Red Panther disposed.");
     }
-    
+
     disposeMaterial(material) {
         for (const key in material) {
             const value = material[key];
@@ -114,7 +119,7 @@ export default class RedPantherEnemy {
             }
         }
         material.dispose();
-    }    
+    }
 
     setAnimation() {
         this.animation = {}
@@ -142,7 +147,7 @@ export default class RedPantherEnemy {
 
             if (newAction && newAction !== oldAction) {
                 newAction.reset()
-                if(newAction.name === 'death'){
+                if (name === 'death') {
                     newAction.clampWhenFinished = true
                     newAction.setLoop(THREE.LoopOnce)
                 }
@@ -174,33 +179,33 @@ export default class RedPantherEnemy {
     startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
         //("Path points:", pathPoints);
-    
+
         const offsetX = levelData.width / 2;
         const offsetZ = levelData.height / 2;
-    
+
         // Convert grid coords → world coords
         const points = pathPoints.map(p => ({
             x: p.x - offsetX + 0.5,
             z: p.z - offsetZ + 0.5,
             angle: p.angle,
         }));
-    
+
         // Start position
         this.model.position.set(points[0].x, this.model.position.y, points[0].z);
         this.model.rotation.y = THREE.MathUtils.degToRad(points[0].angle);
-    
+
         // ✅ Create a single timeline
         this.moveTimeline = gsap.timeline({ paused: false });
-    
+
         for (let i = 0; i < points.length - 1; i++) {
             const current = points[i];
             const next = points[i + 1];
-    
+
             const dx = next.x - current.x;
             const dz = next.z - current.z;
             const distance = Math.sqrt(dx * dx + dz * dz);
             const duration = distance / this.speed;
-    
+
             // Add position tween
             this.moveTimeline.to(this.model.position, {
                 x: next.x,
@@ -208,7 +213,7 @@ export default class RedPantherEnemy {
                 duration,
                 ease: 'none'
             });
-    
+
             // Add rotation tween slightly overlapping for smooth turn
             if (next.angle !== undefined) {
                 this.moveTimeline.to(this.model.rotation, {
@@ -218,11 +223,17 @@ export default class RedPantherEnemy {
                 }); // small overlap
             }
         }
-    }    
+        this.moveTimeline.call(() => {
+            this.animation.play('attack');
+        })
+    }
 
     update() {
         if (this.animation && this.animation.mixer) {
             this.animation.mixer.update(this.time.delta * 0.001)
+        }
+        if (this.healthBar) {
+            this.healthBar.update()
         }
     }
 }

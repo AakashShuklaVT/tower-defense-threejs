@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import Experience from '../../Experience.js'
 
 export default class Ground {
-    constructor({position = { x: 0, z: 0 }, color = '#04cc51', textureRepeat = { x: 1.5, y: 1.5 } }) {
+    constructor({position = { x: 0, z: 0 }, color = '#013220', textureRepeat = { x: 1.5, y: 1.5 } }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources

@@ -30,9 +30,6 @@ export default class Tower {
                 positionZ: this.position.z,
                 scale: 0.25
             })
-            // setTimeout(() => {
-            //     this.disposeTower()
-            // }, 5000) // delay for 1 secon
         }
         else if (name === 'cannonDefense') {
             this.cannonDefense = new CannonDefense({

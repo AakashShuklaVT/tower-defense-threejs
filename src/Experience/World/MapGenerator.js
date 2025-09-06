@@ -29,16 +29,16 @@ export default class MapGenerator {
         const trees = []
         this.towers = []
         this.foundations = []
-        const pathPositions = [] // collect path positions
+        const pathPositions = []
         let isCastleCreated = false;
-        // --- Build map objects ---
+
         this.paths.forEach(path => {
             const worldX = path.position.x - offsetX + 0.5
             const worldZ = path.position.z - offsetZ + 0.5
 
             if (path.type === 'path') {
                 new StraightPath({ position: { x: worldX, z: worldZ } })
-                pathPositions.push({ x: worldX, z: worldZ }) // 🚫 store for exclusion
+                pathPositions.push({ x: worldX, z: worldZ })
             }
             else if (path.type === 'tower') {
                 this.foundations.push(new Foundation({ position: { x: worldX, z: worldZ } }))
@@ -50,11 +50,12 @@ export default class MapGenerator {
                 new Stones({ position: { x: worldX, z: worldZ } })
             }
             else if (path.type === 'castle') {
-                if(!isCastleCreated){
+                if (!isCastleCreated) {
                     isCastleCreated = true;
                     new Castle({ position: { x: worldX, z: worldZ } })
                 }
-            } else if (path.type === "home") {
+            }
+            else if (path.type === "home") {
                 new House({ position: { x: worldX, z: worldZ } })
             }
             else if (path.type === 'base') {
@@ -93,17 +94,8 @@ export default class MapGenerator {
             }
         })
 
-        // --- Instancing (performance) ---
-        // for (let i = 0; i < 100; i++) {
-        //     for (let j = 0; j < 100; j++) {
-        //         const worldX = i - 100 / 2 + 0.5
-        //         const worldZ = j - 100 / 2 + 0.5
-        //         new Grass({ position: { x: worldX, z: worldZ } })
-        //     }
-        // }
         new Ground({ position: { x: 0, z: 0 } });
         new Grass(1000, pathPositions);
-        // Grass.combineIntoInstancedMesh()
         Grass.combineIntoInstancedMeshes(this.experience.scene)
         StraightPath.combineIntoInstancedMesh(this.experience.scene)
         Trees.combineIntoInstancedMeshes(trees, this.experience.scene)
@@ -111,38 +103,39 @@ export default class MapGenerator {
         Boundary.combineIntoInstancedMeshes(this.experience.scene)
     }
 
-    setupTower(position, previosTower, name) {
-        // ✅ Convert position into a unique key
+    setupTower(position, previousTower, name) {
         const key = `${position.x}_${position.z}`
 
         if (!this.placedTowers.has(key)) {
-            this.placedTowers.add(key) // store it
-            previosTower.script.disposeObject()
+            this.placedTowers.add(key)
+
+            if (previousTower && previousTower.script) {
+                previousTower.script.disposeObject()
+            }
 
             const newTower = new Tower({ position, name })
             this.towers.push(newTower)
-            // ✅ Add enemies only to this new tower
-            if (newTower?.fireWizard) {
-                newTower.fireWizard.targets.push(this.experience.world.redPantherEnemy.model)
-                newTower.fireWizard.targets.push(this.experience.world.gaurdamonEnemy.model)
-                newTower.fireWizard.targets.push(this.experience.world.goblimonEnemy.model)
+
+            // ✅ hook into World to add enemies to this tower
+            const world = this.experience.world
+            if (world) {
+                world.addEnemiesToTower(newTower)
             }
 
+            return newTower
         } else {
-            //("Tower already exists at this position:", key)
-            return
+            return null
         }
     }
 
-    setupFoundation(position) {
-        const key = `${position.position.x}_${position.position.z}`
-        //(key);
 
-        this.placedTowers.delete(key) // remove tower if any
-        this.foundations.push(new Foundation(position))
+    setupFoundation(position) {
+        const key = `${position.position.x}_${position.position.z}`;
+        this.placedTowers.delete(key);
+        this.foundations.push(new Foundation(position));
     }
 
     update() {
-        this.towers.forEach(tower => tower.update())
+        this.towers.forEach(tower => tower.update());
     }
 }

@@ -2,8 +2,11 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
+import HealthBar from '../HealthBar/HealthBar.js';
+import { GAURDAMON_HEALTH } from '../../Configs/GameConfig.js';
 
 export default class GaurdamonEnemy {
+    static spawnedEnemies = 0
     constructor({ resourceName = 'gaurdamon', position = { x: 0, y: 0, z: 0 }, scale = 0.15, movePath, speed, levelData }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
@@ -11,7 +14,8 @@ export default class GaurdamonEnemy {
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.speed = speed
-        this.health = 100
+        this.health = GAURDAMON_HEALTH
+        this.type = 'Guardamon'
         // Debug
         if (this.debug.active) {
             this.debugFolder = this.debug.ui.addFolder('gaurdamon enemy')
@@ -27,9 +31,14 @@ export default class GaurdamonEnemy {
         this.setAnimation()
     }
 
-    setModel(position, scale) {
+    setModel(position, scale) {        
         this.model = clone(this.resource.scene)
-
+        this.healthBar = new HealthBar({
+            maxHealth: this.health,
+            camera: this.experience.camera.instance,
+            target: this.model,
+            scene: this.experience.scene
+        })
         this.model.scale.set(scale, scale, scale)
         this.model.position.set(position.x, position.y, position.z)
         this.scene.add(this.model)
@@ -47,51 +56,48 @@ export default class GaurdamonEnemy {
 
     takeDamage(damage) {
         this.health -= damage;
+        this.healthBar.takeDamage(damage)
         //('gaurdamon health:', this.health);
-    
+
         if (this.health <= 0) {
             this.die();
         }
     }
-    
+
     die() {
         if (this.isDead) return;
         this.isDead = true;
-    
+
         //("Gaurdamon is dying...");
-    
+
         // Stop movement timeline if exists
         if (this.moveTimeline) {
             this.moveTimeline.kill();
             this.moveTimeline = null;
         }
-    
+
         // Play death animation once
-        const deathAction = this.animation.actions.down
-        deathAction.reset();
-        deathAction.setLoop(THREE.LoopOnce);
-        deathAction.clampWhenFinished = true;
-        deathAction.play();
-    
+        this.animation.play('down')
+
         // Dispose when death anim finishes
         this.animation.mixer.addEventListener("finished", (e) => {
-            if (e.action === deathAction) {
+            if (this.animation.actions.current === this.animation.actions.down) {
                 //("Disposing Gaurdamon...");
                 this.disposeModel();
             }
         });
-    }    
-    
-    
+    }
+
+
     disposeModel() {
-        
+
         if (this.model) {
             this.scene.remove(this.model);
-    
+
             this.model.traverse((child) => {
                 if (child.isMesh) {
                     child.geometry.dispose();
-    
+
                     if (child.material.isMaterial) {
                         this.disposeMaterial(child.material);
                     } else if (Array.isArray(child.material)) {
@@ -99,19 +105,19 @@ export default class GaurdamonEnemy {
                     }
                 }
             });
-    
+
             this.model = null;
         }
         //("Gaurdamon disposed.");
     }
-    
+
     disposeMaterial(material) {
         for (const key in material) {
             const value = material[key];
             if (value && value.isTexture) value.dispose();
         }
         material.dispose();
-    }    
+    }
 
     setAnimation() {
         this.animation = {}
@@ -140,7 +146,7 @@ export default class GaurdamonEnemy {
 
             if (newAction && newAction !== oldAction) {
                 newAction.reset()
-                if(newAction.name === 'down'){
+                if (name === 'down') {
                     newAction.clampWhenFinished = true
                     newAction.setLoop(THREE.LoopOnce)
                 }
@@ -174,33 +180,33 @@ export default class GaurdamonEnemy {
     startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
         //("Path points:", pathPoints);
-    
+
         const offsetX = levelData.width / 2;
         const offsetZ = levelData.height / 2;
-    
+
         // Convert grid coords → world coords
         const points = pathPoints.map(p => ({
             x: p.x - offsetX + 0.5,
             z: p.z - offsetZ + 0.5,
             angle: p.angle,
         }));
-    
+
         // Start position
         this.model.position.set(points[0].x, this.model.position.y, points[0].z);
         this.model.rotation.y = THREE.MathUtils.degToRad(points[0].angle);
-    
+
         // ✅ Create a single timeline for movement
         this.moveTimeline = gsap.timeline({ paused: false });
-    
+
         for (let i = 0; i < points.length - 1; i++) {
             const current = points[i];
             const next = points[i + 1];
-    
+
             const dx = next.x - current.x;
             const dz = next.z - current.z;
             const distance = Math.sqrt(dx * dx + dz * dz);
             const duration = distance / this.speed;
-    
+
             // Add position tween
             this.moveTimeline.to(this.model.position, {
                 x: next.x,
@@ -208,7 +214,7 @@ export default class GaurdamonEnemy {
                 duration,
                 ease: 'none'
             });
-    
+
             // Add rotation tween slightly overlapping for smooth turn
             if (next.angle !== undefined) {
                 this.moveTimeline.to(this.model.rotation, {
@@ -218,11 +224,18 @@ export default class GaurdamonEnemy {
                 }); // slight overlap for smooth rotation
             }
         }
-    }    
+        this.moveTimeline.call(() => {
+            this.animation.play('attack01');
+        })
+    }
 
     update() {
         if (this.animation && this.animation.mixer) {
             this.animation.mixer.update(this.time.delta * 0.001)
         }
+        if (this.healthBar) {
+            this.healthBar.update();
+        }
+        
     }
 }

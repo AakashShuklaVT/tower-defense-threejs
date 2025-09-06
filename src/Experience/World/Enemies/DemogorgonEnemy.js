@@ -3,22 +3,22 @@ import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HealthBar from '../HealthBar/HealthBar.js';
-import { GOBLIMON_HEALTH } from '../../Configs/GameConfig.js';
+import { DEMOGORGON_HEALTH } from '../../Configs/GameConfig.js';
 
-export default class GoblimonEnemy {
+export default class DemogorgonEnemy {
     static spawnedEnemies = 0;
-    constructor({ resourceName = 'goblimon', position = { x: 0, y: 0, z: 0 }, scale = 0.15, movePath, speed, levelData }) {
+    constructor({ resourceName = 'demogorgon', position = { x: 0, y: 0, z: 0 }, scale = 0.15, movePath, speed, levelData }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.speed = speed
-        this.health = GOBLIMON_HEALTH
-        this.type = 'Goblimon'
+        this.health = DEMOGORGON_HEALTH
+        this.type = 'Demogorgon'
         // Debug
         if (this.debug.active) {
-            this.debugFolder = this.debug.ui.addFolder('goblimon enemy')
+            this.debugFolder = this.debug.ui.addFolder('demogorgon enemy')
         }
 
         // Resource (GLTF model from resources)
@@ -56,8 +56,8 @@ export default class GoblimonEnemy {
 
     takeDamage(damage) {
         this.health -= damage;
-        this.healthBar.takeDamage(damage);
-        //('goblimon health:', this.health);
+        this.healthBar.takeDamage(damage)
+        //('gaurdamon health:', this.health);
 
         if (this.health <= 0) {
             this.die();
@@ -68,20 +68,26 @@ export default class GoblimonEnemy {
         if (this.isDead) return;
         this.isDead = true;
 
-        //("Goblimon is dying...");
+        //("Gaurdamon is dying...");
 
-        // Kill movement timeline
-        this.moveTimeline?.kill();
+        // Stop movement timeline if exists
+        if (this.moveTimeline) {
+            this.moveTimeline.kill();
+            this.moveTimeline = null;
+        }
 
-        // Play death animation
-        this.animation.play('down')
+        // Play death animation once
+        this.animation.play('death')
 
+        // Dispose when death anim finishes
         this.animation.mixer.addEventListener("finished", (e) => {
-            if (this.animation.actions.current === this.animation.actions.down) {
+            if (this.animation.actions.current === this.animation.actions.death) {
+                //("Disposing Gaurdamon...");
                 this.disposeModel();
             }
         });
     }
+
 
     disposeModel() {
         if (this.model) {
@@ -101,7 +107,7 @@ export default class GoblimonEnemy {
 
             this.model = null;
         }
-        //("Goblimon disposed.");
+        //("Demogorgon disposed.");
     }
 
     disposeMaterial(material) {
@@ -121,15 +127,13 @@ export default class GoblimonEnemy {
         // Actions (renamed set)
         this.animation.actions = {}
         this.animation.actions.idle = this.animation.mixer.clipAction(this.resource.animations[0])
-        this.animation.actions.damage = this.animation.mixer.clipAction(this.resource.animations[1])
-        this.animation.actions.win = this.animation.mixer.clipAction(this.resource.animations[2])
-        this.animation.actions.move = this.animation.mixer.clipAction(this.resource.animations[3])
-        this.animation.actions.down = this.animation.mixer.clipAction(this.resource.animations[4])
-        this.animation.actions.getup = this.animation.mixer.clipAction(this.resource.animations[5])
-        this.animation.actions.play_arrowspecial01 = this.animation.mixer.clipAction(this.resource.animations[6])
+        this.animation.actions.run = this.animation.mixer.clipAction(this.resource.animations[1])
+        this.animation.actions.attack = this.animation.mixer.clipAction(this.resource.animations[2])
+        this.animation.actions.win = this.animation.mixer.clipAction(this.resource.animations[3])
+        this.animation.actions.death = this.animation.mixer.clipAction(this.resource.animations[4])
 
         // ✅ Default action = move
-        this.animation.actions.current = this.animation.actions.move
+        this.animation.actions.current = this.animation.actions.run
         this.animation.actions.current.play()
 
         // Play method
@@ -139,7 +143,7 @@ export default class GoblimonEnemy {
 
             if (newAction && newAction !== oldAction) {
                 newAction.reset()
-                if (name === 'down') {
+                if (name === 'death') {
                     newAction.clampWhenFinished = true
                     newAction.setLoop(THREE.LoopOnce)
                 }
@@ -153,25 +157,22 @@ export default class GoblimonEnemy {
         if (this.debug.active) {
             const debugObject = {
                 playIdle: () => this.animation.play('idle'),
-                playDamage: () => this.animation.play('damage'),
+                playRun: () => this.animation.play('run'),
+                playArrowAttack: () => this.animation.play('attack'),
                 playWin: () => this.animation.play('win'),
-                playMove: () => this.animation.play('move'),
-                playDown: () => this.animation.play('down'),
-                playGetup: () => this.animation.play('getup'),
-                playArrowSpecial: () => this.animation.play('play_arrowspecial01'),
+                playDeath: () => this.animation.play('death'),
             }
             this.debugFolder.add(debugObject, 'playIdle')
-            this.debugFolder.add(debugObject, 'playDamage')
+            this.debugFolder.add(debugObject, 'playRun')
+            this.debugFolder.add(debugObject, 'playArrowAttack')
             this.debugFolder.add(debugObject, 'playWin')
-            this.debugFolder.add(debugObject, 'playMove')
-            this.debugFolder.add(debugObject, 'playDown')
-            this.debugFolder.add(debugObject, 'playGetup')
-            this.debugFolder.add(debugObject, 'playArrowSpecial')
+            this.debugFolder.add(debugObject, 'playDeath')
         }
     }
 
     startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
+        //("Path points:", pathPoints);
 
         const offsetX = levelData.width / 2;
         const offsetZ = levelData.height / 2;
@@ -187,7 +188,7 @@ export default class GoblimonEnemy {
         this.model.position.set(points[0].x, this.model.position.y, points[0].z);
         this.model.rotation.y = THREE.MathUtils.degToRad(points[0].angle);
 
-        // Create timeline
+        // ✅ Create a single timeline for movement
         this.moveTimeline = gsap.timeline({ paused: false });
 
         for (let i = 0; i < points.length - 1; i++) {
@@ -197,7 +198,7 @@ export default class GoblimonEnemy {
             const dx = next.x - current.x;
             const dz = next.z - current.z;
             const distance = Math.sqrt(dx * dx + dz * dz);
-            const duration = distance / this.speed; // your speed units
+            const duration = distance / this.speed;
 
             // Add position tween
             this.moveTimeline.to(this.model.position, {
@@ -207,21 +208,19 @@ export default class GoblimonEnemy {
                 ease: 'none'
             });
 
-            // Add rotation tween slightly overlapping with previous move
+            // Add rotation tween slightly overlapping for smooth turn
             if (next.angle !== undefined) {
                 this.moveTimeline.to(this.model.rotation, {
                     y: THREE.MathUtils.degToRad(next.angle),
                     duration: 0.2,
                     ease: 'power2.inOut'
-                }); // small overlap for smoothness
+                }); // slight overlap for smooth rotation
             }
         }
         this.moveTimeline.call(() => {
-            this.animation.play('play_arrowspecial01');
+            this.animation.play('attack');
         })
     }
-
-
 
     update() {
         if (this.animation && this.animation.mixer) {
@@ -230,5 +229,6 @@ export default class GoblimonEnemy {
         if (this.healthBar) {
             this.healthBar.update();
         }
+
     }
 }

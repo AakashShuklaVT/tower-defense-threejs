@@ -2,6 +2,13 @@ import * as THREE from "three";
 import gsap from "gsap";
 import Experience from "../../Experience.js";
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
+import {
+    DAMAGE_FROM_FIRE_WIZARD_TO_GAURDAMON,
+    DAMAGE_FROM_FIRE_WIZARD_TO_GOBLIMON,
+    DAMAGE_FROM_FIRE_WIZARD_TO_RED_PANTHER,
+    DAMAGE_FROM_FIRE_WIZARD_TO_DEMOGORGON,
+    DAMAGE_FROM_FIRE_WIZARD_TO_FLORAMON
+} from "../../Configs/GameConfig.js";
 
 export default class FireWizard {
     constructor({ attackRange = 30,
@@ -47,6 +54,14 @@ export default class FireWizard {
                 child.castShadow = true;
             }
         });
+    }
+
+    updateLevel(newLevel) {
+        if (newLevel === this.currentLevel) return;
+
+        this.disposeModel();
+        this.currentLevel = newLevel;
+        this.setModel();
     }
 
     setParticles() {
@@ -249,12 +264,12 @@ export default class FireWizard {
 
     getEnemiesInSplash(center, radius) {
         this.enemiesInRange = [];
-    
+
         for (let t of this.targets) {
             if (!t) continue;
-    
+
             const dist = t.position.distanceTo(center);
-    
+
             if (dist <= radius) {
                 this.enemiesInRange.push(t);
             }
@@ -263,28 +278,34 @@ export default class FireWizard {
         //("Enemies in range:", this.enemiesInRange);
         this.splashDamage(50)
     }
-    
+
     splashDamage(damage = 10) {
         for (let enemy of this.enemiesInRange) {
             if (enemy) {
                 const script = enemy.userData.scriptInstance;
                 if (!script) continue;
-    
-                script.takeDamage(damage);
-    
+                if (script.type === 'Goblimon') {
+                    script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_GOBLIMON);
+                } else if (script.type === 'Guardamon') {
+                    script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_GAURDAMON);
+                } else if (script.type === 'RedPanther') {
+                    script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_RED_PANTHER);
+                } else if (script.type === 'Demogorgon') {
+                    script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_DEMOGORGON);
+                } else if (script.type === 'Floramon') {
+                    script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_FLORAMON);
+                }
+
                 // ✅ If enemy is dead → remove from targets
-                if (script.health <= 0 ) {
+                if (script.health <= 0) {
                     this.targets = this.targets.filter(t => t !== enemy);
-                    //(this.targets);
-                    
-                    //("Removed dead enemy from targets:", enemy);
                 }
             }
         }
-    
+
         this.enemiesInRange = []; // clear the array after splashing
     }
-    
+
 
     destroyMeteor(target = null) {
 
@@ -427,9 +448,9 @@ export default class FireWizard {
 
     update() {
         // Update animation mixer
-        if(true) {
+        if (true) {
             this.animation.mixer.update(this.time.delta * 0.001);
-    
+
             const action = this.animation.actions.current;
             if (action) {
                 // 🔄 Detect animation restart (looped back to start)
@@ -437,7 +458,7 @@ export default class FireWizard {
                     this.triggered = false; // reset for new cycle
                 }
                 this.prevActionTime = action.time;
-    
+
                 // 🎯 Find nearest target within dynamic range
                 let nearestTarget = null;
                 let minDist = Infinity;
@@ -445,13 +466,13 @@ export default class FireWizard {
                     if (!target) continue;
                     const dist = this.model.position.distanceTo(target.position);
                     // //(dist, minDist, this.attackRange);
-                    
+
                     if (dist < minDist && dist <= this.attackRange) { // ✅ use dynamic range
                         minDist = dist;
                         nearestTarget = target;
                     }
                 }
-    
+
                 // Rotate toward nearest target if any
                 if (nearestTarget) {
                     this.model.lookAt(new THREE.Vector3(nearestTarget.position.x, this.model.position.y, nearestTarget.position.z));
@@ -463,7 +484,7 @@ export default class FireWizard {
                         this.animation.play('idle');
                     }
                 }
-    
+
                 // 🚀 Spawn meteor ONLY once per fire cycle
                 if (
                     action === this.animation.actions.fire &&
@@ -477,17 +498,19 @@ export default class FireWizard {
                     this.triggered = true;
                 }
             }
-    
+
             // ✨ Update particles
             this.particles?.update();
-    
+
             // 💥 Collision check
             if (this.meteor && this.meteorBox) {
                 for (let target of this.targets) {
-                    const targetBox = new THREE.Box3().setFromObject(target);
-                    if (this.meteorBox.intersectsBox(targetBox)) {
-                        this.destroyMeteor(target);
-                        break;
+                    if (target && this.meteorBox) {
+                        const targetBox = new THREE.Box3().setFromObject(target);
+                        if (this.meteorBox.intersectsBox(targetBox)) {
+                            this.destroyMeteor(target);
+                            break;
+                        }
                     }
                 }
             }
