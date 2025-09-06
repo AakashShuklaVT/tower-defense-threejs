@@ -21,23 +21,47 @@ body {
     outline: none;
 }
 
-/* Card container: 2x2 grid full screen */
+/* Card container: default grid */
 .card-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
     gap: 20px;
-    width: 100vw;
+
+    width: 100%;
     max-width: 1200px;
     height: 100vh;
     padding: 20px;
+
     justify-content: center;
-    justify-items: center;
-    /* center cards horizontally */
-    align-items: center;
+    /* center horizontally */
+    align-content: center;
+    /* center vertically */
+    place-items: center;
+    /* center cards inside cells */
+
     z-index: 10;
     position: relative;
-    /* center cards vertically in cells */
+
+    display: none;
+    /* hidden until activated */
+}
+
+/* Default: 2 columns */
+.card-container {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Special case: exactly 3 cards */
+.card-container:has(.card:nth-child(3):last-child) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto auto;
+    /* two rows */
+}
+
+.card-container:has(.card:nth-child(3):last-child) .card:nth-child(3) {
+    grid-column: 1 / -1;
+    /* span across both columns */
+    justify-self: center;
+    /* center it horizontally */
 }
 
 /* Card style */
@@ -162,6 +186,8 @@ body {
     font-weight: 600;
     font-size: 0.9rem;
     padding: 10px 0;
+    height: 45px;
+    margin-bottom: 5px;
     width: 100%;
     border: 1px solid rgba(255, 190, 120, 0.3);
     border-radius: 20px;

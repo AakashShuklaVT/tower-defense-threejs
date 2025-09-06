@@ -23,7 +23,7 @@ export default class Tower {
         Tower.allTowers.push(this)
 
         this.fireWizard = new FireWizard({
-            attackRange: 4,
+            attackRange: 5,
             positionX: this.position.x,
             positionZ: this.position.z,
             scale: 0.25

@@ -95,7 +95,7 @@ export default [
     {
         name: 'prince_green',
         type: 'gltfModel',
-        path: 'models/prince_green.glb'
+        path: 'models/Defenders/fire-wizard.glb'
     },
     {
         name: 'foundation',

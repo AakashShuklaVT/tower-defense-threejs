@@ -12,7 +12,8 @@ export default class LevelManager {
         const response = await fetch('./Experience/Configs/LevelData.json')
         this.levelData = await response.json()
         console.log(this.levelData);
-        
+        const towersDataResponse = await fetch('./Experience/Configs/TowersData.json')
+        this.towersData = await towersDataResponse.json()
         this.movePath = this.levelData.pathPoints
         // return this.levelData
         // this.movePath = extractMovingPath(this.levelData)

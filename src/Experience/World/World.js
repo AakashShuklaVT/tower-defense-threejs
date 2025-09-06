@@ -64,11 +64,11 @@ export default class World {
             })
 
 
-            this.mapGenerator.towers.forEach(tower => {
-                tower.fireWizard.targets.push(this.redPantherEnemy.model)
-                tower.fireWizard.targets.push(this.gaurdamonEnemy.model)
-                tower.fireWizard.targets.push(this.goblimonEnemy.model)
-            })
+            // this.mapGenerator.towers.forEach(tower => {
+            //     tower.fireWizard.targets.push(this.redPantherEnemy.model)
+            //     tower.fireWizard.targets.push(this.gaurdamonEnemy.model)
+            //     tower.fireWizard.targets.push(this.goblimonEnemy.model)
+            // })
 
             // this.fireWizard.targets.push(this.redPantherEnemy.model)
             // this.fireWizard.targets.push(this.gaurdamonEnemy.model)

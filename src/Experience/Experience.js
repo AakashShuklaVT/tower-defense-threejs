@@ -10,6 +10,7 @@ import Resources from './Utils/Resources.js'
 
 import sources from "./sources.js";
 import RaycastManager from './Utils/RaycastManager.js'
+import UIManager from './Utils/UIManager.js'
 
 let instance = null
 
@@ -29,6 +30,7 @@ export default class Experience {
 
         // Setup
         this.triggerableObjects = [];
+        this.uiManager = new UIManager();
         this.debug = new Debug()
         this.sizes = new Sizes()
         this.time = new Time()
