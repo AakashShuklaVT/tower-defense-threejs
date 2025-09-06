@@ -4,9 +4,12 @@ import Grass from './Grass.js'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
 const TREES_SCALING = {
-    0: 0.002,
-    1: 0.1,
+    0: 0.5,
+    1: 0.5,
     2: 0.5,
+    3: 0.5,
+    4: 0.5,
+    5: 0.5
 }
 
 export default class Trees {
@@ -26,7 +29,7 @@ export default class Trees {
         }
 
         // Tree type
-        this.treeTypes = ['tree1', 'tree2', 'tree3']
+        this.treeTypes = ['tree1', 'tree2', 'tree3', 'tree4', 'tree5', 'tree6']
         this.selectedTree = Math.floor(Math.random() * this.treeTypes.length)
         this.treeType = this.treeTypes[this.selectedTree]
         this.resource = this.resources.items[this.treeType]
@@ -167,14 +170,4 @@ function mergeModelToSingleGeometry(root) {
     });
 
     return mergeGeometries(geoms, true);
-}
-
-// helper to get/cloned first material from model
-function getFirstMaterialFromModel(root) {
-    let mat = null;
-    root.traverse((c) => {
-        if (c.isMesh && !mat) mat = c.material;
-    });
-    if (!mat) return new THREE.MeshStandardMaterial();
-    return Array.isArray(mat) ? mat[0].clone() : mat.clone();
 }

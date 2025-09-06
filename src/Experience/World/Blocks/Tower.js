@@ -50,8 +50,8 @@ export default class Tower {
 
     setModel() {
         this.model = this.resource.scene.clone(true)
-        this.model.position.set(this.position.x, 0, this.position.z - 0.3)
-        this.model.scale.set(0.2, 0.2, 0.2)
+        this.model.position.set(this.position.x, 0, this.position.z)
+        this.model.scale.set(0.4, 0.4, 0.4)
         this.scene.add(this.model)
 
         this.model.traverse((child) => {
@@ -141,7 +141,7 @@ export default class Tower {
         return instancedMeshes
     }
 
-    update(){
+    update() {
         this.fireWizard && this.fireWizard.update()
     }
 }

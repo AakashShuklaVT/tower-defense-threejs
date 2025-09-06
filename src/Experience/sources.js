@@ -30,22 +30,37 @@ export default [
     {
         name: 'archerTower',
         type: 'gltfModel',
-        path: 'models/Towers/castle-tower.glb'
+        path: 'models/Towers/tower.glb'
     },
     {
         name: 'tree1',
         type: 'gltfModel',
-        path: 'models/Trees/Tree-1.glb'
+        path: 'models/Trees/tree-1.glb'
     },
     {
         name: 'tree2',
         type: 'gltfModel',
-        path: 'models/Trees/Tree-2.glb'
+        path: 'models/Trees/tree-2.glb'
     },
     {
         name: 'tree3',
         type: 'gltfModel',
-        path: 'models/Trees/Tree-3.glb'
+        path: 'models/Trees/tree-3.glb'
+    },
+    {
+        name: 'tree4',
+        type: 'gltfModel',
+        path: 'models/Trees/fir-tree-1.glb'
+    },
+    {
+        name: 'tree5',
+        type: 'gltfModel',
+        path: 'models/Trees/fir-tree-2.glb'
+    },
+    {
+        name: 'tree6',
+        type: 'gltfModel',
+        path: 'models/Trees/fir-tree-3.glb'
     },
     {
         name: 'stone1',
@@ -117,7 +132,7 @@ export default [
         type: 'gltfModel',
         path: 'models/Defenses/cannon-3.glb'
     },
-    
+
     // 🎯 XBow Levels
     {
         name: 'xbow1',
