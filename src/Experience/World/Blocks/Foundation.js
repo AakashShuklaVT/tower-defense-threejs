@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Grass from './Grass.js'
+import CannonBall from '../Bullets/CannonBall.js'
 
 export default class Foundation {
     constructor({ position = { x: 0, z: 0 } }) {
@@ -8,6 +9,7 @@ export default class Foundation {
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.position = position
+        this.cannonBall = new CannonBall()
         this.setMesh()
         this.setGround()
     }
@@ -28,8 +30,8 @@ export default class Foundation {
             }
         })
         this.scene.add(this.mesh)
-        console.log(this.mesh);
-
+        this.cannonBall.mesh.position.copy(this.mesh.position)
+        this.cannonBall.launch(this.mesh.position, new THREE.Vector3(this.mesh.position.x + 10, this.mesh.position.y, this.mesh.position.z + 10), 5, 10)
         this.experience.triggerableObjects.push(this.mesh)
     }
 
@@ -41,5 +43,9 @@ export default class Foundation {
                 child.material.dispose()
             }
         })
+    }
+
+    update() {
+        this.cannonBall && this.cannonBall.update()
     }
 }       

@@ -36,7 +36,7 @@ export default class FireWizard {
 
     setModel() {
         this.model = clone(this.resource.scene);
-        this.model.position.set(this.positionX, 1.65, this.positionZ);
+        this.model.position.set(this.positionX, 1.75, this.positionZ);
         this.model.rotation.set(0, Math.random() * Math.PI * 2, 0);
         this.model.scale.setScalar(this.scale);
         this.scene.add(this.model);

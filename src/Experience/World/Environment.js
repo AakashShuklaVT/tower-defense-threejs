@@ -22,7 +22,7 @@ export default class Environment
 
     setSunLight()
     {
-        this.ambientLight = new THREE.AmbientLight('#ffffff', 10)
+        this.ambientLight = new THREE.AmbientLight('#ffffff', 1)
         this.scene.add(this.ambientLight)
         
         this.sunLight = new THREE.DirectionalLight('#ffffff', 4)
@@ -73,7 +73,7 @@ export default class Environment
     setEnvironmentMap()
     {
         this.environmentMap = {}
-        this.environmentMap.intensity = 0.4
+        this.environmentMap.intensity = 0.9
         this.environmentMap.texture = this.resources.items.environmentMapTexture
         this.environmentMap.texture.colorSpace = THREE.SRGBColorSpace
         

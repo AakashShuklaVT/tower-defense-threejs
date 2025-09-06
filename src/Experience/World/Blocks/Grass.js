@@ -1,10 +1,10 @@
 import * as THREE from 'three'
 import Experience from '../../Experience'
 
-
 export default class Grass {
-    static instances = []   // keep track of all created Grass meshes
-    constructor({ length = 1, width = 1, height = 0.1, position = { x: 0, z: 0 }, color = 0x00f00, textureRepeat = { x: 1.5, y: 1.5 } }) {
+    static instances = [] // track all individual grass meshes
+
+    constructor({ length = 1, width = 1, height = 0.1, position = { x: 0, z: 0 }, color = 0x00ff00, textureRepeat = { x: 1.5, y: 1.5 } }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
@@ -21,7 +21,6 @@ export default class Grass {
         this.setMaterial()
         this.setMesh()
 
-        // Keep track of instance
         Grass.instances.push(this)
     }
 
@@ -50,33 +49,45 @@ export default class Grass {
 
     setMaterial() {
         this.material = new THREE.MeshStandardMaterial({
-            color: this.color
+            color: this.color,
+            map: this.textures.color || null,
+            normalMap: this.textures.normal || null
         })
     }
 
     setMesh() {
         this.mesh = new THREE.Mesh(this.geometry, this.material)
-        this.mesh.name = "Grass"
-        this.mesh.position.set(
-            this.position.x,
-            0,
-            this.position.z
-        )
-
+        this.mesh.position.set(this.position.x, 0, this.position.z)
         this.mesh.castShadow = true
         this.mesh.receiveShadow = true
         this.scene.add(this.mesh)
     }
 
     /**
-     * Combine all Grass meshes into one InstancedMesh
+     * Static function to generate multiple grass blades randomly
+     * Returns a single InstancedMesh for performance
      */
-    static combineIntoInstancedMesh(name = 'ground') {
+    static generateGrass({ count = 50, areaSize = { x: 1, z: 1 }, length = 1, width = 1, height = 0.1, color = 0x00ff00 }) {
+        // Clear any previous grass instances
+        Grass.instances.forEach(g => g.scene.remove(g.mesh))
+        Grass.instances = []
+
+        for (let i = 0; i < count; i++) {
+            const x = (Math.random() - 0.5) * areaSize.x
+            const z = (Math.random() - 0.5) * areaSize.z
+            new Grass({ length, width, height, position: { x, z }, color })
+        }
+
+        return Grass.combineGrassInstances('grass_instanced')
+    }
+
+    /**
+     * Combine only grass meshes into InstancedMesh
+     */
+    static combineGrassInstances(name = 'grass') {
         if (Grass.instances.length === 0) return null
 
         const first = Grass.instances[0]
-        
-        // Shared geometry + material (you could pick one or clone)
         const geometry = first.geometry.clone()
         const material = first.material.clone()
         const count = Grass.instances.length
@@ -87,18 +98,14 @@ export default class Grass {
         instancedMesh.receiveShadow = true
 
         const dummy = new THREE.Object3D()
-
         Grass.instances.forEach((grass, i) => {
-            // Apply each mesh's transform
             dummy.position.copy(grass.mesh.position)
             dummy.scale.copy(grass.mesh.scale)
             dummy.rotation.copy(grass.mesh.rotation)
             dummy.updateMatrix()
-            
             instancedMesh.setMatrixAt(i, dummy.matrix)
-            instancedMesh.name = "GRASS_INSTANCE"
-            
-            // Remove old mesh from scene and dispose
+
+            // remove old mesh
             grass.scene.remove(grass.mesh)
             grass.geometry.dispose()
             grass.material.dispose()
@@ -106,13 +113,9 @@ export default class Grass {
 
         instancedMesh.instanceMatrix.needsUpdate = true
 
-        // Add to scene
         first.scene.add(instancedMesh)
+        Grass.instances = [] // clear list
 
-        // Clear the old list
-        Grass.instances = []
-        
-        
         return instancedMesh
     }
 }
