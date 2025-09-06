@@ -4,7 +4,7 @@ import Experience from '../../Experience'
 
 export default class Grass {
     static instances = []   // keep track of all created Grass meshes
-    constructor({ length = 1, width = 1, height = 0.1, position = { x: 0, z: 0 }, color = 0x00f00, textureRepeat = { x: 1.5, y: 1.5 } }) {
+    constructor({ length = 100, width = 100, height = 0.1, position = { x: 0, z: 0 }, color = 0x00f00, textureRepeat = { x: 1.5, y: 1.5 } }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
@@ -75,7 +75,7 @@ export default class Grass {
         if (Grass.instances.length === 0) return null
 
         const first = Grass.instances[0]
-        
+
         // Shared geometry + material (you could pick one or clone)
         const geometry = first.geometry.clone()
         const material = first.material.clone()
@@ -94,10 +94,10 @@ export default class Grass {
             dummy.scale.copy(grass.mesh.scale)
             dummy.rotation.copy(grass.mesh.rotation)
             dummy.updateMatrix()
-            
+
             instancedMesh.setMatrixAt(i, dummy.matrix)
             instancedMesh.name = "GRASS_INSTANCE"
-            
+
             // Remove old mesh from scene and dispose
             grass.scene.remove(grass.mesh)
             grass.geometry.dispose()
@@ -111,8 +111,8 @@ export default class Grass {
 
         // Clear the old list
         Grass.instances = []
-        
-        
+
+
         return instancedMesh
     }
 }

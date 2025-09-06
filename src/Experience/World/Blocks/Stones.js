@@ -5,6 +5,7 @@ import mergeModelToSingleGeometry from '../../Utils/UtilityFunctions.js'
 import { STONE_SCALING } from '../../Configs/GameConfig.js'
 
 export default class Stones {
+    static instances = [];
     constructor({ position = { x: 0, z: 0 } }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
@@ -24,6 +25,8 @@ export default class Stones {
         this.stoneType = this.stoneTypes[this.selectedStone]
         this.resource = this.resources.items[this.stoneType]
         this.setModel()
+
+        Stones.instances.push(this);
     }
 
     setModel() {
@@ -42,26 +45,30 @@ export default class Stones {
         })
     }
 
-    static combineIntoInstancedMeshes(trees, scene) {
-        if (trees.length === 0) return;
+    static combineIntoInstancedMeshes(scene) {
+        const stones = Stones.instances;
+        console.log("Stones to combine:", stones.length);
 
-        // Group by treeType
+        if (stones.length === 0) return;
+
+        // Group by stoneType
         const grouped = {};
-        trees.forEach((tree) => {
-            if (!grouped[tree.treeType]) grouped[tree.treeType] = [];
-            grouped[tree.treeType].push(tree);
+        stones.forEach((stone) => {
+            if (!grouped[stone.stoneType]) grouped[stone.stoneType] = [];
+            grouped[stone.stoneType].push(stone);
         });
 
-        Object.entries(grouped).forEach(([treeType, group]) => {
+        Object.entries(grouped).forEach(([stoneType, group]) => {
             const original = group[0].resource.scene;
             const mergedGeometry = mergeModelToSingleGeometry(original);
 
             if (!mergedGeometry) return;
 
-            // Use first material (assumes all share)
             let mergedMaterial = null;
             original.traverse((child) => {
-                if (child.isMesh && !mergedMaterial) mergedMaterial = child.material.clone();
+                if (child.isMesh && !mergedMaterial) {
+                    mergedMaterial = child.material.clone();
+                }
             });
 
             const instancedMesh = new THREE.InstancedMesh(
@@ -71,31 +78,24 @@ export default class Stones {
             );
 
             const dummy = new THREE.Object3D();
-            group.forEach((tree, i) => {
-                tree.model.updateMatrixWorld(true);
-                dummy.position.copy(tree.model.position);
-                dummy.quaternion.copy(tree.model.quaternion);
-                dummy.scale.copy(tree.model.scale);
+            group.forEach((stone, i) => {
+                stone.model.updateMatrixWorld(true);
+                dummy.position.copy(stone.model.position);
+                dummy.quaternion.copy(stone.model.quaternion);
+                dummy.scale.copy(stone.model.scale);
                 dummy.updateMatrix();
 
                 instancedMesh.setMatrixAt(i, dummy.matrix);
 
-                // 🔥 Cleanup old models
-                scene.remove(tree.model);
-                tree.model.traverse((child) => {
+                // cleanup old individual meshes
+                scene.remove(stone.model);
+                stone.model.traverse((child) => {
                     if (child.isMesh) {
                         child.geometry.dispose();
                         if (child.material.map) child.material.map.dispose();
                         child.material.dispose();
                     }
                 });
-
-                // 🔥 Cleanup grass ground too
-                if (tree.ground && tree.ground.mesh) {
-                    scene.remove(tree.ground.mesh);
-                    tree.ground.geometry.dispose();
-                    tree.ground.material.dispose();
-                }
             });
 
             instancedMesh.instanceMatrix.needsUpdate = true;
@@ -104,4 +104,5 @@ export default class Stones {
             scene.add(instancedMesh);
         });
     }
+
 }

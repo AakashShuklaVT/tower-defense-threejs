@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
-import Grass from './Grass.js'
 
 export default class Foundation {
     constructor({ position = { x: 0, z: 0 } }) {
@@ -9,12 +8,8 @@ export default class Foundation {
         this.resources = this.experience.resources
         this.position = position
         this.setMesh()
-        this.setGround()
     }
 
-    setGround() {
-        this.ground = new Grass({ position: { x: this.position.x, z: this.position.z } })
-    }
 
     setMesh() {
         this.mesh = this.resources.items.foundation.scene.clone()

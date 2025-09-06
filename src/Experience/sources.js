@@ -22,11 +22,11 @@ export default [
         type: 'texture',
         path: 'textures/dirt/normal.jpg'
     },
-    {
-        name: 'towerModels',
-        type: 'gltfModel',
-        path: 'models/TowerModels/tower.glb'
-    },
+    // {
+    //     name: 'towerModels',
+    //     type: 'gltfModel',
+    //     path: 'models/TowerModels/tower.glb'
+    // },
     {
         name: 'archerTower',
         type: 'gltfModel',
@@ -163,5 +163,15 @@ export default [
         name: 'freeze3',
         type: 'gltfModel',
         path: 'models/Defenses/freeze-3.glb'
+    },
+    {
+        name: 'boundary',
+        type: 'gltfModel',
+        path: 'models/Buildings/straight-wall.glb'
+    },
+    {
+        name: 'cornerBoundary',
+        type: 'gltfModel',
+        path: 'models/Buildings/corner-wall.glb'
     },
 ]

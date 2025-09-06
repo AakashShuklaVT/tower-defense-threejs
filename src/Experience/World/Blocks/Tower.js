@@ -19,7 +19,6 @@ export default class Tower {
         this.position = position
         this.resource = this.resources.items.archerTower
 
-        this.setGround()
         this.setModel()
 
         // store this tower for later batching
@@ -60,10 +59,6 @@ export default class Tower {
                 scale: 0.25
             })
         }
-    }
-
-    setGround() {
-        this.ground = new Grass({ position: { x: this.position.x, z: this.position.z } })
     }
 
     setModel() {

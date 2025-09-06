@@ -6,6 +6,7 @@ import Trees from './Blocks/Trees.js'
 import Stones from './Blocks/Stones.js'
 import Castle from './Blocks/Castle.js'
 import Foundation from './Blocks/Foundation.js'
+import Boundary from './Blocks/Boundary.js'
 
 export default class MapGenerator {
     constructor(levelData) {
@@ -24,9 +25,11 @@ export default class MapGenerator {
         const offsetX = this.levelData.width / 2
         const offsetZ = this.levelData.height / 2
         const trees = []
+        const stones = []
+        const boundaries = []
         this.towers = []
         this.foundations = []
-
+        let yes = true
         // --- Build map objects ---
         this.paths.forEach(path => {
             const worldX = path.position.x - offsetX + 0.5
@@ -47,19 +50,56 @@ export default class MapGenerator {
             else if (path.type === 'castle') {
                 new Castle({ position: { x: worldX, z: worldZ } })
             }
+            else if (path.type === 'base') {
+                if ((path.position.x === 0 && path.position.z === 0) ||
+                    (path.position.x === 0 && path.position.z === this.levelData.height - 1) ||
+                    (path.position.x === this.levelData.width - 1 && path.position.z === 0) ||
+                    (path.position.x === this.levelData.width - 1 && path.position.z === this.levelData.height - 1)) {
+
+                    if (path.position.x === 0 && path.position.z === 0) {
+                        new Boundary({ position: { x: worldX - 1.25, z: worldZ }, rotation: Math.PI, isCornerWall: true })
+                    } else if (path.position.x === 0 && path.position.z === this.levelData.height - 1) {
+                        new Boundary({ position: { x: worldX, z: worldZ + 1.25 }, rotation: -Math.PI / 2, isCornerWall: true })
+                    } else if (path.position.x === this.levelData.width - 1 && path.position.z === 0) {
+                        new Boundary({ position: { x: worldX, z: worldZ - 1.25 }, rotation: Math.PI / 2, isCornerWall: true })
+                    } else if (path.position.x === this.levelData.width - 1 && path.position.z === this.levelData.height - 1) {
+                        new Boundary({ position: { x: worldX + 1.25, z: worldZ }, rotation: 0, isCornerWall: true })
+                    }
+                } else {
+                    if (path.position.x === 0) {
+                        new Boundary({ position: { x: worldX - 1.25, z: worldZ }, rotation: - Math.PI / 2, isCornerWall: false })
+                        return
+                    }
+                    if (path.position.z === 0) {
+                        new Boundary({ position: { x: worldX, z: worldZ - 1.25 }, rotation: Math.PI, isCornerWall: false })
+                        return
+                    }
+                    if (path.position.x === this.levelData.width - 1) {
+                        new Boundary({ position: { x: worldX + 1.25, z: worldZ }, rotation: Math.PI / 2, isCornerWall: false })
+                        return
+                    }
+                    if (path.position.z === this.levelData.height - 1) {
+                        new Boundary({ position: { x: worldX, z: worldZ + 1.25 }, rotation: 0, isCornerWall: false })
+                        return
+                    }
+                }
+            }
         })
 
         // --- Instancing (performance) ---
-        for (let i = 0; i < 100; i++) {
-            for (let j = 0; j < 100; j++) {
-                const worldX = i - 100 / 2 + 0.5
-                const worldZ = j - 100 / 2 + 0.5
-                new Grass({ position: { x: worldX, z: worldZ } })
-            }
-        }
-        Grass.combineIntoInstancedMesh()
+        // for (let i = 0; i < 100; i++) {
+        //     for (let j = 0; j < 100; j++) {
+        //         const worldX = i - 100 / 2 + 0.5
+        //         const worldZ = j - 100 / 2 + 0.5
+        //         new Grass({ position: { x: worldX, z: worldZ } })
+        //     }
+        // }
+        new Grass({ position: { x: 0, z: 0 } })
+        // Grass.combineIntoInstancedMesh()
         StraightPath.combineIntoInstancedMesh(this.experience.scene)
         Trees.combineIntoInstancedMeshes(trees, this.experience.scene)
+        Stones.combineIntoInstancedMeshes(this.experience.scene)
+        Boundary.combineIntoInstancedMeshes(this.experience.scene)
     }
 
     setupTower(position, previosTower, name) {
