@@ -38,7 +38,7 @@ export default class RaycastManager {
             this.isEnabled = false;
             const objectToBeRemoved = intersects[0].object
             const positionofObject = objectToBeRemoved.script.position
-            this.experience.uiManager.updateCardsPopup(['fireWizard', 'fireWizard', 'fireWizard'],
+            this.experience.uiManager.updateCardsPopup(['fireWizard', 'cannonDefense', 'fireWizard'],
                 this.experience.world.levelManager.towersData,
                 positionofObject, objectToBeRemoved, this.experience, this.setEnabled.bind(this))
         }

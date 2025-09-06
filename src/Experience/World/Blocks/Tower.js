@@ -2,12 +2,13 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Grass from './Grass.js'
-import FireWizard from '../Defenders/FireWizard.js'
+import FireWizard from '../Defenses/FireWizard.js'
+import CannonDefense from '../Defenses/CannonDefense.js'
 
 export default class Tower {
     static allTowers = [] // store all created towers
 
-    constructor({ position = { x: 0, z: 0 } }) {
+    constructor({ position = { x: 0, z: 0 }, name = 'fireWizard' }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
@@ -22,12 +23,25 @@ export default class Tower {
         // store this tower for later batching
         Tower.allTowers.push(this)
 
-        this.fireWizard = new FireWizard({
-            attackRange: 5,
-            positionX: this.position.x,
-            positionZ: this.position.z,
-            scale: 0.25
-        })
+        if(name === 'fireWizard'){
+            this.fireWizard = new FireWizard({
+                attackRange: 5,
+                positionX: this.position.x,
+                positionZ: this.position.z,
+                scale: 0.25
+            })
+            setTimeout(() => {
+                this.disposeTower()
+            }, 5000) // delay for 1 secon
+        }
+        else if(name === 'cannonDefense') {
+            this.cannonDefense = new CannonDefense({
+                attackRange: 5,
+                positionX: this.position.x,
+                positionZ: this.position.z,
+                scale: 0.25
+            })
+        }
     }
 
     setGround() {
@@ -46,6 +60,22 @@ export default class Tower {
                 child.receiveShadow = true
             }
         })
+    }
+
+    disposeTower() {
+        this.scene.remove(this.model)
+        this.model.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+                child.geometry.dispose()
+                if (child.material.map) child.material.map.dispose()
+                child.material.dispose()
+            }
+        })
+        // remove from the list
+        Tower.allTowers = Tower.allTowers.filter(tower => tower !== this)
+        this.fireWizard?.dispose()
+        this.fireWizard = null
+        this.experience.world.mapGenerator.setupFoundation({position : this.position})
     }
 
     // 🔹 Static method to batch all towers

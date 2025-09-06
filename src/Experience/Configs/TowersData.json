@@ -12,10 +12,10 @@
             "Maximum Level: 2"
         ]
     },
-    "archerTower": {
-        "title": "Archer Tower",
+    "cannonDefense": {
+        "title": "Cannon Defense Tower",
         "price": 75,
-        "image": "./assets/archerTower.png",
+        "image": "./assets/fireWizard.png",
         "description": "Archer Tower delivers precise ranged attacks...",
         "features": [
             "Arrow Damage: 20",

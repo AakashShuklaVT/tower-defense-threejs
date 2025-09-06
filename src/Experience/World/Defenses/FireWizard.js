@@ -235,6 +235,16 @@ export default class FireWizard {
         });
     }
 
+    dispose() {
+        this.scene.remove(this.model);
+        this.model.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+                child.geometry.dispose();
+                child.material.dispose();
+            }
+        });
+        this.model = null;
+    }
 
     destroyMeteor(target = null) {
         if (this.meteorTimeline) {
@@ -375,64 +385,68 @@ export default class FireWizard {
 
     update() {
         // Update animation mixer
-        this.animation.mixer.update(this.time.delta * 0.001);
-
-        const action = this.animation.actions.current;
-        if (action) {
-            // 🔄 Detect animation restart (looped back to start)
-            if (action.time < this.prevActionTime) {
-                this.triggered = false; // reset for new cycle
-            }
-            this.prevActionTime = action.time;
-
-            // 🎯 Find nearest target within dynamic range
-            let nearestTarget = null;
-            let minDist = Infinity;
-            for (let target of this.targets) {
-                if (!target) continue;
-                const dist = this.model.position.distanceTo(target.position);
-                if (dist < minDist && dist <= this.attackRange) { // ✅ use dynamic range
-                    minDist = dist;
-                    nearestTarget = target;
+        if(true) {
+            this.animation.mixer.update(this.time.delta * 0.001);
+    
+            const action = this.animation.actions.current;
+            if (action) {
+                // 🔄 Detect animation restart (looped back to start)
+                if (action.time < this.prevActionTime) {
+                    this.triggered = false; // reset for new cycle
                 }
-            }
-
-            // Rotate toward nearest target if any
-            if (nearestTarget) {
-                this.model.lookAt(new THREE.Vector3(nearestTarget.position.x, this.model.position.y, nearestTarget.position.z));
-                if (this.animation.actions.current !== this.animation.actions.fire) {
-                    this.animation.play('fire');
+                this.prevActionTime = action.time;
+    
+                // 🎯 Find nearest target within dynamic range
+                let nearestTarget = null;
+                let minDist = Infinity;
+                for (let target of this.targets) {
+                    if (!target) continue;
+                    const dist = this.model.position.distanceTo(target.position);
+                    // console.log(dist, minDist, this.attackRange);
+                    
+                    if (dist < minDist && dist <= this.attackRange) { // ✅ use dynamic range
+                        minDist = dist;
+                        nearestTarget = target;
+                    }
                 }
-            } else {
-                if (this.animation.actions.current !== this.animation.actions.idle) {
-                    this.animation.play('idle');
-                }
-            }
-
-            // 🚀 Spawn meteor ONLY once per fire cycle
-            if (
-                action === this.animation.actions.fire &&
-                !this.triggered &&
-                action.time >= this.triggerTime
-            ) {
+    
+                // Rotate toward nearest target if any
                 if (nearestTarget) {
-                    this.setParticles();
-                    this.throwBall(nearestTarget);
+                    this.model.lookAt(new THREE.Vector3(nearestTarget.position.x, this.model.position.y, nearestTarget.position.z));
+                    if (this.animation.actions.current !== this.animation.actions.fire) {
+                        this.animation.play('fire');
+                    }
+                } else {
+                    if (this.animation.actions.current !== this.animation.actions.idle) {
+                        this.animation.play('idle');
+                    }
                 }
-                this.triggered = true;
+    
+                // 🚀 Spawn meteor ONLY once per fire cycle
+                if (
+                    action === this.animation.actions.fire &&
+                    !this.triggered &&
+                    action.time >= this.triggerTime
+                ) {
+                    if (nearestTarget) {
+                        this.setParticles();
+                        this.throwBall(nearestTarget);
+                    }
+                    this.triggered = true;
+                }
             }
-        }
-
-        // ✨ Update particles
-        this.particles?.update();
-
-        // 💥 Collision check
-        if (this.meteor && this.meteorBox) {
-            for (let target of this.targets) {
-                const targetBox = new THREE.Box3().setFromObject(target);
-                if (this.meteorBox.intersectsBox(targetBox)) {
-                    this.destroyMeteor(target);
-                    break;
+    
+            // ✨ Update particles
+            this.particles?.update();
+    
+            // 💥 Collision check
+            if (this.meteor && this.meteorBox) {
+                for (let target of this.targets) {
+                    const targetBox = new THREE.Box3().setFromObject(target);
+                    if (this.meteorBox.intersectsBox(targetBox)) {
+                        this.destroyMeteor(target);
+                        break;
+                    }
                 }
             }
         }

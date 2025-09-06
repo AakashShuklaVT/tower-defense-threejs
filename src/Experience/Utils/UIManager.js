@@ -8,7 +8,7 @@ export default class UIManager {
     // Clear old cards first
     itemsContainer.innerHTML = '';
 
-    requiredItems.forEach(itemKey => {
+    requiredItems.forEach((itemKey, index) => {
       const itemInfo = itemsInfo[itemKey];
       if (!itemInfo) return;
 
@@ -45,8 +45,8 @@ export default class UIManager {
             `;
 
       itemsContainer.appendChild(card);
-      const button = document.querySelector('.cta-button')
-      button.addEventListener('click', () => {
+      const button = document.querySelectorAll('.cta-button')
+      button[index].addEventListener('click', () => {
         experience.world.mapGenerator.setupTower(position, previousTower, itemKey)
         itemsContainer.style.display = 'none';
         itemsContainer.innerHTML = '';

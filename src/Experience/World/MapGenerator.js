@@ -19,7 +19,6 @@ export default class MapGenerator {
         this.generateMap()
     }
 
-
     generateMap() {
         this.paths = this.levelData.grid
         const offsetX = this.levelData.width / 2
@@ -27,6 +26,7 @@ export default class MapGenerator {
         const trees = []
         this.towers = []
         this.foundations = []
+
         // --- Build map objects ---
         this.paths.forEach(path => {
             const worldX = path.position.x - offsetX + 0.5
@@ -36,7 +36,6 @@ export default class MapGenerator {
                 new StraightPath({ position: { x: worldX, z: worldZ } })
             }
             else if (path.type === 'tower') {
-                // this.towers.push(new Tower({ position: { x: worldX, z: worldZ } }))
                 this.foundations.push(new Foundation({ position: { x: worldX, z: worldZ } }))
             }
             else if (path.type === 'tree') {
@@ -56,37 +55,43 @@ export default class MapGenerator {
         // --- Instancing (performance) ---
         Grass.combineIntoInstancedMesh()
         StraightPath.combineIntoInstancedMesh(this.experience.scene)
-        // Tower.combineIntoInstancedMesh(this.experience.scene)
-        // Trees.combineIntoInstancedMeshes(trees, this.experience.scene)
     }
 
     setupTower(position, previosTower, name) {
         // ✅ Convert position into a unique key
         const key = `${position.x}_${position.z}`
-        // Check if tower is already placed here
+        console.log(key);
+        
         if (!this.placedTowers.has(key)) {
             this.placedTowers.add(key) // store it
             previosTower.script.disposeObject()
-            if (name === 'fireWizard') {
-                const newTower = new Tower({ position })
-                this.towers.push(newTower)
-                // ✅ Add enemies only to this new tower
-                if (newTower?.fireWizard) {
-                    newTower.fireWizard.targets.push(this.experience.world.redPantherEnemy.model)
-                    newTower.fireWizard.targets.push(this.experience.world.gaurdamonEnemy.model)
-                    newTower.fireWizard.targets.push(this.experience.world.goblimonEnemy.model)
-                }
+
+            const newTower = new Tower({ position, name})
+            this.towers.push(newTower)
+            // ✅ Add enemies only to this new tower
+            if (newTower?.fireWizard) {
+                newTower.fireWizard.targets.push(this.experience.world.redPantherEnemy.model)
+                newTower.fireWizard.targets.push(this.experience.world.gaurdamonEnemy.model)
+                newTower.fireWizard.targets.push(this.experience.world.goblimonEnemy.model)
             }
+
         } else {
             console.log("Tower already exists at this position:", key)
             return
         }
     }
 
+    setupFoundation(position) {
+        console.log(position);
+        
+        const key = `${position.position.x}_${position.position.z}`
+        console.log(key);
+        
+        this.placedTowers.delete(key) // remove tower if any
+        this.foundations.push(new Foundation( position ))
+    }    
+
     update() {
-        // Tower.allTowers.forEach(tower => {
-        //     tower.update()
-        // })
         this.towers.forEach(tower => tower.update())
     }
 }

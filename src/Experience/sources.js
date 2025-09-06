@@ -101,5 +101,52 @@ export default [
         name: 'foundation',
         type: 'gltfModel',
         path: 'models/Foundation/Foundation.glb'
-    }
+    },
+    {
+        name: 'cannon1',
+        type: 'gltfModel',
+        path: 'models/Defenses/cannon-1.glb'
+    },
+    {
+        name: 'cannon2',
+        type: 'gltfModel',
+        path: 'models/Defenses/cannon-2.glb'
+    },
+    {
+        name: 'cannon3',
+        type: 'gltfModel',
+        path: 'models/Defenses/cannon-3.glb'
+    },
+    
+    // 🎯 XBow Levels
+    {
+        name: 'xbow1',
+        type: 'gltfModel',
+        path: 'models/Defenses/xbow-1.glb'
+    },
+    {
+        name: 'xbow2',
+        type: 'gltfModel',
+        path: 'models/Defenses/xbow-2.glb'
+    },
+    {
+        name: 'xbow3',
+        type: 'gltfModel',
+        path: 'models/Defenses/xbow-3.glb'
+    },
+    {
+        name: 'freeze1',
+        type: 'gltfModel',
+        path: 'models/Defenses/freeze-1.glb'
+    },
+    {
+        name: 'freeze2',
+        type: 'gltfModel',
+        path: 'models/Defenses/freeze-2.glb'
+    },
+    {
+        name: 'freeze3',
+        type: 'gltfModel',
+        path: 'models/Defenses/freeze-3.glb'
+    },
 ]
