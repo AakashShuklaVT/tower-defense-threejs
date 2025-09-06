@@ -46,7 +46,7 @@ export default class Stones {
 
     static combineIntoInstancedMeshes(scene) {
         const stones = Stones.instances;
-        console.log("Stones to combine:", stones.length);
+        //("Stones to combine:", stones.length);
 
         if (stones.length === 0) return;
 

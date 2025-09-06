@@ -90,7 +90,7 @@ export default class SkeletonEnemy {
 
     startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
-        console.log("Path points:", pathPoints);
+        //("Path points:", pathPoints);
 
         const offsetX = levelData.width / 2;
         const offsetZ = levelData.height / 2;

@@ -129,14 +129,14 @@ export default class MapGenerator {
             }
 
         } else {
-            console.log("Tower already exists at this position:", key)
+            //("Tower already exists at this position:", key)
             return
         }
     }
 
     setupFoundation(position) {
         const key = `${position.position.x}_${position.position.z}`
-        console.log(key);
+        //(key);
 
         this.placedTowers.delete(key) // remove tower if any
         this.foundations.push(new Foundation(position))

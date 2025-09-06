@@ -24,6 +24,7 @@ export default class FireWizard {
 
         // Array of meshes meteor can collide with
         this.targets = [];
+        this.splashRadius = 2;
         // Dynamic attack range
         this.attackRange = attackRange;
         this.scale = scale;
@@ -246,7 +247,47 @@ export default class FireWizard {
         this.model = null;
     }
 
+    getEnemiesInSplash(center, radius) {
+        this.enemiesInRange = [];
+    
+        for (let t of this.targets) {
+            if (!t) continue;
+    
+            const dist = t.position.distanceTo(center);
+    
+            if (dist <= radius) {
+                this.enemiesInRange.push(t);
+            }
+        }
+
+        //("Enemies in range:", this.enemiesInRange);
+        this.splashDamage(50)
+    }
+    
+    splashDamage(damage = 10) {
+        for (let enemy of this.enemiesInRange) {
+            if (enemy) {
+                const script = enemy.userData.scriptInstance;
+                if (!script) continue;
+    
+                script.takeDamage(damage);
+    
+                // ✅ If enemy is dead → remove from targets
+                if (script.health <= 0 ) {
+                    this.targets = this.targets.filter(t => t !== enemy);
+                    //(this.targets);
+                    
+                    //("Removed dead enemy from targets:", enemy);
+                }
+            }
+        }
+    
+        this.enemiesInRange = []; // clear the array after splashing
+    }
+    
+
     destroyMeteor(target = null) {
+
         if (this.meteorTimeline) {
             this.meteorTimeline.kill();
             this.meteorTimeline = null;
@@ -254,6 +295,7 @@ export default class FireWizard {
 
         if (this.meteor) {
             const splashPos = this.meteor.position.clone();
+            this.getEnemiesInSplash(splashPos, this.splashRadius);
 
             this.scene.remove(this.meteor);
             this.meteor.geometry.dispose();
@@ -402,7 +444,7 @@ export default class FireWizard {
                 for (let target of this.targets) {
                     if (!target) continue;
                     const dist = this.model.position.distanceTo(target.position);
-                    // console.log(dist, minDist, this.attackRange);
+                    // //(dist, minDist, this.attackRange);
                     
                     if (dist < minDist && dist <= this.attackRange) { // ✅ use dynamic range
                         minDist = dist;

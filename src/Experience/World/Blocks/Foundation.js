@@ -23,7 +23,7 @@ export default class Foundation {
             }
         })
         this.scene.add(this.mesh)
-        console.log(this.mesh);
+        // //(this.mesh);
 
         this.experience.triggerableObjects.push(this.mesh)
     }

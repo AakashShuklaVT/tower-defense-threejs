@@ -11,6 +11,7 @@ export default class RedPantherEnemy {
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.speed = speed
+        this.health = 100
 
         // Debug
         if (this.debug.active) {
@@ -21,6 +22,7 @@ export default class RedPantherEnemy {
         this.resource = this.resources.items[resourceName]
 
         this.setModel(position, scale)
+        this.setScriptInstanceInModel()
         this.movePath = movePath
         this.startMoving(this.movePath, levelData) 
         this.setAnimation()
@@ -39,6 +41,80 @@ export default class RedPantherEnemy {
             }
         })
     }
+
+    setScriptInstanceInModel() {
+        this.model.userData.scriptInstance = this
+    }
+
+    takeDamage(damage) {
+        this.health -= damage;
+        //('red panther',this.health);
+        
+        if (this.health <= 0) {
+            this.die()
+        }
+    }
+
+    die() {
+        if (this.isDead) return;
+        this.isDead = true;
+    
+        //("Red Panther is dying...");
+    
+        // Stop movement timeline if exists
+        if (this.moveTimeline) {
+            this.moveTimeline.kill();
+            this.moveTimeline = null;
+        }
+    
+        // Play death animation once
+        const deathAction = this.animation.actions.death
+        deathAction.reset();
+        deathAction.setLoop(THREE.LoopOnce);
+        deathAction.clampWhenFinished = true;
+        deathAction.play();
+    
+        // Dispose when death anim finishes
+        this.animation.mixer.addEventListener("finished", (e) => {
+            if (e.action === deathAction) {
+                //("Disposing Red Panther...");
+                this.disposeModel();
+            }
+        });
+    }
+    
+    
+    
+    disposeModel() {
+        if (this.model) {
+            this.scene.remove(this.model);
+    
+            this.model.traverse((child) => {
+                if (child.isMesh) {
+                    child.geometry.dispose();
+    
+                    if (child.material.isMaterial) {
+                        this.disposeMaterial(child.material);
+                    } else if (Array.isArray(child.material)) {
+                        for (const m of child.material) this.disposeMaterial(m);
+                    }
+                }
+            });
+    
+            this.model = null;
+        }
+        //("Red Panther disposed.");
+    }
+    
+    disposeMaterial(material) {
+        for (const key in material) {
+            const value = material[key];
+            if (value && value.isTexture) {
+                value.dispose();
+            }
+        }
+        material.dispose();
+    }    
 
     setAnimation() {
         this.animation = {}
@@ -66,6 +142,10 @@ export default class RedPantherEnemy {
 
             if (newAction && newAction !== oldAction) {
                 newAction.reset()
+                if(newAction.name === 'death'){
+                    newAction.clampWhenFinished = true
+                    newAction.setLoop(THREE.LoopOnce)
+                }
                 newAction.play()
                 newAction.crossFadeFrom(oldAction, 0.4)
                 this.animation.actions.current = newAction
@@ -91,63 +171,54 @@ export default class RedPantherEnemy {
         }
     }
 
-     startMoving(pathPoints, levelData) {
+    startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
-        console.log("Path points:", pathPoints);
-
+        //("Path points:", pathPoints);
+    
         const offsetX = levelData.width / 2;
         const offsetZ = levelData.height / 2;
-
+    
         // Convert grid coords → world coords
         const points = pathPoints.map(p => ({
             x: p.x - offsetX + 0.5,
             z: p.z - offsetZ + 0.5,
             angle: p.angle,
-            number: p.number,
         }));
-
+    
         // Start position
         this.model.position.set(points[0].x, this.model.position.y, points[0].z);
         this.model.rotation.y = THREE.MathUtils.degToRad(points[0].angle);
-
-        let i = 0;
-
-        const moveToNext = () => {
-            if (i >= points.length - 1) return;
-
+    
+        // ✅ Create a single timeline
+        this.moveTimeline = gsap.timeline({ paused: false });
+    
+        for (let i = 0; i < points.length - 1; i++) {
             const current = points[i];
             const next = points[i + 1];
-
+    
             const dx = next.x - current.x;
             const dz = next.z - current.z;
             const distance = Math.sqrt(dx * dx + dz * dz);
             const duration = distance / this.speed;
-
-
-
-            // Move toward next point
-            gsap.to(this.model.position, {
+    
+            // Add position tween
+            this.moveTimeline.to(this.model.position, {
                 x: next.x,
                 z: next.z,
                 duration,
-                ease: 'none',
-                onComplete: () => {
-                    i++;
-                    moveToNext();
-                    if(next.angle !== undefined){
-                        // Rotate toward next direction first
-                        gsap.to(this.model.rotation, {
-                            y: THREE.MathUtils.degToRad(next.angle),
-                            duration: 0.2,
-                            ease: 'power2.inOut',
-                        });
-                    }
-                }
+                ease: 'none'
             });
-        };
-
-        moveToNext();
-    }
+    
+            // Add rotation tween slightly overlapping for smooth turn
+            if (next.angle !== undefined) {
+                this.moveTimeline.to(this.model.rotation, {
+                    y: THREE.MathUtils.degToRad(next.angle),
+                    duration: 0.2,
+                    ease: 'power2.inOut'
+                }); // small overlap
+            }
+        }
+    }    
 
     update() {
         if (this.animation && this.animation.mixer) {

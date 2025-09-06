@@ -13,7 +13,7 @@ export default [
             ]
     },
     {
-        name: 'grassColorTexture',
+        name: 'grassColorTexture',  
         type: 'texture',
         path: 'textures/dirt/color.jpg'
     },
@@ -35,17 +35,17 @@ export default [
     {
         name: 'tree1',
         type: 'gltfModel',
-        path: 'models/Trees/tree-1.glb'
+        path: 'models/Trees/tree1.glb'
     },
     {
         name: 'tree2',
         type: 'gltfModel',
-        path: 'models/Trees/tree-2.glb'
+        path: 'models/Trees/tree2.glb'
     },
     {
         name: 'tree3',
         type: 'gltfModel',
-        path: 'models/Trees/tree-3.glb'
+        path: 'models/Trees/tree3.glb'
     },
     {
         name: 'tree4',
