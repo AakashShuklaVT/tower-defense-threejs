@@ -24,7 +24,10 @@ export default class Camera {
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.1; // Smoother controls
         this.controls.screenSpacePanning = false;
-        this.controls.maxPolarAngle = Math.PI / 2; // Limit rotation to not go under the ground
+        this.controls.maxPolarAngle = Math.PI / 3.5;
+        this.controls.minPolarAngle = Math.PI / 3.5;
+        this.controls.maxAzimuthAngle = -Math.PI / 180  * 60;
+        this.controls.minAzimuthAngle = -Math.PI / 180  * 120;
     }
 
     resize() {

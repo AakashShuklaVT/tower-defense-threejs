@@ -45,7 +45,7 @@ export default class RaycastManager {
         }
     }
 
-    setEnabled() {
-        this.isEnabled = true;
+    setEnabled(value) {
+        this.isEnabled = value;
     }
 }

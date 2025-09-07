@@ -50,7 +50,7 @@ export default class UIManager {
         experience.world.mapGenerator.setupTower(position, previousTower, itemKey)
         itemsContainer.style.display = 'none';
         itemsContainer.innerHTML = '';
-        callback()
+        callback(true);
       })
     });
 

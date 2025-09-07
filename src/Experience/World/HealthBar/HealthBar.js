@@ -37,7 +37,7 @@ export default class HealthBar {
         const fgGeom = new THREE.PlaneGeometry(this.width, this.height);
         fgGeom.translate(this.width / 2, 0, 0);
         const fgMat = new THREE.MeshBasicMaterial({
-            color: 0xff0000,
+            color: 0x00ff00,
             side: THREE.DoubleSide,
         });
         this.fg = new THREE.Mesh(fgGeom, fgMat);

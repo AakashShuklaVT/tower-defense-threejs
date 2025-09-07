@@ -209,3 +209,110 @@ body {
     transform: translateY(-1px) scale(0.98);
     background-color: rgba(255, 140, 70, 0.45);
 }
+
+
+.enemy-info-container {
+    background: linear-gradient(135deg, #1e1e2f, #2c2c54);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    color: #fff;
+    padding: 1rem;
+    position: relative;
+    z-index: 10;
+}
+
+.enemy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+    flex: 1;
+    align-content: center;
+}
+
+.enemy-card {
+    background: #2f2f46;
+    border-radius: 16px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.enemy-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+}
+
+.enemy-image {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.enemy-info {
+    padding: 0.8rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.enemy-info h3 {
+    margin-bottom: 0.5rem;
+}
+
+.enemy-stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    margin-top: auto;
+}
+
+.enemy-stat {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    flex: 1;
+    text-align: center;
+}
+
+.enemy-container-continue-btn {
+    margin-top: 1rem;
+    padding: 1rem 3rem;
+    background: linear-gradient(135deg, #ff5f6d, #ffc371);
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.enemy-container-continue-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 900px) {
+    .enemy-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .enemy-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -92,9 +92,11 @@ export default class World {
             //         clearInterval(redPantherSpawner)
             //     }
             // }, 2000)
-
-            this.spawnWave(0); // first wave
-            // const gaurdamonEnemy = new GaurdamonEnemy({
+            document.querySelector('.enemy-container-continue-btn').addEventListener('click', () => {
+                this.spawnWave(0); // first wave
+                this.experience.raycastManager.setEnabled(true)
+                document.querySelector('.enemy-info-container').style.display = 'none';
+            })// const gaurdamonEnemy = new GaurdamonEnemy({
             //     resourceName: 'gaurdamon',
             //     position: { x: 0, y: 0.5, z: 0 },
             //     scale: 0.5,
