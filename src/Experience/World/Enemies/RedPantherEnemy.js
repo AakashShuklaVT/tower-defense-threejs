@@ -83,6 +83,8 @@ export default class RedPantherEnemy {
         this.animation.mixer.addEventListener("finished", (e) => {
             if (this.animation.actions.current === this.animation.actions.death) {
                 //("Disposing Red Panther...");
+                RedPantherEnemy.spawnedEnemies--;
+                this.experience.world.removeEnemy(this.model);
                 this.disposeModel();
             }
         });

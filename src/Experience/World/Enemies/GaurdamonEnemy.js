@@ -83,6 +83,8 @@ export default class GaurdamonEnemy {
         this.animation.mixer.addEventListener("finished", (e) => {
             if (this.animation.actions.current === this.animation.actions.down) {
                 //("Disposing Gaurdamon...");
+                GaurdamonEnemy.spawnedEnemies--;
+                this.experience.world.removeEnemy(this.model);
                 this.disposeModel();
             }
         });
@@ -226,6 +228,7 @@ export default class GaurdamonEnemy {
         }
         this.moveTimeline.call(() => {
             this.animation.play('attack01');
+           
         })
     }
 
