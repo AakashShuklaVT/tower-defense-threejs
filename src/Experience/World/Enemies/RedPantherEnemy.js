@@ -95,6 +95,7 @@ export default class RedPantherEnemy {
     disposeModel() {
         if (this.model) {
             this.scene.remove(this.model);
+            this.healthBar.dispose();
 
             this.model.traverse((child) => {
                 if (child.isMesh) {

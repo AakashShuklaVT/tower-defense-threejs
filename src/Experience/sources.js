@@ -118,9 +118,9 @@ export default [
         path: 'models/Enemies/bomberman-flower-enemy.glb'
     },
     {
-        name: 'prince_green',
+        name: 'fireWizard',
         type: 'gltfModel',
-        path: 'models/Defenders/fire-wizard.glb'
+        path: 'models/Defenders/wizard.glb'
     },
     {
         name: 'foundation',

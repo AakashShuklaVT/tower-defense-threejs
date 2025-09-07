@@ -5,6 +5,7 @@ import FireWizard from '../Defenses/FireWizard.js'
 import CannonDefense from '../Defenses/CannonDefense.js'
 import FreezeDefense from '../Defenses/FreezeDefense.js'
 import XBowDefense from '../Defenses/XBowDefense.js'
+import { CANNON_RANGE, FIRE_WIZARD_RANGE } from '../../Configs/GameConfig.js'
 
 export default class Tower {
     static allTowers = [] // store all created towers
@@ -25,15 +26,15 @@ export default class Tower {
 
         if (name === 'fireWizard') {
             this.fireWizard = new FireWizard({
-                attackRange: 5,
+                attackRange: FIRE_WIZARD_RANGE,
                 positionX: this.position.x,
                 positionZ: this.position.z,
-                scale: 0.25
+                scale: 0.35
             })
         }
         else if (name === 'cannonDefense') {
             this.cannonDefense = new CannonDefense({
-                attackRange: 5,
+                attackRange: CANNON_RANGE,
                 positionX: this.position.x,
                 positionZ: this.position.z,
                 scale: 0.25

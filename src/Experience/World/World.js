@@ -92,11 +92,7 @@ export default class World {
             //         clearInterval(redPantherSpawner)
             //     }
             // }, 2000)
-            document.querySelector('.enemy-container-continue-btn').addEventListener('click', () => {
-                this.spawnWave(0); // first wave
-                this.experience.raycastManager.setEnabled(true)
-                document.querySelector('.enemy-info-container').style.display = 'none';
-            })// const gaurdamonEnemy = new GaurdamonEnemy({
+            document.querySelector('.enemy-container-continue-btn').addEventListener('click', this.startGame.bind(this))// const gaurdamonEnemy = new GaurdamonEnemy({
             //     resourceName: 'gaurdamon',
             //     position: { x: 0, y: 0.5, z: 0 },
             //     scale: 0.5,
@@ -161,6 +157,12 @@ export default class World {
         })
     }
 
+    startGame = () => {
+        this.spawnWave(0); // first wave
+        this.experience.raycastManager.setEnabled(true)
+        document.querySelector('.enemy-info-container').style.display = 'none';
+    }
+
     getTotalEnemiesInWave(waveIndex) {
         if (!this.waves || waveIndex >= this.waves.length) return 0;
 
@@ -177,10 +179,10 @@ export default class World {
             this.currentWaveEnemiesKilled = 0;
             this.currentWaveIndex++;
             this.spawnWave(this.currentWaveIndex);
-            if(this.currentWaveIndex === this.waves.length) {
+            if (this.currentWaveIndex === this.waves.length) {
                 this.isGameOver = true;
                 console.log("game over");
-                
+
             }
         }
     }

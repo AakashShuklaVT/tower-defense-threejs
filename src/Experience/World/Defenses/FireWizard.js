@@ -2,16 +2,10 @@ import * as THREE from "three";
 import gsap from "gsap";
 import Experience from "../../Experience.js";
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
-import {
-    DAMAGE_FROM_FIRE_WIZARD_TO_GAURDAMON,
-    DAMAGE_FROM_FIRE_WIZARD_TO_GOBLIMON,
-    DAMAGE_FROM_FIRE_WIZARD_TO_RED_PANTHER,
-    DAMAGE_FROM_FIRE_WIZARD_TO_DEMOGORGON,
-    DAMAGE_FROM_FIRE_WIZARD_TO_FLORAMON
-} from "../../Configs/GameConfig.js";
+import { FIRE_WIZARD_ATTACK_SPEED, FIRE_WIZARD_DAMAGE, FIRE_WIZARD_RANGE, FIRE_WIZARD_SPLASH_DAMAGE_RADIUS, TIME_TAKEN_BY_FIREWIZARD_TO_ATTACK_AT_LEVEL1, TIME_TAKEN_BY_FIREWIZARD_TO_ATTACK_AT_LEVEL2 } from "../../Configs/GameConfig.js";
 
 export default class FireWizard {
-    constructor({ attackRange = 30,
+    constructor({ attackRange = FIRE_WIZARD_RANGE,
         scale = 1,
         positionX = 0,
         positionZ = 0 }) {
@@ -27,11 +21,12 @@ export default class FireWizard {
         }
 
         // Resource
-        this.resource = this.resources.items.prince_green;
+        this.resource = this.resources.items.fireWizard;
 
         // Array of meshes meteor can collide with
         this.targets = [];
-        this.splashRadius = 2;
+        this.splashRadius = FIRE_WIZARD_SPLASH_DAMAGE_RADIUS;
+        this.currentLevel = 1;
         // Dynamic attack range
         this.attackRange = attackRange;
         this.scale = scale;
@@ -52,6 +47,7 @@ export default class FireWizard {
         this.model.traverse((child) => {
             if (child instanceof THREE.Mesh) {
                 child.castShadow = true;
+                child.material.color = new THREE.Color(0x888888)
             }
         });
     }
@@ -222,16 +218,16 @@ export default class FireWizard {
         });
 
         // Phase 1: rise up
-        this.meteorTimeline.to(meteor.position, {
-            x: risePos.x,
-            y: risePos.y,
-            z: risePos.z,
-            duration: 0.75,
-            delay: 0.25,
-        });
+        // this.meteorTimeline.to(meteor.position, {
+        //     x: risePos.x,
+        //     y: risePos.y,
+        //     z: risePos.z,
+        //     duration: 0.75,
+        //     delay: 0.25,
+        // });
 
         // Phase 2: chase toward *current* target position
-        const speed = 25; // units per second
+        const speed = FIRE_WIZARD_ATTACK_SPEED; // units per second
         this.meteorTimeline.to(meteor.position, {
             duration: 3, // just a max duration; GSAP will overwrite each frame
             ease: "none",
@@ -284,17 +280,19 @@ export default class FireWizard {
             if (enemy) {
                 const script = enemy.userData.scriptInstance;
                 if (!script) continue;
-                if (script.type === 'Goblimon') {
-                    script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_GOBLIMON);
-                } else if (script.type === 'Guardamon') {
-                    script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_GAURDAMON);
-                } else if (script.type === 'RedPanther') {
-                    script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_RED_PANTHER);
-                } else if (script.type === 'Demogorgon') {
-                    script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_DEMOGORGON);
-                } else if (script.type === 'Floramon') {
-                    script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_FLORAMON);
-                }
+                // if (script.type === 'Goblimon') {
+                //     script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_GOBLIMON);
+                // } else if (script.type === 'Guardamon') {
+                //     script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_GAURDAMON);
+                // } else if (script.type === 'RedPanther') {
+                //     script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_RED_PANTHER);
+                // } else if (script.type === 'Demogorgon') {
+                //     script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_DEMOGORGON);
+                // } else if (script.type === 'Floramon') {
+                //     script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_FLORAMON);
+                // }
+
+                script.takeDamage(FIRE_WIZARD_DAMAGE);
 
                 // ✅ If enemy is dead → remove from targets
                 if (script.health <= 0) {
@@ -408,10 +406,10 @@ export default class FireWizard {
         // Actions
         this.animation.actions = {};
         this.animation.actions.idle = this.animation.mixer.clipAction(
-            this.resource.animations[1]
+            this.resource.animations[0]
         );
         this.animation.actions.fire = this.animation.mixer.clipAction(
-            this.resource.animations[0]
+            this.resource.animations[1]
         );
 
         this.animation.actions.current = this.animation.actions.idle;
@@ -425,7 +423,14 @@ export default class FireWizard {
             const oldAction = this.animation.actions.current;
 
             if (newAction === oldAction) return; // prevent re-triggering same anim
-
+            if (name === 'fire' && this.currentLevel == 1) {
+                this.triggerTime = TIME_TAKEN_BY_FIREWIZARD_TO_ATTACK_AT_LEVEL1;
+                newAction.timeScale = 0.5;
+                console.log(newAction);
+            } else if (name === 'fire' && this.currentLevel == 2) {
+                this.triggerTime = TIME_TAKEN_BY_FIREWIZARD_TO_ATTACK_AT_LEVEL2;
+                newAction.timeScale = 1.5;
+            }
             newAction.reset();
             newAction.play();
             newAction.crossFadeFrom(oldAction, 0.5);
@@ -507,6 +512,17 @@ export default class FireWizard {
                 for (let target of this.targets) {
                     if (target && this.meteorBox) {
                         const targetBox = new THREE.Box3().setFromObject(target);
+                        if(target.name === 'Gaurdamon'){   
+                            // ISSUE FIXED.  
+                            // As the GAURDAMON (i.e. Gaurdamon as mentioned by name in model) is already above the ground, 
+                            // So, for intersection to happen -> I shifted the position of it's bounding box to a bit Lower 
+                            // as the target position of the meteor is ground but the Actual object is at 0.5 above the ground. 
+                            // The meteor was already targeting the point of the group, but the group contains mesh which is not
+                            // at origin, so combined with the coordinates of the group and mesh, the target was at 1 unit above 
+                            // the ground, due to which sometimes the collision worked and sometimes the meteor skipped it. 
+                            targetBox.min.y -= 0.2;
+                            targetBox.max.y -= 0.2;
+                        }
                         if (this.meteorBox.intersectsBox(targetBox)) {
                             this.destroyMeteor(target);
                             break;

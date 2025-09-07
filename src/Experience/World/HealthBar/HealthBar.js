@@ -47,7 +47,8 @@ export default class HealthBar {
 
     update() {
         if (!this.camera || !this.target) return;
-
+        if (!this.group) return;
+        if (!this.bg || !this.fg) return;
         // ✅ follow target’s world position (but ignore its rotation)
         const worldPos = new THREE.Vector3();
         this.target.getWorldPosition(worldPos);
@@ -58,16 +59,18 @@ export default class HealthBar {
     }
 
     takeDamage(amount) {
-        this.health = Math.max(0, this.health - amount);
-        const hp = this.health / this.maxHealth;
+        if (this.group) {
+            this.health = Math.max(0, this.health - amount);
+            const hp = this.health / this.maxHealth;
 
-        this.fg.scale.x = hp;
+            this.fg.scale.x = hp;
 
-        const col = new THREE.Color(0x00ff00);
-        col.lerp(new THREE.Color(0xff0000), 1 - hp);
-        this.fg.material.color.copy(col);
+            const col = new THREE.Color(0x00ff00);
+            col.lerp(new THREE.Color(0xff0000), 1 - hp);
+            this.fg.material.color.copy(col);
 
-        this.group.visible = this.health > 0;
+            this.group.visible = this.health > 0;
+        }
     }
 
     heal(amount) {
@@ -75,14 +78,16 @@ export default class HealthBar {
         this.takeDamage(0);
     }
 
-    destroy() {
-        if (this.scene) this.scene.remove(this.group);
+    dispose() {
+        if (this.scene && this.group) {
+            this.scene.remove(this.group);
+        }
 
-        this.bg.geometry.dispose();
-        this.bg.material.dispose();
-        this.fg.geometry.dispose();
-        this.fg.material.dispose();
+        this.bg && this.bg.geometry.dispose();
+        this.bg && this.bg.material.dispose();
+        this.fg && this.fg.geometry.dispose();
+        this.fg && this.fg.material.dispose();
 
-        this.group = null;
+        if (this.group) this.group = null;
     }
 }

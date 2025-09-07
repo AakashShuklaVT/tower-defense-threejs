@@ -39,8 +39,9 @@ export default class GaurdamonEnemy {
             target: this.model,
             scene: this.experience.scene
         })
+        this.model.name = "Gaurdamon";
         this.model.scale.set(scale, scale, scale)
-        this.model.position.set(position.x, position.y, position.z)
+        this.model.position.set(position.x, 0.05, position.z)
         this.scene.add(this.model)
 
         this.model.traverse((child) => {
@@ -95,6 +96,7 @@ export default class GaurdamonEnemy {
 
         if (this.model) {
             this.scene.remove(this.model);
+            this.healthBar.dispose();
 
             this.model.traverse((child) => {
                 if (child.isMesh) {
