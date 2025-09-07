@@ -109,8 +109,8 @@ export default class MapGenerator {
         if (!this.placedTowers.has(key)) {
             this.placedTowers.add(key)
 
-            if (previousTower && previousTower.script) {
-                previousTower.script.disposeObject()
+            if (previousTower && previousTower.userData.script) {
+                previousTower.userData.script.disposeObject()
             }
 
             const newTower = new Tower({ position, name })

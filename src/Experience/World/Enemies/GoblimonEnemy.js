@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HealthBar from '../HealthBar/HealthBar.js';
-import { GOBLIMON_DPS, GOBLIMON_HEALTH } from '../../Configs/GameConfig.js';
+import { ENEMIES_STATS } from '../../Configs/GameConfig.js';
 
 export default class GoblimonEnemy {
     static spawnedEnemies = 0;
@@ -14,7 +14,7 @@ export default class GoblimonEnemy {
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.speed = speed
-        this.health = GOBLIMON_HEALTH
+        this.health = ENEMIES_STATS.GOBLIMON.HEALTH
         this.type = 'Goblimon'
         // Debug
         if (this.debug.active) {
@@ -78,6 +78,7 @@ export default class GoblimonEnemy {
 
         this.animation.mixer.addEventListener("finished", (e) => {
             if (this.animation.actions.current === this.animation.actions.down) {
+                this.experience.world.coinsManager.addToCurrentAmount(ENEMIES_STATS.GOBLIMON.KILL_COINS);
                 GoblimonEnemy.spawnedEnemies--;
                 this.experience.world.removeEnemy(this.model);
                 this.disposeModel();
@@ -238,7 +239,7 @@ export default class GoblimonEnemy {
                 const loopTime = attackAction.time % attackDuration;
 
                 if (loopTime >= attackDuration * 0.8 && !this.attackLogTriggered) {
-                    this.experience.world.hudManager.takeDamage(GOBLIMON_DPS);
+                    this.experience.world.hudManager.takeDamage(ENEMIES_STATS.GOBLIMON.DAMAGE_PER_SECOND);
                     this.attackLogTriggered = true;
                 }
 

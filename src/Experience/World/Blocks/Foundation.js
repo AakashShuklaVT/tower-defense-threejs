@@ -19,9 +19,16 @@ export default class Foundation {
         this.mesh.receiveShadow = true
         this.mesh.traverse((child) => {
             if (child instanceof THREE.Mesh) {
-                child.script = this;
+                child.userData.script = this;
+                child.name = 'foundation';
+
+                // IMPORTANT: clone the material so each mesh has its own
+                if (child.material) {
+                    child.material = child.material.clone();
+                }
             }
-        })
+        });
+
         this.scene.add(this.mesh)
         // //(this.mesh);
 
@@ -29,12 +36,15 @@ export default class Foundation {
     }
 
     disposeObject() {
-        this.mesh.removeFromParent()
+        this.experience.triggerableObjects = this.experience.triggerableObjects.filter(value => value != this.mesh);
+        this.scene.remove(this.mesh);
         this.mesh.traverse((child) => {
             if (child instanceof THREE.Mesh) {
                 child.geometry.dispose()
                 child.material.dispose()
             }
         })
+
+        this.mesh = null;
     }
 }       

@@ -6,9 +6,9 @@
         "description": "The Fire Wizard Tower hurls searing flames at your enemies, dealing high DPS with splash damage.",
         "features": [
             "Fireball Damage",
-            "Damage Per Second: 80",
+            "Damage Per Second: 100",
             "Damage Type: Splash",
-            "Fireball Damage: 5",
+            "Splash Radius: 2 ",
             "Maximum Level: 2"
         ]
     },

@@ -9,7 +9,10 @@ export default class CoinsManager {
         this._availableCoins = INITIAL_COINS_AMOUNT;
     }
 
-    addToCurrentAmount = (amount) => this._availableCoins += amount
+    addToCurrentAmount = (amount) => {
+        this._availableCoins += amount
+        this.hudManager.addCoins(amount);
+    }
 
     subtractFromCurrentAmount = (amount) => {
         this._availableCoins -= amount;

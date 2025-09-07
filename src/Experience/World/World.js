@@ -12,6 +12,7 @@ import DemogorgonEnemy from './Enemies/DemogorgonEnemy.js'
 import FloramonEnemy from './Enemies/FloramonEnemy.js'
 import CoinsManager from './CoinsManager.js'
 import HUDManager from './HUDManager.js'
+import { ENEMIES_STATS, WAVES_INFO } from '../Configs/GameConfig.js'
 // import BombermanEnemy from './Enemies/BombermanEnemy.js'
 // import FireWizard from './Defenders/FireWizard.js'
 
@@ -42,34 +43,137 @@ export default class World {
             this.waves = [
                 // Wave 1
                 [
-                    { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 5, delay: 2000, scale: 0.35, speed: 0.75 },
-                    { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 3, delay: 3000, scale: 0.3, speed: 1.2 },
+                    {
+                        EnemyClass: RedPantherEnemy,
+                        resourceName: 'redPanther',
+                        count: WAVES_INFO.WAVE_1.RED_PANTHER.count,
+                        delay: WAVES_INFO.WAVE_1.RED_PANTHER.delay,
+                        scale: ENEMIES_STATS.RED_PANTHER.SCALE,
+                        speed: ENEMIES_STATS.RED_PANTHER.SPEED,
+                    },
+                    {
+                        EnemyClass: GoblimonEnemy,
+                        resourceName: 'goblimon',
+                        count: WAVES_INFO.WAVE_1.GOBLIMON.count,
+                        delay: WAVES_INFO.WAVE_1.GOBLIMON.delay,
+                        scale: ENEMIES_STATS.GOBLIMON.SCALE,
+                        speed: ENEMIES_STATS.GOBLIMON.SPEED,
+                    },
                 ],
+
                 // Wave 2
                 [
-                    { EnemyClass: GaurdamonEnemy, resourceName: 'gaurdamon', count: 2, delay: 3000, scale: 0.5, speed: 2 },
-                    { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 2, delay: 4000, scale: 0.005, speed: 2 },
+                    {
+                        EnemyClass: GaurdamonEnemy,
+                        resourceName: 'gaurdamon',
+                        count: WAVES_INFO.WAVE_2.GAURDAMON.count,
+                        delay: WAVES_INFO.WAVE_2.GAURDAMON.delay,
+                        scale: ENEMIES_STATS.GAURDAMON.SCALE,
+                        speed: ENEMIES_STATS.GAURDAMON.SPEED,
+                    },
+                    {
+                        EnemyClass: DemogorgonEnemy,
+                        resourceName: 'demogorgon',
+                        count: WAVES_INFO.WAVE_2.DEMOGORGON.count,
+                        delay: WAVES_INFO.WAVE_2.DEMOGORGON.delay,
+                        scale: ENEMIES_STATS.DEMOGORGON.SCALE,
+                        speed: ENEMIES_STATS.DEMOGORGON.SPEED,
+                    },
                 ],
+
                 // Wave 3
                 [
-                    { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 4, delay: 1500, scale: 0.35, speed: 0.9 },
-                    { EnemyClass: FloramonEnemy, resourceName: 'floramon', count: 2, delay: 2500, scale: 0.25, speed: 2.5 },
-                    { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 3, delay: 2000, scale: 0.3, speed: 1.5 },
+                    {
+                        EnemyClass: RedPantherEnemy,
+                        resourceName: 'redPanther',
+                        count: WAVES_INFO.WAVE_3.RED_PANTHER.count,
+                        delay: WAVES_INFO.WAVE_3.RED_PANTHER.delay,
+                        scale: ENEMIES_STATS.RED_PANTHER.SCALE,
+                        speed: ENEMIES_STATS.RED_PANTHER.SPEED,
+                    },
+                    {
+                        EnemyClass: FloramonEnemy,
+                        resourceName: 'floramon',
+                        count: WAVES_INFO.WAVE_3.FLORAMON.count,
+                        delay: WAVES_INFO.WAVE_3.FLORAMON.delay,
+                        scale: ENEMIES_STATS.FLORAMON.SCALE,
+                        speed: ENEMIES_STATS.FLORAMON.SPEED,
+                    },
+                    {
+                        EnemyClass: GoblimonEnemy,
+                        resourceName: 'goblimon',
+                        count: WAVES_INFO.WAVE_3.GOBLIMON.count,
+                        delay: WAVES_INFO.WAVE_3.GOBLIMON.delay,
+                        scale: ENEMIES_STATS.GOBLIMON.SCALE,
+                        speed: ENEMIES_STATS.GOBLIMON.SPEED,
+                    },
                 ],
+
                 // Wave 4
                 [
-                    { EnemyClass: GaurdamonEnemy, resourceName: 'gaurdamon', count: 3, delay: 3000, scale: 0.5, speed: 2 },
-                    { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 3, delay: 3500, scale: 0.005, speed: 2.2 },
-                    { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 2, delay: 1800, scale: 0.35, speed: 0.8 },
+                    {
+                        EnemyClass: GaurdamonEnemy,
+                        resourceName: 'gaurdamon',
+                        count: WAVES_INFO.WAVE_4.GAURDAMON.count,
+                        delay: WAVES_INFO.WAVE_4.GAURDAMON.delay,
+                        scale: ENEMIES_STATS.GAURDAMON.SCALE,
+                        speed: ENEMIES_STATS.GAURDAMON.SPEED,
+                    },
+                    {
+                        EnemyClass: DemogorgonEnemy,
+                        resourceName: 'demogorgon',
+                        count: WAVES_INFO.WAVE_4.DEMOGORGON.count,
+                        delay: WAVES_INFO.WAVE_4.DEMOGORGON.delay,
+                        scale: ENEMIES_STATS.DEMOGORGON.SCALE,
+                        speed: ENEMIES_STATS.DEMOGORGON.SPEED,
+                    },
+                    {
+                        EnemyClass: RedPantherEnemy,
+                        resourceName: 'redPanther',
+                        count: WAVES_INFO.WAVE_4.RED_PANTHER.count,
+                        delay: WAVES_INFO.WAVE_4.RED_PANTHER.delay,
+                        scale: ENEMIES_STATS.RED_PANTHER.SCALE,
+                        speed: ENEMIES_STATS.RED_PANTHER.SPEED,
+                    },
                 ],
+
                 // Wave 5
                 [
-                    { EnemyClass: FloramonEnemy, resourceName: 'floramon', count: 4, delay: 2500, scale: 0.25, speed: 2.7 },
-                    { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 4, delay: 2000, scale: 0.3, speed: 1.6 },
-                    { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 2, delay: 4000, scale: 0.005, speed: 2.5 },
-                    { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 2, delay: 5000, scale: 0.35, speed: 0.8 }
+                    {
+                        EnemyClass: FloramonEnemy,
+                        resourceName: 'floramon',
+                        count: WAVES_INFO.WAVE_5.FLORAMON.count,
+                        delay: WAVES_INFO.WAVE_5.FLORAMON.delay,
+                        scale: ENEMIES_STATS.FLORAMON.SCALE,
+                        speed: ENEMIES_STATS.FLORAMON.SPEED,
+                    },
+                    {
+                        EnemyClass: GoblimonEnemy,
+                        resourceName: 'goblimon',
+                        count: WAVES_INFO.WAVE_5.GOBLIMON.count,
+                        delay: WAVES_INFO.WAVE_5.GOBLIMON.delay,
+                        scale: ENEMIES_STATS.GOBLIMON.SCALE,
+                        speed: ENEMIES_STATS.GOBLIMON.SPEED,
+                    },
+                    {
+                        EnemyClass: DemogorgonEnemy,
+                        resourceName: 'demogorgon',
+                        count: WAVES_INFO.WAVE_5.DEMOGORGON.count,
+                        delay: WAVES_INFO.WAVE_5.DEMOGORGON.delay,
+                        scale: ENEMIES_STATS.DEMOGORGON.SCALE,
+                        speed: ENEMIES_STATS.DEMOGORGON.SPEED,
+                    },
+                    {
+                        EnemyClass: RedPantherEnemy,
+                        resourceName: 'redPanther',
+                        count: WAVES_INFO.WAVE_5.RED_PANTHER.count,
+                        delay: WAVES_INFO.WAVE_5.RED_PANTHER.delay,
+                        scale: ENEMIES_STATS.RED_PANTHER.SCALE,
+                        speed: ENEMIES_STATS.RED_PANTHER.SPEED,
+                    },
                 ],
             ];
+
 
 
             this.totalEnemiesInFirstWave = this.getTotalEnemiesInWave(0);
@@ -80,6 +184,7 @@ export default class World {
 
             this.currentWaveIndex = 0;
             this.currentWaveEnemiesKilled = 0;
+            this.isGameWin = false;
             this.isGameOver = false;
             // const redPantherSpawner = setInterval(() => {
             //     if (this.redPantherCount > 0) {
@@ -96,7 +201,10 @@ export default class World {
             //         clearInterval(redPantherSpawner)
             //     }
             // }, 2000)
-            document.querySelector('.enemy-container-continue-btn').addEventListener('click', this.startGame.bind(this))// const gaurdamonEnemy = new GaurdamonEnemy({
+            document.querySelector('.enemy-container-continue-btn').addEventListener('click', () => {
+                this.experience.camera.startinitialCameraAnimation(this.startGame.bind(this))
+                document.querySelector('.enemy-info-container').style.display = 'none';
+            })// const gaurdamonEnemy = new GaurdamonEnemy({
             //     resourceName: 'gaurdamon',
             //     position: { x: 0, y: 0.5, z: 0 },
             //     scale: 0.5,
@@ -170,6 +278,21 @@ export default class World {
         }, 2500)
     }
 
+    showGameOverScreen() {
+        if (!this.isGameOver && !this.isGameWin) {
+            this.isGameOver = true;
+            const gameOverScreen = document.querySelector('.td-win-screen-container');
+            const gameOverTitle = document.querySelector('.td-lose-title');
+
+            gameOverScreen.style.display = 'flex';
+            gameOverTitle.innerHTML = 'You Lose !<br />Reload Game to Try Again.'
+            // Hide win screen and restart game
+            setTimeout(() => {
+                gameOverScreen.classList.add('show');
+            }, 500)
+        }
+    }
+
     startGame = () => {
         this.hudManager = new HUDManager('hud')
         this.coinsManager = new CoinsManager()
@@ -178,7 +301,7 @@ export default class World {
         }, 1000)
         this.experience.raycastManager.intializeRaycaster()
         this.experience.raycastManager.setEnabled(true)
-        document.querySelector('.enemy-info-container').style.display = 'none';
+
     }
 
     getTotalEnemiesInWave(waveIndex) {
@@ -193,12 +316,12 @@ export default class World {
         console.log("currentWaveEnemiesKilled", this.currentWaveEnemiesKilled);
         console.log("totalEnemiesInWave", this.getTotalEnemiesInWave(this.currentWaveIndex));
 
-        if (this.currentWaveEnemiesKilled === this.getTotalEnemiesInWave(this.currentWaveIndex) & !this.isGameOver) {
+        if (this.currentWaveEnemiesKilled === this.getTotalEnemiesInWave(this.currentWaveIndex) & !this.isGameWin) {
             this.currentWaveEnemiesKilled = 0;
             this.currentWaveIndex++;
             this.spawnWave(this.currentWaveIndex);
             if (this.currentWaveIndex === this.waves.length) {
-                this.isGameOver = true;
+                this.isGameWin = true;
                 this.showWavePopup()
                 this.mapGenerator.towers.forEach((tower) => {
                     if (tower.fireWizard) {
@@ -215,7 +338,7 @@ export default class World {
 
         // Determine the text to show
         let displayText = this.currentWaveIndex == this.waves.length - 1 ? 'Final Wave!' : textWrapper.textContent;
-        if (this.isGameOver) {
+        if (this.isGameWin) {
             displayText = 'You Successfully Defended!';
             this.showGameWinScreen()
         }
@@ -287,6 +410,11 @@ export default class World {
         this.currentWaveEnemiesKilled++;
         console.log("currentWaveEnemiesKilled", this.currentWaveEnemiesKilled);
         console.log("totalEnemiesInWave", this.getTotalEnemiesInWave(this.currentWaveIndex));
+        this.mapGenerator.towers.forEach((tower) => {
+            if (tower.fireWizard) {
+                tower.fireWizard.targets = tower.fireWizard.targets.filter(enemy => enemy != target)
+            }
+        })
         if (this.currentWaveEnemiesKilled === this.getTotalEnemiesInWave(this.currentWaveIndex)) {
             this.checkWaveComplete(this.currentWaveIndex);
         }

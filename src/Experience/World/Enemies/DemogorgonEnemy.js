@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HealthBar from '../HealthBar/HealthBar.js';
-import { DEMOGORGON_DPS, DEMOGORGON_HEALTH } from '../../Configs/GameConfig.js';
+import { ENEMIES_STATS } from '../../Configs/GameConfig.js';
 
 export default class DemogorgonEnemy {
     static spawnedEnemies = 0;
@@ -14,7 +14,7 @@ export default class DemogorgonEnemy {
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.speed = speed
-        this.health = DEMOGORGON_HEALTH
+        this.health = ENEMIES_STATS.DEMOGORGON.HEALTH
         this.type = 'Demogorgon'
         // Debug
         if (this.debug.active) {
@@ -83,6 +83,7 @@ export default class DemogorgonEnemy {
         this.animation.mixer.addEventListener("finished", (e) => {
             if (this.animation.actions.current === this.animation.actions.death) {
                 //("Disposing Gaurdamon...");
+                this.experience.world.coinsManager.addToCurrentAmount(ENEMIES_STATS.DEMOGORGON.KILL_COINS);
                 DemogorgonEnemy.spawnedEnemies--;
                 this.experience.world.removeEnemy(this.model);
                 this.disposeModel();
@@ -237,7 +238,7 @@ export default class DemogorgonEnemy {
                 const loopTime = attackAction.time % attackDuration;
 
                 if (loopTime >= attackDuration * 0.8 && !this.attackLogTriggered) {
-                    this.experience.world.hudManager.takeDamage(DEMOGORGON_DPS);
+                    this.experience.world.hudManager.takeDamage(ENEMIES_STATS.DEMOGORGON.DAMAGE_PER_SECOND);
                     this.attackLogTriggered = true;
                 }
 

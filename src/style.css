@@ -47,7 +47,7 @@ body {
 
 /* Default: 2 columns */
 .card-container {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
 }
 
 /* Special case: exactly 3 cards */
@@ -462,4 +462,111 @@ body {
     /* start full */
     background: linear-gradient(to right, #00ff00, #ff0000);
     transition: width 0.3s ease;
+}
+
+/* Transparent overlay that blocks clicks */
+.upgrade-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    user-select: none;
+    display: none;
+}
+
+.upgrade-popup-box {
+    position: relative;
+    width: 50vw;
+    height: 50vh;
+    background: linear-gradient(135deg, #1e1e2f, #2c2c54);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    /* 🔥 makes cards equal height */
+}
+
+/* Close button */
+.upgrade-popup-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.upgrade-popup-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.upgrade-popup-card {
+    display: flex;
+    /* 🔥 make content stack */
+    flex-direction: column;
+    /* keep text vertical */
+    justify-content: center;
+    /* center content vertically */
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    height: 75%;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+}
+
+.upgrade-popup-card:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.upgrade-popup-title {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+.upgrade-popup-text {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #ddd;
+}
+
+.upgrade-popup-card-upgrade {
+    border: 2px solid #4dd0e1;
+    width: 300px;
+}
+
+.upgrade-popup-card-remove {
+    border: 2px solid #ef5350;
+    width: 300px;
+}
+
+.game-info{
+    width: 100%;
+    position: absolute;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    top: 12%;
+    color: white;
+    text-shadow: black 2px 2px 2px;
+    z-index: 10;
+    user-select: none;
 }

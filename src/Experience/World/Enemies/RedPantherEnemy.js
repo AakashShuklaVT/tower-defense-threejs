@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HealthBar from '../HealthBar/HealthBar.js';
-import { RED_PANTHER_DPS, RED_PANTHER_HEALTH } from '../../Configs/GameConfig.js';
+import { ENEMIES_STATS } from '../../Configs/GameConfig.js';
 
 export default class RedPantherEnemy {
     static spawnedEnemies = 0;
@@ -14,7 +14,7 @@ export default class RedPantherEnemy {
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.speed = speed
-        this.health = RED_PANTHER_HEALTH
+        this.health = ENEMIES_STATS.RED_PANTHER.HEALTH
         this.type = 'RedPanther'
 
         // Debug
@@ -83,6 +83,7 @@ export default class RedPantherEnemy {
         this.animation.mixer.addEventListener("finished", (e) => {
             if (this.animation.actions.current === this.animation.actions.death) {
                 //("Disposing Red Panther...");
+                this.experience.world.coinsManager.addToCurrentAmount(ENEMIES_STATS.RED_PANTHER.KILL_COINS);
                 RedPantherEnemy.spawnedEnemies--;
                 this.experience.world.removeEnemy(this.model);
                 this.disposeModel();
@@ -243,7 +244,7 @@ export default class RedPantherEnemy {
                 const loopTime = attackAction.time % attackDuration;
 
                 if (loopTime >= attackDuration * 0.8 && !this.attackLogTriggered) {
-                    this.experience.world.hudManager.takeDamage(RED_PANTHER_DPS);
+                    this.experience.world.hudManager.takeDamage(ENEMIES_STATS.RED_PANTHER.DAMAGE_PER_SECOND);
                     this.attackLogTriggered = true;
                 }
 

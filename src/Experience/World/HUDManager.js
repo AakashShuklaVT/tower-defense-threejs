@@ -1,7 +1,9 @@
 import { INITIAL_COINS_AMOUNT, INITIAL_TOWER_HEALTH } from "../Configs/GameConfig";
+import Experience from "../Experience";
 
 export default class HUDManager {
     constructor(containerId) {
+        this.experience = new Experience();
         // Create HUD container
         this.container = document.getElementById(containerId);
         this.container.classList.add('hud');
@@ -34,6 +36,7 @@ export default class HUDManager {
     // Update coins
     addCoins(amount) {
         this.coinsValue += amount;
+        this.updateCoins()
     }
 
     // Update tower health
@@ -55,7 +58,12 @@ export default class HUDManager {
     // Decrease tower health
     takeDamage(amount) {
         this.healthValue -= amount;
-        if (this.healthValue < 0) this.healthValue = 0;
+        console.log(this.healthValue);
+        if (this.healthValue <= 0) {
+            this.healthValue = 0;
+            this.experience.world.showGameOverScreen()
+            return;
+        }
         this.setHealth();
     }
 }

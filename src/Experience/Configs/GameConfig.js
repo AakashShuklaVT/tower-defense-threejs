@@ -1,6 +1,6 @@
 export const DEFENSE_TYPES = [
-    'fireWizard', 
-    'cannonDefense', 
+    'fireWizard',
+    // 'cannonDefense',
     // 'freezeDefense', 
     // 'xBowDefense'
 ];
@@ -20,52 +20,13 @@ export const STONE_SCALING = {
     2: 0.9,
 }
 
-// export const FIRE_WIZARD_DAMAGE = 100;
 export const CANNON_DAMAGE = 150;
-
-export const GOBLIMON_HEALTH = 100;
-export const GAURDAMON_HEALTH = 300;
-export const RED_PANTHER_HEALTH = 500;
-export const DEMOGORGON_HEALTH = 250;
-export const FLORAMON_HEALTH = 350;
-export const OBLIVIRON_HEALTH = 2000;
-
-// export const FIRE_WIZARD_ATTACK_SPEED = 25;
 export const CANNON_ATTACK_SPEED = 10;
-
-// export const FIRE_WIZARD_SPLASH_DAMAGE_RADIUS = 2;
-
-// export const FIREWIZARD_LEVEL1_ATTACK_SPEED = 0.5;
-// export const FIREWIZARD_LEVEL2_ATTACK_SPEED = 1.5;
-
-// export const FIRE_WIZARD_RANGE = 5;
 export const CANNON_RANGE = 7;
 
 export const INITIAL_COINS_AMOUNT = 300;
 export const INITIAL_TOWER_HEALTH = 5000;
-
-// export const COST_OF_BUILDINGS = {
-//     FIRE_WIZARD: {
-//         LEVEL_1: 100,
-//         LEVEL_2: 200,
-//     },
-//     CANNON_TOWER: {
-//         LEVEL_1: 150,
-//         LEVEL_2: 300,
-//         LEVEL_3: 450,
-//     }
-// }
-export const GOBLIMON_DPS = 35;
-export const GAURDAMON_DPS = 50;
-export const RED_PANTHER_DPS = 80;
-export const FLORAMON_DPS = 100;
-export const DEMOGORGON_DPS = 120;
-export const OBLIVIRON_DPS = 150;
-
-// export const FIRE_WIZARD_LV1_SELL_AMOUNT = 80;
-// export const FIRE_WIZARD_LV2_SELL_AMOUNT = 150;
-export const CANNON_TOWER_LV2_SELL_AMOUNT = 80;
-
+export const MIN_AMOUNT_REQUIRED_TO_BUILD = 100;
 
 export const DEFENSES_STATS = {
     FIRE_WIZARD: {
@@ -84,6 +45,91 @@ export const DEFENSES_STATS = {
         SELL_AMOUNT: {
             LV_1: 80,
             LV_2: 150
+        },
+        UPGRADE_POPUP_INFO: {
+            LV1: {
+                UPGRADE_COST: "Upgrade Cost: " + 200,
+                SELL_AMOUNT: "Sell Amount: " + 80,
+                STAT_INCREASE: "Attack Speed : 1.15",
+            },
+            LV2: {
+                UPGRADE_COST: null,
+                SELL_AMOUNT: "Sell Amount: " + 150,
+                STAT_INCREASE: null
+            }
         }
+    }
+}
+
+export const WAVES_INFO = {
+    WAVE_1: {
+        GOBLIMON: { count: 5, delay: 2500 },   // more goblins, spawn faster
+        RED_PANTHER: { count: 6, delay: 1800 },   // 1 extra panther, faster spawn
+    },
+    WAVE_2: {
+        GAURDAMON: { count: 3, delay: 2800 },   // +1 gaurdamon, slightly faster
+        DEMOGORGON: { count: 3, delay: 3500 },   // +1 demogorgon, spawns sooner
+    },
+    WAVE_3: {
+        RED_PANTHER: { count: 6, delay: 1300 },   // stronger panther rush
+        FLORAMON: { count: 3, delay: 2200 },   // +1 floramon, faster
+        GOBLIMON: { count: 5, delay: 1800 },   // more goblins
+    },
+    WAVE_4: {
+        GAURDAMON: { count: 4, delay: 2500 },   // bigger gaurdamon group
+        DEMOGORGON: { count: 4, delay: 3200 },   // +1 demogorgon, faster
+        RED_PANTHER: { count: 3, delay: 1500 },   // extra panther, quicker rush
+    },
+    WAVE_5: {
+        FLORAMON: { count: 5, delay: 3500 },   // more floramons, quicker
+        GOBLIMON: { count: 6, delay: 2000 },   // extra goblins, faster spawn
+        DEMOGORGON: { count: 5, delay: 5000 },   // +1 demogorgon
+        RED_PANTHER: { count: 4, delay: 4000 },   // +2 panthers, spawn sooner
+    },
+};
+
+
+export const ENEMIES_STATS = {
+    GOBLIMON: {
+        HEALTH: 200,
+        DAMAGE_PER_SECOND: 55,
+        KILL_COINS: 5,
+        SPEED: 2.2,
+        SCALE: 0.3,
+    },
+    GAURDAMON: {
+        HEALTH: 400,
+        DAMAGE_PER_SECOND: 70,
+        KILL_COINS: 10,
+        SPEED: 2,
+        SCALE: 0.5,
+    },
+    RED_PANTHER: {
+        HEALTH: 650,
+        DAMAGE_PER_SECOND: 100,
+        KILL_COINS: 20,
+        SPEED: 1,
+        SCALE: 0.35,
+    },
+    FLORAMON: {
+        HEALTH: 400,
+        DAMAGE_PER_SECOND: 70,
+        KILL_COINS: 10,
+        SPEED: 1.2,
+        SCALE: 0.25,
+    },
+    DEMOGORGON: {
+        HEALTH: 1200,
+        DAMAGE_PER_SECOND: 120,
+        KILL_COINS: 75,
+        SPEED: 0.75,
+        SCALE: 0.005,
+    },
+    OBLIVIRON: {
+        HEALTH: 2000,
+        DAMAGE_PER_SECOND: 150,
+        KILL_COINS: 150,
+        SPEED: 0.5,
+        SCALE: 0.5,
     }
 }

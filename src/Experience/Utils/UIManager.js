@@ -1,5 +1,12 @@
+import { DEFENSES_STATS } from "../Configs/GameConfig";
+
 export default class UIManager {
-  updateCardsPopup(requiredItems, itemsInfo, position, previousTower, experience,
+  updateCardsPopup(
+    requiredItems,
+    itemsInfo,
+    position,
+    previousTower,
+    experience,
     callback
   ) {
     const itemsContainer = document.querySelector('.card-container');
@@ -56,5 +63,58 @@ export default class UIManager {
 
     // Show container after filling
     itemsContainer.style.display = requiredItems.length ? 'grid' : 'none';
+  }
+
+  showUpgradeTowerPopup(name, level, upgradeCallBack, removeCallback, restartRaycastCallback) {
+    console.log(level);
+
+    const container = document.querySelector(".upgrade-popup-overlay");
+    const upgradeButton = document.querySelector('.upgrade-popup-card-upgrade');
+    const removeButton = document.querySelector('.upgrade-popup-card-remove');
+    const closeButton = document.querySelector('.upgrade-popup-close');
+    const sellAmount = document.querySelector('.sell-amount');
+    const upgradeCost = document.querySelector('.upgrade-cost');
+    const statIncrease = document.querySelector('.stat-increase');
+
+    container.style.display = 'flex';
+    upgradeButton.style.display = 'flex';
+
+    if (name == 'fireWizard') {
+      if (level === 1) {
+        sellAmount.textContent = DEFENSES_STATS.FIRE_WIZARD.UPGRADE_POPUP_INFO.LV1.SELL_AMOUNT;
+        upgradeCost.textContent = DEFENSES_STATS.FIRE_WIZARD.UPGRADE_POPUP_INFO.LV1.UPGRADE_COST;
+        statIncrease.textContent = DEFENSES_STATS.FIRE_WIZARD.UPGRADE_POPUP_INFO.LV1.STAT_INCREASE;
+      } else {
+        sellAmount.textContent = DEFENSES_STATS.FIRE_WIZARD.UPGRADE_POPUP_INFO.LV2.SELL_AMOUNT;
+        upgradeButton.style.display = 'none';
+      }
+    }
+
+    const onUpgradeClick = () => {
+      upgradeCallBack();
+      cleanup();
+    };
+
+    const onRemoveClick = () => {
+      removeCallback();
+      cleanup();
+    };
+
+    const onCloseClick = () => {
+      cleanup();
+    };
+
+    const cleanup = () => {
+      container.style.display = 'none';
+      upgradeButton.removeEventListener('click', onUpgradeClick);
+      removeButton.removeEventListener('click', onRemoveClick);
+      closeButton.removeEventListener('click', onCloseClick);
+      restartRaycastCallback(true);
+    };
+
+    // ✅ bind listeners directly, no .bind(this)
+    upgradeButton.addEventListener('click', onUpgradeClick);
+    removeButton.addEventListener('click', onRemoveClick);
+    closeButton.addEventListener('click', onCloseClick);
   }
 }

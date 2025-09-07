@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HealthBar from '../HealthBar/HealthBar.js';
-import { GAURDAMON_DPS, GAURDAMON_HEALTH } from '../../Configs/GameConfig.js';
+import { ENEMIES_STATS } from '../../Configs/GameConfig.js';
 
 export default class GaurdamonEnemy {
     static spawnedEnemies = 0
@@ -14,7 +14,7 @@ export default class GaurdamonEnemy {
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.speed = speed
-        this.health = GAURDAMON_HEALTH
+        this.health = ENEMIES_STATS.GAURDAMON.HEALTH
         this.type = 'Guardamon'
         // Debug
         if (this.debug.active) {
@@ -83,6 +83,7 @@ export default class GaurdamonEnemy {
         // Dispose when death anim finishes
         this.animation.mixer.addEventListener("finished", (e) => {
             if (this.animation.actions.current === this.animation.actions.down) {
+                this.experience.world.coinsManager.addToCurrentAmount(ENEMIES_STATS.GAURDAMON.KILL_COINS);
                 //("Disposing Gaurdamon...");
                 GaurdamonEnemy.spawnedEnemies--;
                 this.experience.world.removeEnemy(this.model);
@@ -246,7 +247,7 @@ export default class GaurdamonEnemy {
                 const loopTime = attackAction.time % attackDuration;
 
                 if (loopTime >= attackDuration * 0.8 && !this.attackLogTriggered) {
-                    this.experience.world.hudManager.takeDamage(GAURDAMON_DPS);
+                    this.experience.world.hudManager.takeDamage(ENEMIES_STATS.GAURDAMON.DAMAGE_PER_SECOND);
                     this.attackLogTriggered = true;
                 }
 

@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HealthBar from '../HealthBar/HealthBar.js';
-import { FLORAMON_DPS, FLORAMON_HEALTH } from '../../Configs/GameConfig.js';
+import { ENEMIES_STATS } from '../../Configs/GameConfig.js';
 
 export default class FloramonEnemy {
     static spawnedEnemies = 0;
@@ -14,7 +14,7 @@ export default class FloramonEnemy {
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.speed = speed
-        this.health = FLORAMON_HEALTH
+        this.health = ENEMIES_STATS.FLORAMON.HEALTH
         this.type = 'Floramon'
         // Debug
         if (this.debug.active) {
@@ -82,6 +82,7 @@ export default class FloramonEnemy {
         // Dispose when death anim finishes
         this.animation.mixer.addEventListener("finished", (e) => {
             if (this.animation.actions.current === this.animation.actions.death) {
+                this.experience.world.coinsManager.addToCurrentAmount(ENEMIES_STATS.FLORAMON.KILL_COINS);
                 //("Disposing Gaurdamon...");
                 FloramonEnemy.spawnedEnemies--;
                 this.experience.world.removeEnemy(this.model);
@@ -240,7 +241,7 @@ export default class FloramonEnemy {
                 const loopTime = attackAction.time % attackDuration;
 
                 if (loopTime >= attackDuration * 0.8 && !this.attackLogTriggered) {
-                    this.experience.world.hudManager.takeDamage(FLORAMON_DPS);
+                    this.experience.world.hudManager.takeDamage(ENEMIES_STATS.FLORAMON.DAMAGE_PER_SECOND);
                     this.attackLogTriggered = true;
                 }
 

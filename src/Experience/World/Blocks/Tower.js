@@ -18,7 +18,7 @@ export default class Tower {
 
         this.position = position
         this.resource = this.resources.items.archerTower
-
+        this.defenseName = name;
         this.setModel()
         this.coinsManager = this.experience.world.coinsManager;
 
@@ -30,8 +30,8 @@ export default class Tower {
                 attackRange: DEFENSES_STATS.FIRE_WIZARD.ATTACK_RANGE,
                 positionX: this.position.x,
                 positionZ: this.position.z,
-                scale: 0.35, 
-                level: 2
+                scale: 0.35,
+                level: 1
             })
             this.coinsManager.subtractFromCurrentAmount(DEFENSES_STATS.FIRE_WIZARD.BUILDING_COST.LV1);
         }
@@ -67,16 +67,27 @@ export default class Tower {
         this.model.position.set(this.position.x, 0, this.position.z)
         this.model.scale.set(0.4, 0.4, 0.4)
         this.scene.add(this.model)
-
         this.model.traverse((child) => {
             if (child instanceof THREE.Mesh) {
                 child.castShadow = true
                 child.receiveShadow = true
+                child.userData.script = this;
+                child.name = 'defensive_tower';
             }
         })
+        this.experience.triggerableObjects.push(this.model);
     }
 
     disposeTower() {
+        console.log(this);
+        if (this.defenseName === 'fireWizard') {
+            const level = this.fireWizard.currentLevel;
+            if (level == 1) {
+                this.experience.world.coinsManager.addToCurrentAmount(DEFENSES_STATS.FIRE_WIZARD.SELL_AMOUNT.LV_1);
+            } else {
+                this.experience.world.coinsManager.addToCurrentAmount(DEFENSES_STATS.FIRE_WIZARD.SELL_AMOUNT.LV_2);
+            }
+        }
         this.scene.remove(this.model)
         this.model.traverse((child) => {
             if (child instanceof THREE.Mesh) {
@@ -90,6 +101,7 @@ export default class Tower {
         this.fireWizard?.dispose()
         this.fireWizard = null
         this.experience.world.mapGenerator.setupFoundation({ position: this.position })
+        this.experience.triggerableObjects = this.experience.triggerableObjects.filter(value => value != this.model);
     }
 
     // 🔹 Static method to batch all towers

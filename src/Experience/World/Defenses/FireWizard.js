@@ -9,13 +9,13 @@ export default class FireWizard {
         scale = 1,
         positionX = 0,
         positionZ = 0,
-        level = 1}) {
+        level = 1 }) {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
         this.time = this.experience.time;
         this.debug = this.experience.debug;
-
+        this.meteorTimeout = null;
         // Debug
         if (this.debug.active) {
             this.debugFolder = this.debug.ui.addFolder("PrinceGreen");
@@ -54,12 +54,15 @@ export default class FireWizard {
         });
     }
 
-    updateLevel(newLevel) {
-        if (newLevel === this.currentLevel) return;
-
-        this.disposeModel();
-        this.currentLevel = newLevel;
-        this.setModel();
+    updateLevel() {
+        if (this.currentLevel == 1) {
+            if (this.experience.world.coinsManager.getCurrentAmount() < DEFENSES_STATS.FIRE_WIZARD.BUILDING_COST.LV2) return;
+            this.experience.world.coinsManager.subtractFromCurrentAmount(DEFENSES_STATS.FIRE_WIZARD.BUILDING_COST.LV2);
+        }
+        this.currentLevel += 1;
+        if (this.animation.actions.current == this.animation.actions.fire) {
+            this.animation.play('fire');
+        }
     }
 
     setParticles() {
@@ -246,6 +249,9 @@ export default class FireWizard {
                     meteor.position.add(direction);
                 }
             },
+            onComplete: () => {
+                this.destroyMeteor()
+            }
         });
     }
 
@@ -427,10 +433,9 @@ export default class FireWizard {
             const newAction = this.animation.actions[name];
             const oldAction = this.animation.actions.current;
 
-            if (newAction === oldAction) return; // prevent re-triggering same anim
+            if (newAction === oldAction && name != 'fire') return; // prevent re-triggering same anim
             if (name === 'fire' && this.currentLevel == 1) {
                 newAction.timeScale = DEFENSES_STATS.FIRE_WIZARD.ATTACK_SPEED.LV1;
-                console.log(newAction);
             } else if (name === 'fire' && this.currentLevel == 2) {
                 newAction.timeScale = DEFENSES_STATS.FIRE_WIZARD.ATTACK_SPEED.LV2;
             }
@@ -464,7 +469,7 @@ export default class FireWizard {
 
     update() {
         // Update animation mixer
-        if (true) {
+        if (this.model) {
             this.animation.mixer.update(this.time.delta * 0.001);
 
             const action = this.animation.actions.current;
@@ -536,7 +541,19 @@ export default class FireWizard {
                         }
                         if (this.meteorBox.intersectsBox(targetBox)) {
                             this.destroyMeteor(target);
+                            if (this.meteorTimeout) {
+                                clearTimeout(this.meteorTimeout)
+                                this.meteorTimeout = null;
+                            }
                             break;
+                        } else {
+                            if (!this.meteorTimeout) {
+                                this.meteorTimeout = setTimeout(() => {
+                                    this.destroyMeteor();
+                                    clearTimeout(this.meteorTimeout)
+                                    this.meteorTimeout = null;
+                                }, 2000)
+                            }
                         }
                     }
                 }

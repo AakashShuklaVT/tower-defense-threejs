@@ -13,6 +13,11 @@
     />
   </head>
   <body>
+    <div class="game-info">
+      TOWER DEFENSE - By Deepak
+      <br />
+      Double Click on the White Foundations to Add, Upgrade or Remove Towers.
+    </div>
     <div class="card-container">
       <div
         class="card"
@@ -449,12 +454,12 @@
           </div>
         </div>
       </div>
-      <button class="enemy-container-continue-btn">Continue</button>
+      <button class="enemy-container-continue-btn">Start Game</button>
     </div>
     <!-- Game Win Screen Container -->
     <div class="td-win-screen-container" style="display: none">
       <div class="td-win-screen-content">
-        <h1 class="td-win-title">You Win!</h1>
+        <h1 class="td-win-title td-lose-title">You Win! <br/> Reload game to Play Again !</h1>
         <!-- <button class="td-win-restart-btn">Restart</button> -->
       </div>
     </div>
@@ -464,6 +469,20 @@
       </span>
     </h1>
     <div id="hud"></div>
+    <div class="upgrade-popup-overlay" id="upgradePopup">
+      <div class="upgrade-popup-box">
+        <button class="upgrade-popup-close">✕</button>
+        <div class="upgrade-popup-card upgrade-popup-card-upgrade">
+          <h2 class="upgrade-popup-title">Upgrade</h2>
+          <p class="upgrade-popup-text upgrade-cost">Upgrade Cost: -200</p>
+          <p class="upgrade-popup-text stat-increase">Attack Speed: 1.15</p>
+        </div>
+        <div class="upgrade-popup-card upgrade-popup-card-remove">
+          <h2 class="upgrade-popup-title">Remove</h2>
+          <p class="upgrade-popup-text sell-amount">Sell Amount: +80</p>
+        </div>
+      </div>
+    </div>
     <canvas class="webgl"></canvas>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script type="module" src="./script.js"></script>
