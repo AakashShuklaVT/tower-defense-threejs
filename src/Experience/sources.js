@@ -12,16 +12,16 @@ export default [
                 'textures/environmentMap/nz.png'
             ]
     },
-    {
-        name: 'grassColorTexture',  
-        type: 'texture',
-        path: 'textures/dirt/color.jpg'
-    },
-    {
-        name: 'grassNormalTexture',
-        type: 'texture',
-        path: 'textures/dirt/normal.jpg'
-    },
+    // {
+    //     name: 'grassColorTexture',
+    //     type: 'texture',
+    //     path: 'textures/dirt/color.jpg'
+    // },
+    // {
+    //     name: 'grassNormalTexture',
+    //     type: 'texture',
+    //     path: 'textures/dirt/normal.jpg'
+    // },
     // {
     //     name: 'towerModels',
     //     type: 'gltfModel',
@@ -30,7 +30,7 @@ export default [
     {
         name: 'archerTower',
         type: 'gltfModel',
-        path: 'models/Towers/tower.glb'
+        path: 'models/Tower/tower.glb'
     },
     {
         name: 'tree1',
@@ -42,26 +42,26 @@ export default [
         type: 'gltfModel',
         path: 'models/Trees/tree2.glb'
     },
-    {
-        name: 'tree3',
-        type: 'gltfModel',
-        path: 'models/Trees/tree3.glb'
-    },
-    {
-        name: 'tree4',
-        type: 'gltfModel',
-        path: 'models/Trees/fir-tree-1.glb'
-    },
+    // {
+    //     name: 'tree3',
+    //     type: 'gltfModel',
+    //     path: 'models/Trees/tree3.glb'
+    // },
+    // {
+    //     name: 'tree4',
+    //     type: 'gltfModel',
+    //     path: 'models/Trees/fir-tree-1.glb'
+    // },
     {
         name: 'tree5',
         type: 'gltfModel',
-        path: 'models/Trees/fir-tree-2.glb'
+        path: 'models/Trees/tree-3.glb'
     },
-    {
-        name: 'tree6',
-        type: 'gltfModel',
-        path: 'models/Trees/fir-tree-3.glb'
-    },
+    // {
+    //     name: 'tree6',
+    //     type: 'gltfModel',
+    //     path: 'models/Trees/fir-tree-3.glb'
+    // },
     {
         name: 'stone1',
         type: 'gltfModel',
@@ -87,11 +87,11 @@ export default [
         type: 'gltfModel',
         path: 'models/Buildings/castle-tower.glb'
     },
-    {
-        name: 'skeleton',
-        type: 'gltfModel',
-        path: 'models/Enemies/skeleton.glb'
-    },
+    // {
+    //     name: 'skeleton',
+    //     type: 'gltfModel',
+    //     path: 'models/Enemies/skeleton.glb'
+    // },
     {
         name: 'redPanther',
         type: 'gltfModel',
@@ -110,12 +110,12 @@ export default [
     {
         name: 'demogorgon',
         type: 'gltfModel',
-        path: 'models/Enemies/bomberman-devil-enemy.glb'
+        path: 'models/Enemies/demogorgon-enemy.glb'
     },
     {
         name: 'floramon',
         type: 'gltfModel',
-        path: 'models/Enemies/bomberman-flower-enemy.glb'
+        path: 'models/Enemies/floramon-enemy.glb'
     },
     {
         name: 'fireWizard',
@@ -144,36 +144,36 @@ export default [
     },
 
     // 🎯 XBow Levels
-    {
-        name: 'xbow1',
-        type: 'gltfModel',
-        path: 'models/Defenses/xbow-1.glb'
-    },
-    {
-        name: 'xbow2',
-        type: 'gltfModel',
-        path: 'models/Defenses/xbow-2.glb'
-    },
-    {
-        name: 'xbow3',
-        type: 'gltfModel',
-        path: 'models/Defenses/xbow-3.glb'
-    },
-    {
-        name: 'freeze1',
-        type: 'gltfModel',
-        path: 'models/Defenses/freeze-1.glb'
-    },
-    {
-        name: 'freeze2',
-        type: 'gltfModel',
-        path: 'models/Defenses/freeze-2.glb'
-    },
-    {
-        name: 'freeze3',
-        type: 'gltfModel',
-        path: 'models/Defenses/freeze-3.glb'
-    },
+    // {
+    //     name: 'xbow1',
+    //     type: 'gltfModel',
+    //     path: 'models/Defenses/xbow-1.glb'
+    // },
+    // {
+    //     name: 'xbow2',
+    //     type: 'gltfModel',
+    //     path: 'models/Defenses/xbow-2.glb'
+    // },
+    // {
+    //     name: 'xbow3',
+    //     type: 'gltfModel',
+    //     path: 'models/Defenses/xbow-3.glb'
+    // },
+    // {
+    //     name: 'freeze1',
+    //     type: 'gltfModel',
+    //     path: 'models/Defenses/freeze-1.glb'
+    // },
+    // {
+    //     name: 'freeze2',
+    //     type: 'gltfModel',
+    //     path: 'models/Defenses/freeze-2.glb'
+    // },
+    // {
+    //     name: 'freeze3',
+    //     type: 'gltfModel',
+    //     path: 'models/Defenses/freeze-3.glb'
+    // },
     {
         name: 'boundary',
         type: 'gltfModel',
@@ -187,13 +187,13 @@ export default [
     {
         name: 'grass',
         type: 'gltfModel',
-        path: 'models/Grass/grass_with_flowers_low-poly/scene.gltf'
+        path: 'models/Grass/grass.glb'
     },
-    {
-        name: 'grassTexture',
-        type: 'texture',
-        path: 'models/Grass/grass_with_flowers_low-poly/Material.001_diffuse.png'
-    },
+    // {
+    //     name: 'grassTexture',
+    //     type: 'texture',
+    //     path: 'models/Grass/grass_with_flowers_low-poly/Material.001_diffuse.png'
+    // },
     {
         name: 'house',
         type: 'gltfModel',
@@ -202,6 +202,6 @@ export default [
     {
         name: 'door',
         type: 'gltfModel',
-        path: 'models/Door.glb'
+        path: 'models/Buildings/Door.glb'
     },
 ]

@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HealthBar from '../HealthBar/HealthBar.js';
-import { GOBLIMON_HEALTH } from '../../Configs/GameConfig.js';
+import { GOBLIMON_DPS, GOBLIMON_HEALTH } from '../../Configs/GameConfig.js';
 
 export default class GoblimonEnemy {
     static spawnedEnemies = 0;
@@ -129,7 +129,7 @@ export default class GoblimonEnemy {
         this.animation.actions.move = this.animation.mixer.clipAction(this.resource.animations[3])
         this.animation.actions.down = this.animation.mixer.clipAction(this.resource.animations[4])
         this.animation.actions.getup = this.animation.mixer.clipAction(this.resource.animations[5])
-        this.animation.actions.play_arrowspecial01 = this.animation.mixer.clipAction(this.resource.animations[6])
+        this.animation.actions.attack = this.animation.mixer.clipAction(this.resource.animations[6])
 
         // ✅ Default action = move
         this.animation.actions.current = this.animation.actions.move
@@ -161,7 +161,7 @@ export default class GoblimonEnemy {
                 playMove: () => this.animation.play('move'),
                 playDown: () => this.animation.play('down'),
                 playGetup: () => this.animation.play('getup'),
-                playArrowSpecial: () => this.animation.play('play_arrowspecial01'),
+                playArrowSpecial: () => this.animation.play('attack'),
             }
             this.debugFolder.add(debugObject, 'playIdle')
             this.debugFolder.add(debugObject, 'playDamage')
@@ -220,7 +220,7 @@ export default class GoblimonEnemy {
             }
         }
         this.moveTimeline.call(() => {
-            this.animation.play('play_arrowspecial01');
+            this.animation.play('attack');
         })
     }
 
@@ -228,8 +228,27 @@ export default class GoblimonEnemy {
 
     update() {
         if (this.animation && this.animation.mixer) {
-            this.animation.mixer.update(this.time.delta * 0.001)
+            this.animation.mixer.update(this.time.delta * 0.001);
+
+            const attackAction = this.animation.actions.attack;
+            if (this.animation.actions.current === attackAction) {
+                const attackDuration = attackAction.getClip().duration;
+
+                // Calculate normalized time (0 → 1) for the current loop
+                const loopTime = attackAction.time % attackDuration;
+
+                if (loopTime >= attackDuration * 0.8 && !this.attackLogTriggered) {
+                    this.experience.world.hudManager.takeDamage(GOBLIMON_DPS);
+                    this.attackLogTriggered = true;
+                }
+
+                // Reset the flag at the start of the loop
+                if (loopTime < 0.1) {
+                    this.attackLogTriggered = false;
+                }
+            }
         }
+
         if (this.healthBar) {
             this.healthBar.update();
         }

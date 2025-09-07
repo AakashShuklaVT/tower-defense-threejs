@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HealthBar from '../HealthBar/HealthBar.js';
-import { FLORAMON_HEALTH } from '../../Configs/GameConfig.js';
+import { FLORAMON_DPS, FLORAMON_HEALTH } from '../../Configs/GameConfig.js';
 
 export default class FloramonEnemy {
     static spawnedEnemies = 0;
@@ -230,11 +230,29 @@ export default class FloramonEnemy {
 
     update() {
         if (this.animation && this.animation.mixer) {
-            this.animation.mixer.update(this.time.delta * 0.001)
+            this.animation.mixer.update(this.time.delta * 0.001);
+
+            const attackAction = this.animation.actions.attack;
+            if (this.animation.actions.current === attackAction) {
+                const attackDuration = attackAction.getClip().duration;
+
+                // Calculate normalized time (0 → 1) for the current loop
+                const loopTime = attackAction.time % attackDuration;
+
+                if (loopTime >= attackDuration * 0.8 && !this.attackLogTriggered) {
+                    this.experience.world.hudManager.takeDamage(FLORAMON_DPS);
+                    this.attackLogTriggered = true;
+                }
+
+                // Reset the flag at the start of the loop
+                if (loopTime < 0.1) {
+                    this.attackLogTriggered = false;
+                }
+            }
         }
+
         if (this.healthBar) {
             this.healthBar.update();
         }
-
     }
 }

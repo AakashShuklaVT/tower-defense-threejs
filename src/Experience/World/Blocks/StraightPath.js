@@ -9,8 +9,7 @@ export default class StraightPath {
         width = 1,
         height = 0.1,
         position = { x: 0, z: 0 },
-        color = 0x808080,
-        textureRepeat = { x: 1.5, y: 1.5 }
+        color = 0x3d251e,
     }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
@@ -21,10 +20,10 @@ export default class StraightPath {
         this.height = height
         this.position = position
         this.color = color
-        this.textureRepeat = textureRepeat
+        // this.textureRepeat = textureRepeat
 
         this.setGeometry()
-        this.setTextures()
+        // this.setTextures()
         this.setMaterial()
         this.setMesh()
 
@@ -35,30 +34,30 @@ export default class StraightPath {
         this.geometry = new THREE.BoxGeometry(this.length, this.height, this.width)
     }
 
-    setTextures() {
-        this.textures = {}
+    // setTextures() {
+    //     this.textures = {}
 
-        if (this.resources.items.grassColorTexture) {
-            this.textures.color = this.resources.items.grassColorTexture
-            this.textures.color.colorSpace = THREE.SRGBColorSpace
-            this.textures.color.repeat.set(this.textureRepeat.x, this.textureRepeat.y)
-            this.textures.color.wrapS = THREE.RepeatWrapping
-            this.textures.color.wrapT = THREE.RepeatWrapping
-        }
+    //     if (this.resources.items.grassColorTexture) {
+    //         this.textures.color = this.resources.items.grassColorTexture
+    //         this.textures.color.colorSpace = THREE.SRGBColorSpace
+    //         this.textures.color.repeat.set(this.textureRepeat.x, this.textureRepeat.y)
+    //         this.textures.color.wrapS = THREE.RepeatWrapping
+    //         this.textures.color.wrapT = THREE.RepeatWrapping
+    //     }
 
-        if (this.resources.items.grassNormalTexture) {
-            this.textures.normal = this.resources.items.grassNormalTexture
-            this.textures.normal.repeat.set(this.textureRepeat.x, this.textureRepeat.y)
-            this.textures.normal.wrapS = THREE.RepeatWrapping
-            this.textures.normal.wrapT = THREE.RepeatWrapping
-        }
-    }
+    //     if (this.resources.items.grassNormalTexture) {
+    //         this.textures.normal = this.resources.items.grassNormalTexture
+    //         this.textures.normal.repeat.set(this.textureRepeat.x, this.textureRepeat.y)
+    //         this.textures.normal.wrapS = THREE.RepeatWrapping
+    //         this.textures.normal.wrapT = THREE.RepeatWrapping
+    //     }
+    // }
 
     setMaterial() {
         this.material = new THREE.MeshStandardMaterial({
             color: this.color,
-            map: this.textures.color || null,
-            normalMap: this.textures.normal || null
+            // map: this.textures.color || null,
+            // normalMap: this.textures.normal || null
         })
     }
 

@@ -51,7 +51,6 @@ export default class Grass {
                 if (child instanceof THREE.Mesh) {
                     child.castShadow = true
                     child.receiveShadow = true
-                    child.material.map = this.resources.items.grassTexture
                     child.material.color = new THREE.Color(0x00ff00)
                 }
             })

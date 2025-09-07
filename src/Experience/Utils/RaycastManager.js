@@ -13,13 +13,12 @@ export default class RaycastManager {
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.isEnabled = true;
-        this.intializeRaycaster()
-        this.setupEventListners()
     }
 
     intializeRaycaster() {
         this.raycaster = new THREE.Raycaster()
         this.pointer = new THREE.Vector2()
+        this.setupEventListners()
     }
 
     setupEventListners() {
@@ -35,7 +34,7 @@ export default class RaycastManager {
         const intersects = this.raycaster.intersectObjects(this.experience.triggerableObjects);
 
         if (intersects.length > 0) {
-
+            if (this.experience.world.coinsManager.getCurrentAmount() <= 0) return;
             this.isEnabled = false;
             const objectToBeRemoved = intersects[0].object
             const positionofObject = objectToBeRemoved.script.position

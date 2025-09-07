@@ -2,13 +2,14 @@ import * as THREE from "three";
 import gsap from "gsap";
 import Experience from "../../Experience.js";
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
-import { FIRE_WIZARD_ATTACK_SPEED, FIRE_WIZARD_DAMAGE, FIRE_WIZARD_RANGE, FIRE_WIZARD_SPLASH_DAMAGE_RADIUS, TIME_TAKEN_BY_FIREWIZARD_TO_ATTACK_AT_LEVEL1, TIME_TAKEN_BY_FIREWIZARD_TO_ATTACK_AT_LEVEL2 } from "../../Configs/GameConfig.js";
+import { DEFENSES_STATS } from "../../Configs/GameConfig.js";
 
 export default class FireWizard {
-    constructor({ attackRange = FIRE_WIZARD_RANGE,
+    constructor({ attackRange = DEFENSES_STATS.FIRE_WIZARD.ATTACK_RANGE,
         scale = 1,
         positionX = 0,
-        positionZ = 0 }) {
+        positionZ = 0,
+        level = 1}) {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
@@ -25,8 +26,8 @@ export default class FireWizard {
 
         // Array of meshes meteor can collide with
         this.targets = [];
-        this.splashRadius = FIRE_WIZARD_SPLASH_DAMAGE_RADIUS;
-        this.currentLevel = 1;
+        this.splashRadius = DEFENSES_STATS.FIRE_WIZARD.DAMAGE_RADIUS;
+        this.currentLevel = level;
         // Dynamic attack range
         this.attackRange = attackRange;
         this.scale = scale;
@@ -228,7 +229,7 @@ export default class FireWizard {
         // });
 
         // Phase 2: chase toward *current* target position
-        const speed = FIRE_WIZARD_ATTACK_SPEED; // units per second
+        const speed = DEFENSES_STATS.FIRE_WIZARD.TIME_TAKEN_TO_REACH_TARGET; // units per second
         this.meteorTimeline.to(meteor.position, {
             duration: 3, // just a max duration; GSAP will overwrite each frame
             ease: "none",
@@ -293,7 +294,7 @@ export default class FireWizard {
                 //     script.takeDamage(DAMAGE_FROM_FIRE_WIZARD_TO_FLORAMON);
                 // }
 
-                script.takeDamage(FIRE_WIZARD_DAMAGE);
+                script.takeDamage(DEFENSES_STATS.FIRE_WIZARD.ATTACK_DAMAGE);
 
                 // ✅ If enemy is dead → remove from targets
                 if (script.health <= 0) {
@@ -419,7 +420,7 @@ export default class FireWizard {
         this.animation.actions.current = this.animation.actions.idle;
         this.animation.actions.current.play();
 
-        this.triggerTime = 1.1;
+        this.triggerTime = 0.6;
         this.triggered = false;
 
         this.animation.play = (name) => {
@@ -428,12 +429,10 @@ export default class FireWizard {
 
             if (newAction === oldAction) return; // prevent re-triggering same anim
             if (name === 'fire' && this.currentLevel == 1) {
-                this.triggerTime = TIME_TAKEN_BY_FIREWIZARD_TO_ATTACK_AT_LEVEL1;
-                newAction.timeScale = 0.5;
+                newAction.timeScale = DEFENSES_STATS.FIRE_WIZARD.ATTACK_SPEED.LV1;
                 console.log(newAction);
             } else if (name === 'fire' && this.currentLevel == 2) {
-                this.triggerTime = TIME_TAKEN_BY_FIREWIZARD_TO_ATTACK_AT_LEVEL2;
-                newAction.timeScale = 1.5;
+                newAction.timeScale = DEFENSES_STATS.FIRE_WIZARD.ATTACK_SPEED.LV2;
             }
             newAction.reset();
             newAction.play();

@@ -10,6 +10,8 @@ import GaurdamonEnemy from './Enemies/GaurdamonEnemy.js'
 import GoblimonEnemy from './Enemies/GoblimonEnemy.js'
 import DemogorgonEnemy from './Enemies/DemogorgonEnemy.js'
 import FloramonEnemy from './Enemies/FloramonEnemy.js'
+import CoinsManager from './CoinsManager.js'
+import HUDManager from './HUDManager.js'
 // import BombermanEnemy from './Enemies/BombermanEnemy.js'
 // import FireWizard from './Defenders/FireWizard.js'
 
@@ -43,30 +45,30 @@ export default class World {
                     { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 5, delay: 2000, scale: 0.35, speed: 0.75 },
                     { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 3, delay: 3000, scale: 0.3, speed: 1.2 },
                 ],
-                // // Wave 2
-                // [
-                //     { EnemyClass: GaurdamonEnemy, resourceName: 'gaurdamon', count: 2, delay: 3000, scale: 0.5, speed: 0.85 },
-                //     { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 2, delay: 4000, scale: 0.005, speed: 2 },
-                // ],
-                // // Wave 3
-                // [
-                //     { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 4, delay: 1500, scale: 0.35, speed: 0.9 },
-                //     { EnemyClass: FloramonEnemy, resourceName: 'floramon', count: 2, delay: 2500, scale: 0.25, speed: 2.5 },
-                //     { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 3, delay: 2000, scale: 0.3, speed: 1.5 },
-                // ],
-                // // Wave 4
-                // [
-                //     { EnemyClass: GaurdamonEnemy, resourceName: 'gaurdamon', count: 3, delay: 3000, scale: 0.5, speed: 1 },
-                //     { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 3, delay: 3500, scale: 0.005, speed: 2.2 },
-                //     { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 2, delay: 1800, scale: 0.35, speed: 0.8 },
-                // ],
-                // // Wave 5
-                // [
-                //     { EnemyClass: FloramonEnemy, resourceName: 'floramon', count: 4, delay: 2500, scale: 0.25, speed: 2.7 },
-                //     { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 4, delay: 2000, scale: 0.3, speed: 1.6 },
-                //     { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 2, delay: 4000, scale: 0.005, speed: 2.5 },
-                //     { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 2, delay: 1800, scale: 0.35, speed: 0.8 }
-                // ],
+                // Wave 2
+                [
+                    { EnemyClass: GaurdamonEnemy, resourceName: 'gaurdamon', count: 2, delay: 3000, scale: 0.5, speed: 2 },
+                    { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 2, delay: 4000, scale: 0.005, speed: 2 },
+                ],
+                // Wave 3
+                [
+                    { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 4, delay: 1500, scale: 0.35, speed: 0.9 },
+                    { EnemyClass: FloramonEnemy, resourceName: 'floramon', count: 2, delay: 2500, scale: 0.25, speed: 2.5 },
+                    { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 3, delay: 2000, scale: 0.3, speed: 1.5 },
+                ],
+                // Wave 4
+                [
+                    { EnemyClass: GaurdamonEnemy, resourceName: 'gaurdamon', count: 3, delay: 3000, scale: 0.5, speed: 2 },
+                    { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 3, delay: 3500, scale: 0.005, speed: 2.2 },
+                    { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 2, delay: 1800, scale: 0.35, speed: 0.8 },
+                ],
+                // Wave 5
+                [
+                    { EnemyClass: FloramonEnemy, resourceName: 'floramon', count: 4, delay: 2500, scale: 0.25, speed: 2.7 },
+                    { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 4, delay: 2000, scale: 0.3, speed: 1.6 },
+                    { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 2, delay: 4000, scale: 0.005, speed: 2.5 },
+                    { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 2, delay: 5000, scale: 0.35, speed: 0.8 }
+                ],
             ];
 
 
@@ -169,9 +171,12 @@ export default class World {
     }
 
     startGame = () => {
+        this.hudManager = new HUDManager('hud')
+        this.coinsManager = new CoinsManager()
         setTimeout(() => {
             this.spawnWave(0); // first wave
         }, 1000)
+        this.experience.raycastManager.intializeRaycaster()
         this.experience.raycastManager.setEnabled(true)
         document.querySelector('.enemy-info-container').style.display = 'none';
     }

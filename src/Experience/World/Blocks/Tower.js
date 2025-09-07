@@ -5,7 +5,7 @@ import FireWizard from '../Defenses/FireWizard.js'
 import CannonDefense from '../Defenses/CannonDefense.js'
 import FreezeDefense from '../Defenses/FreezeDefense.js'
 import XBowDefense from '../Defenses/XBowDefense.js'
-import { CANNON_RANGE, FIRE_WIZARD_RANGE } from '../../Configs/GameConfig.js'
+import { CANNON_RANGE, DEFENSES_STATS } from '../../Configs/GameConfig.js'
 
 export default class Tower {
     static allTowers = [] // store all created towers
@@ -20,17 +20,20 @@ export default class Tower {
         this.resource = this.resources.items.archerTower
 
         this.setModel()
+        this.coinsManager = this.experience.world.coinsManager;
 
         // store this tower for later batching
         Tower.allTowers.push(this)
 
         if (name === 'fireWizard') {
             this.fireWizard = new FireWizard({
-                attackRange: FIRE_WIZARD_RANGE,
+                attackRange: DEFENSES_STATS.FIRE_WIZARD.ATTACK_RANGE,
                 positionX: this.position.x,
                 positionZ: this.position.z,
-                scale: 0.35
+                scale: 0.35, 
+                level: 2
             })
+            this.coinsManager.subtractFromCurrentAmount(DEFENSES_STATS.FIRE_WIZARD.BUILDING_COST.LV1);
         }
         else if (name === 'cannonDefense') {
             this.cannonDefense = new CannonDefense({
@@ -39,6 +42,7 @@ export default class Tower {
                 positionZ: this.position.z,
                 scale: 0.25
             })
+            this.coinsManager.subtractFromCurrentAmount(COST_OF_BUILDINGS.CANNON_TOWER);
         }
         else if (name === 'freezeDefense') {
             this.freezeDefense = new FreezeDefense({
