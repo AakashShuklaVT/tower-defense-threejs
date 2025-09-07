@@ -316,3 +316,105 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+.wave-incoming-text_box {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    font-family: 'Russo One', sans-serif;
+    /* strong bold font */
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    z-index: 1000;
+    text-align: center;
+    pointer-events: none;
+    display: none;
+
+    /* Core Red */
+    color: #ff1a1a;
+    -webkit-text-stroke: 1.5px #660000;
+
+    /* Subtle, directional glow */
+    text-shadow:
+        2px 1px 2px #ff3333,
+        4px 2px 4px #cc0000;
+}
+
+
+.wave-incoming-text_box .wave-incoming-text-wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 0.2em 0.1em;
+    overflow: hidden;
+}
+
+.wave-incoming-text_box .wave-incoming-letter {
+    display: inline-block;
+    line-height: 1em;
+    transform-origin: 50% 100%;
+}
+
+/* Full-screen container */
+.td-win-screen-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1e1e2f, #2c2c54);
+    /* Blue background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    /* Above everything */
+    flex-direction: column;
+    opacity: 0;
+    /* Start hidden */
+    pointer-events: none;
+    /* Disable interaction initially */
+    transition: opacity 1s ease;
+    /* Smooth fade-in */
+}
+
+/* Show class for fade-in */
+.td-win-screen-container.show {
+    opacity: 1;
+    pointer-events: all;
+    /* Enable interaction when visible */
+}
+
+/* Inner content wrapper */
+.td-win-screen-content {
+    text-align: center;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* Win title */
+.td-win-title {
+    font-size: 6rem;
+    margin-bottom: 2rem;
+}
+
+/* Restart button */
+.td-win-restart-btn {
+    margin-top: 1rem;
+    padding: 1rem 3rem;
+    background: linear-gradient(135deg, #ff5f6d, #ffc371);
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.td-win-restart-btn:hover {
+    background-color: #ecf0f1;
+    transform: scale(1.05);
+}

@@ -32,6 +32,7 @@ export default class FireWizard {
         this.scale = scale;
         this.positionX = positionX;
         this.positionZ = positionZ;
+        this.won = false;
 
         this.setModel();
         this.setAnimation();
@@ -409,6 +410,9 @@ export default class FireWizard {
             this.resource.animations[0]
         );
         this.animation.actions.fire = this.animation.mixer.clipAction(
+            this.resource.animations[2]
+        );
+        this.animation.actions.win = this.animation.mixer.clipAction(
             this.resource.animations[1]
         );
 
@@ -436,6 +440,7 @@ export default class FireWizard {
             newAction.crossFadeFrom(oldAction, 0.5);
 
             this.animation.actions.current = newAction;
+            name == 'win' ? console.log("Played Win") : null;
 
             this.triggered = false;       // reset meteor spawn control
             this.prevActionTime = 0;      // reset animation cycle tracking
@@ -445,10 +450,17 @@ export default class FireWizard {
             const debugObject = {
                 playIdle: () => this.animation.play("idle"),
                 playFire: () => this.animation.play("fire"),
+                playWin: () => this.animation.play("win"),
             };
             this.debugFolder.add(debugObject, "playIdle");
             this.debugFolder.add(debugObject, "playFire");
+            this.debugFolder.add(debugObject, "playWin");
         }
+    }
+
+    playWin() {
+        this.won = true
+        this.animation.play('win');
     }
 
     update() {
@@ -485,7 +497,7 @@ export default class FireWizard {
                         this.animation.play('fire');
                     }
                 } else {
-                    if (this.animation.actions.current !== this.animation.actions.idle) {
+                    if (this.animation.actions.current !== this.animation.actions.idle && !this.won) {
                         this.animation.play('idle');
                     }
                 }
@@ -512,7 +524,7 @@ export default class FireWizard {
                 for (let target of this.targets) {
                     if (target && this.meteorBox) {
                         const targetBox = new THREE.Box3().setFromObject(target);
-                        if(target.name === 'Gaurdamon'){   
+                        if (target.name === 'Gaurdamon') {
                             // ISSUE FIXED.  
                             // As the GAURDAMON (i.e. Gaurdamon as mentioned by name in model) is already above the ground, 
                             // So, for intersection to happen -> I shifted the position of it's bounding box to a bit Lower 

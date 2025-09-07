@@ -25,7 +25,7 @@ export default class House {
     setModel() {
         this.model = this.resource.scene.clone()
         this.model.position.set(this.position.x, 0, this.position.z)
-        this.model.scale.set(0.2, 0.2, 0.2)
+        this.model.scale.set(0.2, 0.2, 0.15)
 
         // ✅ Random rotation (0, 90, 180, 270) around Y axis
         const rotations = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2]

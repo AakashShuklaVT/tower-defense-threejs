@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tower Defense</title>
     <link rel="stylesheet" href="./style.css" />
+    <!-- Add this in your <head> -->
+    <!-- Add in <head> -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div class="card-container">
@@ -368,7 +374,11 @@
         </div>
 
         <div class="enemy-card">
-          <img src="./assets/Gaurdamon.png" alt="Gaurdamon" class="enemy-image" />
+          <img
+            src="./assets/Gaurdamon.png"
+            alt="Gaurdamon"
+            class="enemy-image"
+          />
           <div class="enemy-info">
             <h3>Gaurdamon</h3>
             <div class="enemy-stats">
@@ -392,7 +402,11 @@
         </div>
 
         <div class="enemy-card">
-          <img src="./assets/Pantherasur.png" alt="Pantherasur" class="enemy-image" />
+          <img
+            src="./assets/Pantherasur.png"
+            alt="Pantherasur"
+            class="enemy-image"
+          />
           <div class="enemy-info">
             <h3>Pantherasur</h3>
             <div class="enemy-stats">
@@ -404,7 +418,11 @@
         </div>
 
         <div class="enemy-card">
-          <img src="./assets/Demogorgon.png" alt="Demogorgon" class="enemy-image" />
+          <img
+            src="./assets/Demogorgon.png"
+            alt="Demogorgon"
+            class="enemy-image"
+          />
           <div class="enemy-info">
             <h3>Demogorgon</h3>
             <div class="enemy-stats">
@@ -416,7 +434,11 @@
         </div>
 
         <div class="enemy-card">
-          <img src="./assets/Obliviron.png" alt="Obliviron" class="enemy-image" />
+          <img
+            src="./assets/Obliviron.png"
+            alt="Obliviron"
+            class="enemy-image"
+          />
           <div class="enemy-info">
             <h3>Obliviron</h3>
             <div class="enemy-stats">
@@ -429,7 +451,20 @@
       </div>
       <button class="enemy-container-continue-btn">Continue</button>
     </div>
+    <!-- Game Win Screen Container -->
+    <div class="td-win-screen-container" style="display: none">
+      <div class="td-win-screen-content">
+        <h1 class="td-win-title">You Win!</h1>
+        <!-- <button class="td-win-restart-btn">Restart</button> -->
+      </div>
+    </div>
+    <h1 class="wave-incoming-text_box">
+      <span class="wave-incoming-text-wrapper">
+        <span class="wave-incoming-letters">Wave Incoming!</span>
+      </span>
+    </h1>
     <canvas class="webgl"></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script type="module" src="./script.js"></script>
   </body>
 </html>

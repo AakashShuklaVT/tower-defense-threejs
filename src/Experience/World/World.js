@@ -43,29 +43,30 @@ export default class World {
                     { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 5, delay: 2000, scale: 0.35, speed: 0.75 },
                     { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 3, delay: 3000, scale: 0.3, speed: 1.2 },
                 ],
-                // Wave 2
-                [
-                    { EnemyClass: GaurdamonEnemy, resourceName: 'gaurdamon', count: 2, delay: 3000, scale: 0.5, speed: 0.85 },
-                    { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 2, delay: 4000, scale: 0.005, speed: 2 },
-                ],
-                // Wave 3
-                [
-                    { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 4, delay: 1500, scale: 0.35, speed: 0.9 },
-                    { EnemyClass: FloramonEnemy, resourceName: 'floramon', count: 2, delay: 2500, scale: 0.25, speed: 2.5 },
-                    { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 3, delay: 2000, scale: 0.3, speed: 1.5 },
-                ],
-                // Wave 4
-                [
-                    { EnemyClass: GaurdamonEnemy, resourceName: 'gaurdamon', count: 3, delay: 3000, scale: 0.5, speed: 1 },
-                    { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 3, delay: 3500, scale: 0.005, speed: 2.2 },
-                    { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 2, delay: 1800, scale: 0.35, speed: 0.8 },
-                ],
-                // Wave 5
-                [
-                    { EnemyClass: FloramonEnemy, resourceName: 'floramon', count: 4, delay: 2500, scale: 0.25, speed: 2.7 },
-                    { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 4, delay: 2000, scale: 0.3, speed: 1.6 },
-                    { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 2, delay: 4000, scale: 0.005, speed: 2.5 },
-                ],
+                // // Wave 2
+                // [
+                //     { EnemyClass: GaurdamonEnemy, resourceName: 'gaurdamon', count: 2, delay: 3000, scale: 0.5, speed: 0.85 },
+                //     { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 2, delay: 4000, scale: 0.005, speed: 2 },
+                // ],
+                // // Wave 3
+                // [
+                //     { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 4, delay: 1500, scale: 0.35, speed: 0.9 },
+                //     { EnemyClass: FloramonEnemy, resourceName: 'floramon', count: 2, delay: 2500, scale: 0.25, speed: 2.5 },
+                //     { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 3, delay: 2000, scale: 0.3, speed: 1.5 },
+                // ],
+                // // Wave 4
+                // [
+                //     { EnemyClass: GaurdamonEnemy, resourceName: 'gaurdamon', count: 3, delay: 3000, scale: 0.5, speed: 1 },
+                //     { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 3, delay: 3500, scale: 0.005, speed: 2.2 },
+                //     { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 2, delay: 1800, scale: 0.35, speed: 0.8 },
+                // ],
+                // // Wave 5
+                // [
+                //     { EnemyClass: FloramonEnemy, resourceName: 'floramon', count: 4, delay: 2500, scale: 0.25, speed: 2.7 },
+                //     { EnemyClass: GoblimonEnemy, resourceName: 'goblimon', count: 4, delay: 2000, scale: 0.3, speed: 1.6 },
+                //     { EnemyClass: DemogorgonEnemy, resourceName: 'demogorgon', count: 2, delay: 4000, scale: 0.005, speed: 2.5 },
+                //     { EnemyClass: RedPantherEnemy, resourceName: 'redPanther', count: 2, delay: 1800, scale: 0.35, speed: 0.8 }
+                // ],
             ];
 
 
@@ -77,6 +78,7 @@ export default class World {
 
             this.currentWaveIndex = 0;
             this.currentWaveEnemiesKilled = 0;
+            this.isGameOver = false;
             // const redPantherSpawner = setInterval(() => {
             //     if (this.redPantherCount > 0) {
             //         this.spawnEnemy(RedPantherEnemy, {
@@ -157,8 +159,19 @@ export default class World {
         })
     }
 
+    showGameWinScreen() {
+        const winScreen = document.querySelector('.td-win-screen-container');
+        winScreen.style.display = 'flex';
+        // Hide win screen and restart game
+        setTimeout(() => {
+            winScreen.classList.add('show');
+        }, 2500)
+    }
+
     startGame = () => {
-        this.spawnWave(0); // first wave
+        setTimeout(() => {
+            this.spawnWave(0); // first wave
+        }, 1000)
         this.experience.raycastManager.setEnabled(true)
         document.querySelector('.enemy-info-container').style.display = 'none';
     }
@@ -181,15 +194,58 @@ export default class World {
             this.spawnWave(this.currentWaveIndex);
             if (this.currentWaveIndex === this.waves.length) {
                 this.isGameOver = true;
-                console.log("game over");
-
+                this.showWavePopup()
+                this.mapGenerator.towers.forEach((tower) => {
+                    if (tower.fireWizard) {
+                        tower.fireWizard.playWin();
+                    }
+                })
             }
         }
     }
 
+    showWavePopup() {
+        const textBox = document.querySelector('.wave-incoming-text_box');
+        const textWrapper = document.querySelector('.wave-incoming-text_box .wave-incoming-letters');
+
+        // Determine the text to show
+        let displayText = this.currentWaveIndex == this.waves.length - 1 ? 'Final Wave!' : textWrapper.textContent;
+        if (this.isGameOver) {
+            displayText = 'You Successfully Defended!';
+            this.showGameWinScreen()
+        }
+        // Wrap each letter in a span
+        textWrapper.innerHTML = displayText.replace(/\S/g, "<span class='wave-incoming-letter'>$&</span>");
+
+        // Reset initial state before animation
+        textBox.style.display = 'flex';
+        textBox.style.opacity = 1; // reset container opacity
+        const letters = document.querySelectorAll('.wave-incoming-text_box .wave-incoming-letter');
+        letters.forEach(letter => {
+            letter.style.transform = 'scale(0)'; // reset each letter scale
+        });
+
+        anime.timeline({ loop: false })
+            .add({
+                targets: '.wave-incoming-text_box .wave-incoming-letter',
+                scale: [0, 1],
+                duration: 1500,
+                elasticity: 600,
+                delay: (el, i) => 45 * (i + 1)
+            }).add({
+                targets: '.wave-incoming-text_box',
+                opacity: 0,
+                duration: 1000,
+                easing: "easeOutExpo",
+                delay: 500 // small delay before fading out
+            });
+    }
+
     spawnWave(waveIndex = 0) {
         if (!this.waves || waveIndex >= this.waves.length) return;
-
+        setTimeout(() => {
+            this.showWavePopup()
+        }, 1000)
         // Mark this wave as active
         const wave = this.waves[waveIndex];
         wave.forEach(config => {
