@@ -16,6 +16,7 @@ export default class World {
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.levelManager = new LevelManager()
+        this.enemies = []
 
 
         this.resources.on('ready', async () => {
@@ -24,7 +25,6 @@ export default class World {
             this.environment = new Environment()
             this.mapGenerator = new MapGenerator(this.levelManager.getLevelData().levelData)
 
-            this.enemies = []
             // Spawn skeleton using preloaded path
             // this.skeletonEnemy = new SkeletonEnemy({
             //     resourceName: 'skeleton',
@@ -74,7 +74,6 @@ export default class World {
             this.enemies.push(this.redPantherEnemy)
             this.enemies.push(this.gaurdamonEnemy)
             this.enemies.push(this.goblimonEnemy)
-
             // this.transformControlsManager = new TransformControlsManager(
             //     this.experience.camera.instance,
             //     this.experience.renderer.instance.domElement,
@@ -84,11 +83,16 @@ export default class World {
 
             // // After creating both camera and transform controls
             // this.transformControlsManager.setOrbitControls(this.experience.camera.controls);
+            
         })
     }
 
+    getEnemies() {
+        return this.enemies
+    }
+
     update() {
-        
+        this.mapGenerator && this.mapGenerator.update()
         this.enemies && this.enemies.forEach((enemy) => {
             enemy.update()
         })

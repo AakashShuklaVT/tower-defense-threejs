@@ -23,6 +23,11 @@ export default class GoblimonEnemy {
         this.movePath = movePath
         this.startMoving(this.movePath, levelData)
         this.setAnimation()
+        this.setInstance()
+    }
+
+    setInstance() {
+        this.scriptInstance = this
     }
 
     setModel(position, scale) {
@@ -95,7 +100,6 @@ export default class GoblimonEnemy {
 
     startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
-        console.log("Path points:", pathPoints);
 
         const offsetX = levelData.width / 2;
         const offsetZ = levelData.height / 2;

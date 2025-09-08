@@ -23,6 +23,7 @@ export default class GaurdamonEnemy {
         this.movePath = movePath
         this.startMoving(this.movePath, levelData)
         this.setAnimation()
+        this.setInstance()
     }
 
     setModel(position, scale) {
@@ -37,6 +38,10 @@ export default class GaurdamonEnemy {
                 child.castShadow = true
             }
         })
+    }
+
+    setInstance() {
+        this.scriptInstance = this
     }
 
     setAnimation() {
@@ -95,7 +100,6 @@ export default class GaurdamonEnemy {
 
     startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
-        console.log("Path points:", pathPoints);
 
         const offsetX = levelData.width / 2;
         const offsetZ = levelData.height / 2;
@@ -124,8 +128,6 @@ export default class GaurdamonEnemy {
             const dz = next.z - current.z;
             const distance = Math.sqrt(dx * dx + dz * dz);
             const duration = distance / this.speed;
-
-
 
             // Move toward next point
             gsap.to(this.model.position, {

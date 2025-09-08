@@ -1,7 +1,7 @@
-// Tower.js
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Grass from './Grass.js'
+import Wizard from '../Defenses/Wizard.js'
 
 export default class Tower {
     static allTowers = [] // store all created towers
@@ -11,13 +11,13 @@ export default class Tower {
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.debug = this.experience.debug
-
+        
         this.position = position
-        this.resource = this.resources.items.archerTower
-
+        this.resource = this.resources.items.tower
+        
+        this.setDefenderModel()
         this.setGround()
         this.setModel()
-
         // store this tower for later batching
         Tower.allTowers.push(this)
     }
@@ -38,6 +38,17 @@ export default class Tower {
                 child.receiveShadow = true
             }
         })
+        
+    }
+
+    setDefenderModel() {
+        this.defender = new Wizard({position: { x: this.position.x, y: 1.5, z: this.position.z}})
+    }
+
+    update() {
+        if(this.defender) {
+            this.defender.update()
+        }
     }
 
     // 🔹 Static method to batch all towers

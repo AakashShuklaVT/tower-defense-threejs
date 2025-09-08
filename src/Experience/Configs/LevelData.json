@@ -266,7 +266,7 @@
         "x": 17,
         "z": 1
       },
-      "type": "stone"
+      "type": "grass"
     },
     {
       "position": {
@@ -1246,14 +1246,14 @@
         "x": 17,
         "z": 8
       },
-      "type": "castle"
+      "type": "grass"
     },
     {
       "position": {
         "x": 18,
         "z": 8
       },
-      "type": "castle"
+      "type": "grass"
     },
     {
       "position": {
@@ -1393,7 +1393,7 @@
         "x": 18,
         "z": 9
       },
-      "type": "castle"
+      "type": "grass"
     },
     {
       "position": {
@@ -1533,7 +1533,7 @@
         "x": 18,
         "z": 10
       },
-      "type": "grass"
+      "type": "castle"
     },
     {
       "position": {
@@ -1806,21 +1806,21 @@
         "x": 17,
         "z": 12
       },
-      "type": "base"
+      "type": "grass"
     },
     {
       "position": {
         "x": 18,
         "z": 12
       },
-      "type": "base"
+      "type": "grass"
     },
     {
       "position": {
         "x": 19,
         "z": 12
       },
-      "type": "base"
+      "type": "grass"
     },
     {
       "position": {
@@ -1953,14 +1953,14 @@
         "x": 18,
         "z": 13
       },
-      "type": "tree"
+      "type": "grass"
     },
     {
       "position": {
         "x": 19,
         "z": 13
       },
-      "type": "base"
+      "type": "grass"
     },
     {
       "position": {

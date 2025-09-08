@@ -14,6 +14,7 @@
   "dependencies": {
     "gsap": "^3.13.0",
     "lil-gui": "^0.19.2",
-    "three": "^0.166.1"
+    "three": "^0.166.1",
+    "three-particle-fire": "^0.1.0"
   }
 }

@@ -22,7 +22,6 @@ export default class Castle {
 
         this.setGround()
         this.setModel()
-        // this.setAnimation()
     }
 
     setGround() {
@@ -34,8 +33,8 @@ export default class Castle {
 
     setModel() {
         this.model = this.resource.scene.clone()
-        this.model.position.set(this.position.x - 0.5, 0, this.position.z + 2)
-        this.model.scale.set(0.0035, 0.0035, 0.0035)
+        this.model.position.set(this.position.x + 0.45 , 0, this.position.z )
+        this.model.scale.set(0.007, 0.009, 0.007)
         this.model.rotation.set(0, -Math.PI / 2, 0)
         this.scene.add(this.model)
 
@@ -45,51 +44,5 @@ export default class Castle {
                 child.receiveShadow = true
             }
         })
-    }
-
-    setAnimation() {
-        this.animation = {}
-
-        // Mixer
-        this.animation.mixer = new THREE.AnimationMixer(this.model)
-
-        // Actions
-        this.animation.actions = {}
-        this.animation.actions.idle = this.animation.mixer.clipAction(this.resource.animations[0])
-        this.animation.actions.walking = this.animation.mixer.clipAction(this.resource.animations[1])
-        this.animation.actions.running = this.animation.mixer.clipAction(this.resource.animations[2])
-
-        this.animation.actions.current = this.animation.actions.idle
-        this.animation.actions.current.play()
-
-        // Play the action
-        this.animation.play = (name) => {
-            const newAction = this.animation.actions[name]
-            const oldAction = this.animation.actions.current
-
-            newAction.reset()
-            newAction.play()
-            newAction.crossFadeFrom(oldAction, 1)
-
-            this.animation.actions.current = newAction
-        }
-
-        // Debug
-        if (this.debug.active) {
-            const debugObject = {
-                playIdle: () => { this.animation.play('idle') },
-                playWalking: () => { this.animation.play('walking') },
-                playRunning: () => { this.animation.play('running') }
-            }
-            this.debugFolder.add(debugObject, 'playIdle')
-            this.debugFolder.add(debugObject, 'playWalking')
-            this.debugFolder.add(debugObject, 'playRunning')
-        }
-    }
-
-    update() {
-        // if (this.animation?.mixer) {
-        //     this.animation.mixer.update(this.time.delta * 0.001)
-        // }
     }
 }

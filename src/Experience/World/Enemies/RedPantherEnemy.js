@@ -23,6 +23,7 @@ export default class RedPantherEnemy {
         this.movePath = movePath
         this.startMoving(this.movePath, levelData) 
         this.setAnimation()
+        this.setInstance()
     }
 
     setModel(position, scale) {
@@ -37,6 +38,10 @@ export default class RedPantherEnemy {
                 child.castShadow = true
             }
         })
+    }
+
+    setInstance() {
+        this.scriptInstance = this
     }
 
     setAnimation() {
@@ -90,9 +95,8 @@ export default class RedPantherEnemy {
         }
     }
 
-     startMoving(pathPoints, levelData) {
+    startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
-        console.log("Path points:", pathPoints);
 
         const offsetX = levelData.width / 2;
         const offsetZ = levelData.height / 2;

@@ -11,6 +11,7 @@ export default class MapGenerator {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.levelData = levelData
+        this.towers = []
         this.generateMap()
     }
 
@@ -30,7 +31,7 @@ export default class MapGenerator {
                 new StraightPath({ position: { x: worldX, z: worldZ } })
             }
             else if (path.type === 'tower') {
-                new Tower({ position: { x: worldX, z: worldZ } })
+                this.towers.push(new Tower({ position: { x: worldX, z: worldZ } }))
             }
             else if (path.type === 'tree') {
                 trees.push(new Trees({ position: { x: worldX, z: worldZ } }))
@@ -51,5 +52,9 @@ export default class MapGenerator {
         StraightPath.combineIntoInstancedMesh(this.experience.scene)
         Tower.combineIntoInstancedMesh(this.experience.scene)
         // Trees.combineIntoInstancedMeshes(trees, this.experience.scene)
+    }
+
+    update() {
+        this.towers.forEach(tower => tower.update())
     }
 }

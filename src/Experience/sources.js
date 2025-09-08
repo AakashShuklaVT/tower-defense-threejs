@@ -28,44 +28,49 @@ export default [
         path: 'models/TowerModels/tower.glb'
     },
     {
-        name: 'archerTower',
+        name: 'tower',
         type: 'gltfModel',
-        path: 'models/Towers/archer-tower.glb'
+        path: 'models/Towers/tower.glb'
     },
     {
         name: 'tree1',
         type: 'gltfModel',
-        path: 'models/Trees/Tree-1.glb'
+        path: 'models/Trees/tree1.glb'
     },
     {
         name: 'tree2',
         type: 'gltfModel',
-        path: 'models/Trees/Tree-2.glb'
+        path: 'models/Trees/tree2.glb'
     },
     {
         name: 'tree3',
         type: 'gltfModel',
-        path: 'models/Trees/Tree-3.glb'
+        path: 'models/Trees/tree3.glb'
     },
     {
         name: 'stone1',
         type: 'gltfModel',
-        path: 'models/Stones/Stone-1.glb'
+        path: 'models/Stones/stone1.glb'
     },
     {
         name: 'stone2',
         type: 'gltfModel',
-        path: 'models/Stones/Stone-2.glb'
+        path: 'models/Stones/stone2.glb'
     },
     {
         name: 'stone3',
         type: 'gltfModel',
-        path: 'models/Stones/Stone-3.glb'
+        path: 'models/Stones/stone3.glb'
+    },
+    {
+        name: 'stone4',
+        type: 'gltfModel',
+        path: 'models/Stones/stone3.glb'
     },
     {
         name: 'castle',
         type: 'gltfModel',
-        path: 'models/Castle/Castle.glb'
+        path: 'models/Castle/castle.glb'
     },
     {
         name: 'skeleton',
@@ -91,5 +96,10 @@ export default [
         name: 'bomberman',
         type: 'gltfModel',
         path: 'models/Enemies/bomberman-devil-enemy.glb'
+    },
+    {
+        name: 'wizard',
+        type: 'gltfModel',
+        path: 'models/Defenders/wizard.glb'
     },
 ]
