@@ -68,6 +68,11 @@ export default [
         path: 'models/Stones/stone3.glb'
     },
     {
+        name: 'foundation',
+        type: 'gltfModel',
+        path: 'models/Foundation/foundation.glb'
+    },
+    {
         name: 'castle',
         type: 'gltfModel',
         path: 'models/Castle/castle.glb'

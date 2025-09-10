@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Grass from './Grass.js'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 
 const TREES_SCALING = {
     0: 0.5,
@@ -43,7 +44,7 @@ export default class Trees {
     }
 
     setModel() {
-        this.model = this.resource.scene.clone()
+        this.model = clone(this.resource.scene)
         this.model.position.set(this.position.x, 0, this.position.z)
         this.model.scale.set(
             TREES_SCALING[this.selectedTree],

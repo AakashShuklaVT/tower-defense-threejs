@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import gsap from 'gsap'
 import Experience from '../../Experience.js'
-
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 export default class GoblimonEnemy {
     constructor({ resourceName = 'goblimon', position = { x: 0, y: 0, z: 0 }, scale = 0.15, movePath, speed, levelData }) {
         this.experience = new Experience()
@@ -10,6 +10,8 @@ export default class GoblimonEnemy {
         this.time = this.experience.time
         this.debug = this.experience.debug
         this.speed = speed
+        this.health = 100
+        this.isDead = false
 
         // Debug
         if (this.debug.active) {
@@ -30,8 +32,105 @@ export default class GoblimonEnemy {
         this.scriptInstance = this
     }
 
+    takeDamage(damage) {
+        this.health -= damage
+        //('Goblimon health:', this.health);
+
+        if (this.health <= 0) {
+            this.die()
+        }
+    }
+    
+    die() {
+        this.killTweens()
+        this.playDeathAnimation()
+        this.isDead = true
+    }
+
+    killTweens() {
+        gsap.killTweensOf(this.model.position)
+        gsap.killTweensOf(this.model.rotation)
+    }
+
+    dispose() {
+        // ✅ Dispose geometries & materials
+        this.model.traverse((child) => {
+            if (child.isMesh) {
+                if (child.geometry) child.geometry.dispose()
+                if (child.material) {
+                    // If material is an array
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach((m) => {
+                            if (m.map) m.map.dispose()
+                            if (m.normalMap) m.normalMap.dispose()
+                            if (m.roughnessMap) m.roughnessMap.dispose()
+                            if (m.metalnessMap) m.metalnessMap.dispose()
+                            m.dispose()
+                        })
+                    } else {
+                        if (child.material.map) child.material.map.dispose()
+                        if (child.material.normalMap) child.material.normalMap.dispose()
+                        if (child.material.roughnessMap) child.material.roughnessMap.dispose()
+                        if (child.material.metalnessMap) child.material.metalnessMap.dispose()
+                        child.material.dispose()
+                    }
+                }
+            }
+        })
+
+        // ✅ Remove from scene
+        this.scene.remove(this.model)
+
+        // ✅ Dispose animations
+        if (this.animation && this.animation.mixer) {
+            this.animation.mixer.stopAllAction()
+            this.animation.mixer.uncacheRoot(this.model)
+        }
+
+        // ✅ Clear references
+        this.model = null
+        this.resource = null
+        this.animation = null
+    }
+
+    playDeathAnimation() {
+        if (this.isDead) {
+            return
+        }
+
+        const deathAnimation = this.animation.actions.down
+        if (!deathAnimation) {
+            this.dispose()
+            return
+        }
+
+        // Configure to play once
+        deathAnimation.setLoop(THREE.LoopOnce, 1)
+        deathAnimation.clampWhenFinished = true
+
+        const oldAction = this.animation.actions.current
+        if (oldAction && oldAction !== deathAnimation) {
+            oldAction.fadeOut(0.2)
+        }
+
+        // Reset and play
+        deathAnimation.reset()
+        deathAnimation.play()
+        this.animation.actions.current = deathAnimation
+
+        // Listen for animation finished
+        const onFinish = (e) => {
+            if (e.action === deathAnimation) {
+                //('down animation finished')
+                this.animation.mixer.removeEventListener('finished', onFinish)
+                this.dispose()
+            }
+        }
+        this.animation.mixer.addEventListener('finished', onFinish)
+    }
+
     setModel(position, scale) {
-        this.model = this.resource.scene
+        this.model = clone(this.resource.scene)
 
         this.model.scale.set(scale, scale, scale)
         this.model.position.set(position.x, position.y, position.z)
@@ -140,7 +239,7 @@ export default class GoblimonEnemy {
                 onComplete: () => {
                     i++;
                     moveToNext();
-                    if(next.angle !== undefined){
+                    if (next.angle !== undefined) {
                         // Rotate toward next direction first
                         gsap.to(this.model.rotation, {
                             y: THREE.MathUtils.degToRad(next.angle),

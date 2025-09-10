@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Grass from './Grass.js'
 import Wizard from '../Defenses/Wizard.js'
-
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 export default class Tower {
     static allTowers = [] // store all created towers
 
@@ -27,7 +27,7 @@ export default class Tower {
     }
 
     setModel() {
-        this.model = this.resource.scene.clone(true)
+        this.model = clone(this.resource.scene)
         this.model.position.set(this.position.x, 0, this.position.z)
         this.model.scale.set(0.35, 0.35, 0.35)
         this.scene.add(this.model)

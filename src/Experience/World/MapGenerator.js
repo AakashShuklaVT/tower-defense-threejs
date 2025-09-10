@@ -5,6 +5,7 @@ import Tower from './Blocks/Tower.js'
 import Trees from './Blocks/Trees.js'
 import Stones from './Blocks/Stones.js'
 import Castle from './Blocks/Castle.js'
+import Foundation from './Blocks/Foundation.js'
 
 export default class MapGenerator {
     constructor(levelData) {
@@ -12,6 +13,7 @@ export default class MapGenerator {
         this.scene = this.experience.scene
         this.levelData = levelData
         this.towers = []
+        this.foundations = []
         this.generateMap()
     }
 
@@ -30,8 +32,16 @@ export default class MapGenerator {
             if (path.type === 'path') {
                 new StraightPath({ position: { x: worldX, z: worldZ } })
             }
+            // else if (path.type === 'tower') {
+            //     this.towers.push(new Tower({ position: { x: worldX, z: worldZ } }))
+            // }
             else if (path.type === 'tower') {
-                this.towers.push(new Tower({ position: { x: worldX, z: worldZ } }))
+                const foundation = new Foundation({ position: { x: worldX, z: worldZ } })
+                // //(foundation);
+                
+                this.foundations.push(foundation)
+                // //(this.foundations);
+                
             }
             else if (path.type === 'tree') {
                 trees.push(new Trees({ position: { x: worldX, z: worldZ } }))
@@ -51,10 +61,12 @@ export default class MapGenerator {
         Grass.combineIntoInstancedMesh()
         StraightPath.combineIntoInstancedMesh(this.experience.scene)
         Tower.combineIntoInstancedMesh(this.experience.scene)
-        // Trees.combineIntoInstancedMeshes(trees, this.experience.scene)
+        Trees.combineIntoInstancedMeshes(trees, this.experience.scene)
     }
 
     update() {
-        this.towers.forEach(tower => tower.update())
+        // //(this.foundations)
+        this.foundations.forEach(foundation => foundation.update())
+        // this.towers.forEach(tower => tower.update())
     }
 }

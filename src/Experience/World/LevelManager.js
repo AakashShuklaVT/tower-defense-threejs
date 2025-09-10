@@ -1,5 +1,3 @@
-import { extractMovingPath } from '../Utils/PathExtractor.js'
-
 export default class LevelManager {
     constructor() {
         this.levelData = null
@@ -9,7 +7,7 @@ export default class LevelManager {
     async load() {
         if (this.levelData) return 
 
-        const response = await fetch('./Experience/Configs/LevelData.json')
+        const response = await fetch('/Configs/LevelData.json')
         this.levelData = await response.json()
         
         this.movePath = this.levelData.pathPoints

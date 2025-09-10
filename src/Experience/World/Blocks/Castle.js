@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Grass from './Grass.js'
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 
 export default class Castle {
     constructor({ position = { x: 0, z: 0 } }) {
@@ -32,7 +33,7 @@ export default class Castle {
     }
 
     setModel() {
-        this.model = this.resource.scene.clone()
+        this.model = clone(this.resource.scene)
         this.model.position.set(this.position.x + 0.45 , 0, this.position.z )
         this.model.scale.set(0.007, 0.009, 0.007)
         this.model.rotation.set(0, -Math.PI / 2, 0)

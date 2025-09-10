@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Grass from './Grass.js'
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 
 const STONE_SCALING = {
     0: 0.4,
@@ -37,7 +38,7 @@ export default class Stones {
     }
 
     setModel() {
-        this.model = this.resource.scene.clone()
+        this.model = clone(this.resource.scene)
         this.model.position.set(this.position.x, this.selectedStone !== 1 ? 0.27 : 0, this.position.z)
         this.model.rotation.set(0, Math.floor(Math.PI * 2 * Math.random()), 0)
         this.model.scale.set(STONE_SCALING[this.selectedStone], STONE_SCALING[this.selectedStone], STONE_SCALING[this.selectedStone])
