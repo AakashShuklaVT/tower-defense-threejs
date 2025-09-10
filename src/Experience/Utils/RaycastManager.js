@@ -39,8 +39,9 @@ export default class RaycastManager {
     handleRaycast() {
         this.raycaster.setFromCamera(this.pointer, this.camera)
         const intersects = this.raycaster.intersectObjects(this.targets);
+        
         if(intersects[0]) {
-            intersects[0].object.userData.scriptInstance.createTower()
+            intersects[0].object.userData.scriptInstance.onFoundationClick(intersects[0].object)
         }
     }
 }

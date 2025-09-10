@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
+import HealthBar from '../../Utils/HealthBar.js'
 export default class GoblimonEnemy {
     constructor({ resourceName = 'goblimon', position = { x: 0, y: 0, z: 0 }, scale = 0.15, movePath, speed, levelData }) {
         this.experience = new Experience()
@@ -26,21 +27,47 @@ export default class GoblimonEnemy {
         this.startMoving(this.movePath, levelData)
         this.setAnimation()
         this.setInstance()
+        this.createHealthBar()
     }
+
+    createHealthBar() {
+        this.healthBar = new HealthBar({
+            maxHealth: this.health,
+            camera: this.experience.camera.instance,
+            scene: this.scene,
+            target: this.model,
+            offset: new THREE.Vector3(0, 1, 0) // move bar above head
+        });
+
+        // initialize UI with full health
+        this.healthBar.setHealth(this.health);
+    }
+
 
     setInstance() {
         this.scriptInstance = this
     }
 
-    takeDamage(damage) {
-        this.health -= damage
-        //('Goblimon health:', this.health);
-
-        if (this.health <= 0) {
-            this.die()
+    updateHealthBarUI() {
+        if (this.healthBar) {
+            this.healthBar.setHealth(this.health)
         }
     }
-    
+
+    takeDamage(damage) {
+        this.health -= damage;
+        this.health = Math.max(0, this.health);
+
+        if (this.healthBar) {
+            this.healthBar.setHealth(this.health); // update UI
+        }
+
+        if (this.health <= 0) {
+            this.die();
+        }
+    }
+
+
     die() {
         this.killTweens()
         this.playDeathAnimation()
@@ -257,6 +284,9 @@ export default class GoblimonEnemy {
     update() {
         if (this.animation && this.animation.mixer) {
             this.animation.mixer.update(this.time.delta * 0.001)
+        }
+        if (this.healthBar) {
+            this.healthBar.updateHealthBarUI()
         }
     }
 }

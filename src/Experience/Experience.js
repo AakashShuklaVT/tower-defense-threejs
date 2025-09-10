@@ -9,6 +9,7 @@ import World from './World/World.js'
 import Resources from './Utils/Resources.js'
 
 import sources from './sources.js'
+import EventEmitter from './Utils/EventEmitter.js'
 
 let instance = null
 
@@ -30,6 +31,7 @@ export default class Experience
         this.canvas = _canvas
 
         // Setup
+        this.eventEmitter = new EventEmitter()
         this.debug = new Debug()
         this.sizes = new Sizes()
         this.time = new Time()
@@ -38,7 +40,6 @@ export default class Experience
         this.camera = new Camera()
         this.renderer = new Renderer()
         this.world = new World()
-
         // Resize event
         this.sizes.on('resize', () =>
         {

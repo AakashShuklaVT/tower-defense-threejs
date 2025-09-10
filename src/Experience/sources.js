@@ -107,4 +107,9 @@ export default [
         type: 'gltfModel',
         path: 'models/Defenders/wizard.glb'
     },
+    {
+        name: 'waterNormalTexture',
+        type: 'texture',
+        path: 'textures/water/water-normals.jpg'
+    },
 ]

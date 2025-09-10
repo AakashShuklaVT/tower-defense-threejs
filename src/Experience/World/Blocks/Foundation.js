@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
-import Grass from './Grass.js'
+import Grass from './Ground.js'
 import Tower from './Tower.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 
@@ -24,6 +24,11 @@ export default class Foundation {
         this.setGround()
         this.setModel()
         this.setInstance()
+
+        this.experience.eventEmitter.on('towerSelected', (towerType) => {
+            console.log(towerType);
+            this.handleTowerBuild(towerType)
+        })
     }
 
     setGround() {
@@ -34,7 +39,16 @@ export default class Foundation {
         this.model.userData.scriptInstance = this
     }
 
-    createTower() {
+    onFoundationClick(object) {
+        if (!object || !object.userData.scriptInstance) return
+
+        this.experience.eventEmitter.trigger(
+            'foundationSelected',
+            [object.userData.scriptInstance]
+        )
+    }
+
+    createTower(towerType) {
         if (this.tower == null) {
             this.tower = new Tower({ position: { x: this.position.x, y: 0, z: this.position.z } })
             // this.pushTowerForRaycast()
@@ -42,7 +56,7 @@ export default class Foundation {
         }
     }
 
-    pushTowerForRaycast() {        
+    pushTowerForRaycast() {
         this.experience.world.raycastManager.targets.push(this.tower.model)
     }
 

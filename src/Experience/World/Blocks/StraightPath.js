@@ -9,7 +9,7 @@ export default class StraightPath {
         width = 1,
         height = 0.1,
         position = { x: 0, z: 0 },
-        color = 0x808080,
+        color = 0x000000,
         textureRepeat = { x: 1.5, y: 1.5 }
     }) {
         this.experience = new Experience()
@@ -57,8 +57,8 @@ export default class StraightPath {
     setMaterial() {
         this.material = new THREE.MeshStandardMaterial({
             color: this.color,
-            map: this.textures.color || null,
-            normalMap: this.textures.normal || null
+            // map: this.textures.color || null,
+            // normalMap: this.textures.normal || null
         })
     }
 

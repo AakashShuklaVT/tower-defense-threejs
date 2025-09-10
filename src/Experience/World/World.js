@@ -8,6 +8,7 @@ import GaurdamonEnemy from './Enemies/GaurdamonEnemy.js'
 import GoblimonEnemy from './Enemies/GoblimonEnemy.js'
 import BombermanEnemy from './Enemies/BombermanEnemy.js'
 import RaycastManager from '../Utils/RaycastManager.js'
+import UIManager from '../UI/UIManager.js'
 
 export default class World {
     constructor() {
@@ -15,6 +16,7 @@ export default class World {
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.levelManager = new LevelManager()
+        this.uiManager = new UIManager()
         this.enemies = []
         
         
@@ -26,9 +28,9 @@ export default class World {
             this.redPantherEnemy = new RedPantherEnemy({
                 resourceName: 'redPanther',
                 position: { x: 0, y: 0.1, z: 0 },
-                scale: 0.5,
+                scale: 0.48,
                 movePath: this.levelManager.getLevelData().movePath,
-                speed: 1.2,
+                speed: 0.8,
                 levelData: this.levelManager.getLevelData().levelData,
             })
             

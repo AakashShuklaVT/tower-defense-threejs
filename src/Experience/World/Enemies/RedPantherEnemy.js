@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 import gsap from 'gsap'
+import HealthBar from '../../Utils/HealthBar.js'
 
 export default class RedPantherEnemy {
     constructor({ resourceName = 'redPantherModel', position = { x: 0, y: 0, z: 0 }, scale = 0.15, movePath, speed, levelData }) {
@@ -27,6 +28,7 @@ export default class RedPantherEnemy {
         this.startMoving(this.movePath, levelData)
         this.setAnimation()
         this.setInstance()
+        this.createHealthBar()
     }
 
     setModel(position, scale) {
@@ -47,14 +49,39 @@ export default class RedPantherEnemy {
         this.scriptInstance = this
     }
 
-    takeDamage(damage) {
-        this.health -= damage
-        //('Red Panther health:', this.health);
+    createHealthBar() {
+        this.healthBar = new HealthBar({
+            maxHealth: this.health,
+            camera: this.experience.camera.instance,
+            scene: this.scene,
+            target: this.model,
+            offset: new THREE.Vector3(0, 1, 0) 
+        });
 
-        if (this.health <= 0) {
-            this.die()
+        // initialize UI with full health
+        this.healthBar.setHealth(this.health);
+    }
+
+
+    updateHealthBarUI() {
+        if (this.healthBar) {
+            this.healthBar.setHealth(this.health)
         }
     }
+
+    takeDamage(damage) {
+        this.health -= damage;
+        this.health = Math.max(0, this.health);
+
+        if (this.healthBar) {
+            this.healthBar.setHealth(this.health); // update UI
+        }
+
+        if (this.health <= 0) {
+            this.die();
+        }
+    }
+
 
     die() {
         this.killTweens()
@@ -255,6 +282,9 @@ export default class RedPantherEnemy {
     update() {
         if (this.animation && this.animation.mixer) {
             this.animation.mixer.update(this.time.delta * 0.001)
+        }
+        if (this.healthBar) {
+            this.healthBar.updateHealthBarUI()
         }
     }
 }

@@ -1,13 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tower Defense</title>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.css" />
 </head>
+
 <body>
-    <canvas class="webgl"></canvas>
+    <main class="game-root">
+        <!-- Tower Selection Menu -->
+        <div class="tower-menu">
+            <div class="tower-menu__title">Select a Tower</div>
+
+            <div class="tower-list">
+                <!-- Wizard Tower -->
+                <div class="tower-card">
+                    <div class="tower-card__name">Wizard Tower</div>
+                    <button class="tower-card__btn" data-tower="wizard">Build Tower</button>
+                </div>
+
+                <!-- Cannon Tower -->
+                <div class="tower-card">
+                    <div class="tower-card__name">Cannon Tower</div>
+                    <button class="tower-card__btn" data-tower="cannon">Build Tower</button>
+                </div>
+
+                <!-- X-Bow Tower -->
+                <div class="tower-card">
+                    <div class="tower-card__name">X-Bow Tower</div>
+                    <button class="tower-card__btn" data-tower="xbow">Build Tower</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <canvas class="webgl" aria-hidden="true"></canvas>
     <script type="module" src="./script.js"></script>
 </body>
+
 </html>
