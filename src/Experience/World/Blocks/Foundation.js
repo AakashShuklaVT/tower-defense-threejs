@@ -10,7 +10,7 @@ export default class Foundation {
         this.resources = this.experience.resources
         this.time = this.experience.time
         this.debug = this.experience.debug
-        jnvfj
+        this.eventEmitter = this.experience.eventEmitter
         this.position = position
 
         // Debug
@@ -20,13 +20,8 @@ export default class Foundation {
 
         this.resource = this.resources.items['foundation']
         this.tower = null
-        this.setGround()
         this.setModel()
         this.setInstance()
-    }
-
-    setGround() {
-        this.ground = new Grass({ position: { x: this.position.x, z: this.position.z } })
     }
 
     setInstance() {
@@ -36,7 +31,7 @@ export default class Foundation {
     onFoundationClick(object) {
         if (!object || !object.userData.scriptInstance) return
 
-        this.experience.eventEmitter.trigger(
+        this.eventEmitter.trigger(
             'foundationSelected',
             [object.userData.scriptInstance]
         )

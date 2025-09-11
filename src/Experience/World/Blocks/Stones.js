@@ -29,12 +29,7 @@ export default class Stones {
         this.selectedStone = Math.floor(Math.random() * this.stoneTypes.length)
         this.stoneType = this.stoneTypes[this.selectedStone]
         this.resource = this.resources.items[this.stoneType]
-        this.setGround()
         this.setModel()
-    }
-
-    setGround() {
-        this.ground = new Grass({ position: { x: this.position.x, z: this.position.z } })
     }
 
     setModel() {

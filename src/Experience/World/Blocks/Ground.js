@@ -5,7 +5,7 @@ export default class Ground {
     constructor({ length = 50, width = 30, height = 0.1, color = 0x888888 }) {
         this.experience = new Experience()
         this.scene = this.experience.scene
-
+        
         this.length = length
         this.width = width
         this.height = height

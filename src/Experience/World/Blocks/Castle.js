@@ -21,15 +21,7 @@ export default class Castle {
         // Resource
         this.resource = this.resources.items.castle
 
-        this.setGround()
         this.setModel()
-    }
-
-    setGround() {
-        this.ground = new Grass({ position: { x: this.position.x, z: this.position.z } })
-        this.ground = new Grass({ position: { x: this.position.x + 1, z: this.position.z } })
-        this.ground = new Grass({ position: { x: this.position.x, z: this.position.z + 1 } })
-        this.ground = new Grass({ position: { x: this.position.x + 1, z: this.position.z + 1 } })
     }
 
     setModel() {

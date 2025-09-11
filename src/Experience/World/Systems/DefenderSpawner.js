@@ -20,7 +20,7 @@ export default class DefenderSpawner {
     spawnDefender(foundation, towerType) {
         if (!foundation || !foundation.tower) return
 
-        console.log(`[DefenderSpawner] Spawning defender for ${towerType} tower`)
+        // console.log(`[DefenderSpawner] Spawning defender for ${towerType} tower`)
 
         let defender
         switch (towerType) {
@@ -51,7 +51,7 @@ export default class DefenderSpawner {
                 z: tower.position.z
             }
         })
-        console.log('✨ Wizard defender spawned at tower', tower)
+        // console.log('✨ Wizard defender spawned at tower', tower)
         return wizard
     }
 

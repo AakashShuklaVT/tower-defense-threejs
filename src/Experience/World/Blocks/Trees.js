@@ -32,15 +32,10 @@ export default class Trees {
         this.treeType = this.treeTypes[this.selectedTree]
         this.resource = this.resources.items[this.treeType]
 
-        this.setGround()
         this.setModel()
 
         // Store this instance for later batching
         Trees.instances.push(this)
-    }
-
-    setGround() {
-        this.ground = new Grass({ position: { x: this.position.x, z: this.position.z } })
     }
 
     setModel() {

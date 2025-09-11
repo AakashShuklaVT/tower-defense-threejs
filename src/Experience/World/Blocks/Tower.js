@@ -15,15 +15,10 @@ export default class Tower {
         this.position = position
         this.resource = this.resources.items.tower
 
-        this.setGround()
         this.setModel()
 
         // store this tower for later batching
         Tower.allTowers.push(this)
-    }
-
-    setGround() {
-        this.ground = new Grass({ position: { x: this.position.x, z: this.position.z } })
     }
 
     setModel() {

@@ -33,7 +33,7 @@ export default class TowerBuilder {
     }
 
     buildWizardTower(foundation) {
-        console.log("[TowerBuilder] Building Wizard Tower on foundation", foundation)
+        // console.log("[TowerBuilder] Building Wizard Tower on foundation", foundation)
 
         foundation.tower = new Tower({
             type: TOWER_TYPES.WIZARD,
@@ -44,7 +44,7 @@ export default class TowerBuilder {
     }
 
     buildCannonTower(foundation) {
-        console.log("[TowerBuilder] Building Cannon Tower on foundation", foundation)
+        // console.log("[TowerBuilder] Building Cannon Tower on foundation", foundation)
 
         foundation.tower = new Tower({
             type: TOWER_TYPES.CANNON,
@@ -55,7 +55,7 @@ export default class TowerBuilder {
     }
 
     buildXBowTower(foundation) {
-        console.log("[TowerBuilder] Building XBow Tower on foundation", foundation)
+        // console.log("[TowerBuilder] Building XBow Tower on foundation", foundation)
 
         foundation.tower = new Tower({
             type: TOWER_TYPES.XBOW,
