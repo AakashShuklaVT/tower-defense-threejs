@@ -8,16 +8,7 @@ import Foundation from './Blocks/Foundation.js'
 import WaterBlock from './Blocks/WaterBlock.js'
 import Ground from './Blocks/Ground.js'
 import House from './Blocks/House.js'
-
-
-const BlockType = {
-    PATH: 'path',
-    TOWER: 'tower',
-    TREE: 'tree',
-    STONE: 'stone',
-    CASTLE: 'castle',
-    HOUSE: 'house',
-}
+import { BlockType } from '../Utils/CONSTANTS.js'
 
 export default class MapGenerator {
     constructor(levelData) {
@@ -69,7 +60,7 @@ export default class MapGenerator {
 
         // --- Ground & Water ---
         new Ground({ position: { x: 0, z: 0 } })
-        this.water = new WaterBlock()
+        // this.water = new WaterBlock()
 
         // --- Instancing (performance) ---
         StraightPath.combineIntoInstancedMesh(this.experience.scene)
@@ -77,8 +68,7 @@ export default class MapGenerator {
         Trees.combineIntoInstancedMeshes(trees, this.experience.scene)
     }
 
-    update() {
-        this.foundations.forEach(foundation => foundation.update())
-        this.water && this.water.update()
-    }
+    // update() {
+    //     this.water && this.water.update()
+    // }
 }

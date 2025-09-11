@@ -122,4 +122,9 @@ export default [
         type: 'gltfModel',
         path: 'models/Defenses/cannon-1.glb'
     },
+    {
+        name: 'xbow1',
+        type: 'gltfModel',
+        path: 'models/Defenses/xbow-1.glb'
+    },
 ]

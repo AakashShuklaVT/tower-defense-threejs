@@ -3,20 +3,21 @@ import Experience from '../Experience.js'
 export default class TowerSelectionUI {
     constructor() {
         this.experience = new Experience()
+        this.eventEmitter = this.experience.eventEmitter
+
         this.uiElements = {}
         this.getUIElements()
         this.addEventListeners()
 
-        this.experience.eventEmitter.on('foundationSelected', (foundation) => {
+        // Show tower menu when a foundation is selected
+        this.eventEmitter.on('foundationSelected', (foundation) => {
             this.currentFoundation = foundation
             this.toggleElementVisibility(this.uiElements.container, 'show')
         })
     }
 
     getUIElements() {
-        // Parent container
         this.uiElements.container = document.querySelector('.tower-menu')
-        // All tower buttons
         this.uiElements.buttons = document.querySelectorAll('.tower-card__btn')
     }
 
@@ -33,7 +34,12 @@ export default class TowerSelectionUI {
 
     handleTowerSelection(towerType) {
         if (!this.currentFoundation) return
-        this.currentFoundation.createTower(towerType)
+
+        this.eventEmitter.trigger('towerSelected', [
+            this.currentFoundation,
+            towerType,
+        ])
+
         this.toggleElementVisibility(this.uiElements.container, 'hide')
     }
 

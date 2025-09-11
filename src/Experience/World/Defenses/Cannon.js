@@ -1,10 +1,10 @@
 import * as THREE from "three"
-import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 import Experience from "../../Experience.js"
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 
 export default class Cannon {
     static enemies = []
-    constructor({ resourceName = "cannon", position = { x: 0, y: 0, z: 0 }, scale = 0.5, attackRange = 6 }) {
+    constructor({ resourceName = "cannon1", position = { x: 0, y: 0, z: 0 }, scale = 0.25, attackRange = 6 }) {
         // === Experience ===
         this.experience = new Experience()
         this.scene = this.experience.scene
