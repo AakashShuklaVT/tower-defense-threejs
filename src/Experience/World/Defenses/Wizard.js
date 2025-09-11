@@ -43,7 +43,7 @@ export default class Wizard {
     setModel() {
         this.model = clone(this.resource.scene)
         this.model.position.set(this.position.x, this.position.y, this.position.z)
-        this.model.rotation.set(0, Math.PI, 0)
+        this.model.rotation.set(0, Math.random() * Math.PI * 2, 0)
         this.model.scale.setScalar(this.scale)
         this.scene.add(this.model)
 
@@ -190,7 +190,7 @@ export default class Wizard {
             .sub(fireball.mesh.position)
             .normalize()
 
-        const speed = 0.08
+        const speed = 0.15
         fireball.mesh.position.add(dir.multiplyScalar(speed))
     }
 

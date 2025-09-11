@@ -29,7 +29,7 @@ export default class XBow {
     setModel() {
         this.model = clone(this.resource.scene)
         this.model.position.set(this.position.x, this.position.y, this.position.z)
-        this.model.rotation.set(0, Math.PI, 0) // rotate like cannon, adjust if needed
+        this.model.rotation.set(0, Math.random() * Math.PI * 2, 0)
         this.model.scale.setScalar(this.scale)
         this.scene.add(this.model)
 

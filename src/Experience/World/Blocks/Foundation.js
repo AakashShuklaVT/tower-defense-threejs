@@ -36,7 +36,16 @@ export default class Foundation {
             [object.userData.scriptInstance]
         )
     }
-
+    
+    getTower() {
+        return this.tower
+    }
+    
+    setTower(tower) {
+        this.tower = tower
+        this.model.visible = false
+    }
+    
     setModel() {
         this.model = clone(this.resource.scene)
         this.model.position.set(this.position.x, 0.1, this.position.z)

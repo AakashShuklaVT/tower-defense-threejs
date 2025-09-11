@@ -70,7 +70,7 @@ export default class World {
             // Raycasting setup (click detection)
             this.raycastManager = new RaycastManager(this.mapGenerator.foundations)
 
-            this.addTransformControls()
+            // this.addTransformControls()
         })
     }
 

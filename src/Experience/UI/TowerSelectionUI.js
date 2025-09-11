@@ -8,9 +8,12 @@ export default class TowerSelectionUI {
         this.uiElements = {}
         this.getUIElements()
         this.addEventListeners()
-
+        this.currentFoundation = null
         // Show tower menu when a foundation is selected
         this.eventEmitter.on('foundationSelected', (foundation) => {
+            if(foundation.getTower()) {
+                return
+            }
             this.currentFoundation = foundation
             this.toggleElementVisibility(this.uiElements.container, 'show')
         })
@@ -35,6 +38,10 @@ export default class TowerSelectionUI {
     handleTowerSelection(towerType) {
         if (!this.currentFoundation) return
 
+        if (this.currentFoundation.getTower()) {
+            return
+        }
+
         this.eventEmitter.trigger('towerSelected', [
             this.currentFoundation,
             towerType,
@@ -48,9 +55,11 @@ export default class TowerSelectionUI {
 
         if (action === 'show') {
             element.style.display = 'flex'
+            this.experience.world.raycastManager.disableRaycast()
         }
         else if (action === 'hide') {
             element.style.display = 'none'
+            this.experience.world.raycastManager.enableRaycast()
         }
         else if (action === 'toggle') {
             const isVisible = element.style.display === 'flex'

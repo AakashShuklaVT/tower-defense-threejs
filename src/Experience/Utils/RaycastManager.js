@@ -11,6 +11,7 @@ export default class RaycastManager {
         this.renderer = this.experience.renderer.instance
         this.time = this.experience.time
         this.debug = this.experience.debug
+        this.raycastEnabled = true
         this.targets = [...targets]
         this.setModelsForRaycast()
         this.intializeRaycaster()
@@ -18,7 +19,7 @@ export default class RaycastManager {
     }
 
     setModelsForRaycast() {
-        for(let i = 0; i < this.targets.length; i++) {
+        for (let i = 0; i < this.targets.length; i++) {
             this.targets[i] = this.targets[i].model
         }
     }
@@ -37,11 +38,24 @@ export default class RaycastManager {
     }
 
     handleRaycast() {
+        if (!this.raycastEnabled) return
         this.raycaster.setFromCamera(this.pointer, this.camera)
         const intersects = this.raycaster.intersectObjects(this.targets);
-        
-        if(intersects[0]) {
+
+        if (intersects[0]) {
             intersects[0].object.userData.scriptInstance.onFoundationClick(intersects[0].object)
         }
+    }
+
+    toggleRaycast() {
+        this.raycastEnabled = !this.raycastEnabled
+    }
+
+    enableRaycast() {
+        this.raycastEnabled = true
+    }
+
+    disableRaycast() {
+        this.raycastEnabled = false
     }
 }

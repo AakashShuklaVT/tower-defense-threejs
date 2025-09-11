@@ -4,7 +4,7 @@ import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 
 export default class Cannon {
     static enemies = []
-    constructor({ resourceName = "cannon1", position = { x: 0, y: 0, z: 0 }, scale = 0.25, attackRange = 6 }) {
+    constructor({ resourceName = "cannon1", position = { x: 0, y: 0, z: 0 }, scale = 0.25, attackRange = 3 }) {
         // === Experience ===
         this.experience = new Experience()
         this.scene = this.experience.scene
@@ -39,7 +39,7 @@ export default class Cannon {
     setModel() {
         this.model = clone(this.resource.scene)
         this.model.position.set(this.position.x, this.position.y, this.position.z)
-        this.model.rotation.set(0, Math.PI, 0)
+        this.model.rotation.set(0, Math.random() * Math.PI * 2, 0)
         this.model.scale.setScalar(this.scale)
         this.scene.add(this.model)
 
@@ -63,7 +63,7 @@ export default class Cannon {
         )
 
         // Start position (barrel mouth)
-        const spawnPos = this.model.position.clone().add(new THREE.Vector3(0, 1 * this.scale, 0))
+        const spawnPos = this.model.position.clone().add(new THREE.Vector3(0, 2.1 * this.scale, 0))
         sphere.mesh.position.copy(spawnPos)
         this.scene.add(sphere.mesh)
 

@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
-import Grass from './Ground.js'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 
