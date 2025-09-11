@@ -7,6 +7,17 @@ import Castle from './Blocks/Castle.js'
 import Foundation from './Blocks/Foundation.js'
 import WaterBlock from './Blocks/WaterBlock.js'
 import Ground from './Blocks/Ground.js'
+import House from './Blocks/House.js'
+
+
+const BlockType = {
+    PATH: 'path',
+    TOWER: 'tower',
+    TREE: 'tree',
+    STONE: 'stone',
+    CASTLE: 'castle',
+    HOUSE: 'house',
+}
 
 export default class MapGenerator {
     constructor(levelData) {
@@ -17,7 +28,6 @@ export default class MapGenerator {
         this.foundations = []
         this.generateMap()
     }
-
 
     generateMap() {
         this.paths = this.levelData.grid
@@ -30,23 +40,34 @@ export default class MapGenerator {
             const worldX = path.position.x - offsetX + 0.5
             const worldZ = path.position.z - offsetZ + 0.5
 
-            if (path.type === 'path') {
-                new StraightPath({ position: { x: worldX, z: worldZ } })
-            }
-            else if (path.type === 'tower') {
-                const foundation = new Foundation({ position: { x: worldX, z: worldZ } })
-                this.foundations.push(foundation)
-            }
-            else if (path.type === 'tree') {
-                trees.push(new Trees({ position: { x: worldX, z: worldZ } }))
-            }
-            else if (path.type === 'stone') {
-                new Stones({ position: { x: worldX, z: worldZ } })
-            }
-            else if (path.type === 'castle') {
-                new Castle({ position: { x: worldX, z: worldZ } })
+            switch (path.type) {
+                case BlockType.PATH:
+                    new StraightPath({ position: { x: worldX, z: worldZ } })
+                    break
+
+                case BlockType.TOWER:
+                    const foundation = new Foundation({ position: { x: worldX, z: worldZ } })
+                    this.foundations.push(foundation)
+                    break
+
+                case BlockType.TREE:
+                    trees.push(new Trees({ position: { x: worldX, z: worldZ } }))
+                    break
+
+                case BlockType.STONE:
+                    new Stones({ position: { x: worldX, z: worldZ } })
+                    break
+
+                case BlockType.CASTLE:
+                    new Castle({ position: { x: worldX, z: worldZ } })
+                    break
+                case BlockType.HOUSE:
+                    new House({ position: { x: worldX, z: worldZ } })
+                    break
             }
         })
+
+        // --- Ground & Water ---
         new Ground({ position: { x: 0, z: 0 } })
         this.water = new WaterBlock()
 

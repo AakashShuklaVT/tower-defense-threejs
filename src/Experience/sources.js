@@ -73,6 +73,11 @@ export default [
         path: 'models/Foundation/foundation.glb'
     },
     {
+        name: 'house',
+        type: 'gltfModel',
+        path: 'models/Houses/house.glb'
+    },
+    {
         name: 'castle',
         type: 'gltfModel',
         path: 'models/Castle/castle.glb'
@@ -111,5 +116,10 @@ export default [
         name: 'waterNormalTexture',
         type: 'texture',
         path: 'textures/water/water-normals.jpg'
+    },
+    {
+        name: 'cannon1',
+        type: 'gltfModel',
+        path: 'models/Defenses/cannon-1.glb'
     },
 ]

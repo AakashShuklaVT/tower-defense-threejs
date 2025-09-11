@@ -4,6 +4,12 @@ import Grass from './Ground.js'
 import Tower from './Tower.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 
+// Tower type constants (enum-like)
+export const TOWER_TYPES = Object.freeze({
+    WIZARD: 'wizard',
+    CANNON: 'cannon',
+})
+
 export default class Foundation {
     constructor({ position = { x: 0, z: 0 } }) {
         this.experience = new Experience()
@@ -26,7 +32,7 @@ export default class Foundation {
         this.setInstance()
 
         this.experience.eventEmitter.on('towerSelected', (towerType) => {
-            console.log(towerType);
+            console.log('Tower selected:', towerType)
             this.handleTowerBuild(towerType)
         })
     }
@@ -48,9 +54,25 @@ export default class Foundation {
         )
     }
 
+    handleTowerBuild(towerType) {
+        switch (towerType) {
+            case TOWER_TYPES.WIZARD:
+                this.createTower(TOWER_TYPES.WIZARD)
+                break
+            case TOWER_TYPES.CANNON:
+                this.createTower(TOWER_TYPES.CANNON)
+                break
+            default:
+                console.warn(`Unknown tower type: ${towerType}`)
+        }
+    }
+
     createTower(towerType) {
         if (this.tower == null) {
-            this.tower = new Tower({ position: { x: this.position.x, y: 0, z: this.position.z } })
+            this.tower = new Tower({
+                type: towerType,
+                position: { x: this.position.x, y: 0, z: this.position.z },
+            })
             // this.pushTowerForRaycast()
             this.model.visible = false
         }
@@ -61,7 +83,10 @@ export default class Foundation {
     }
 
     removeTowerFromRaycast() {
-        this.experience.world.raycastManager.targets = this.experience.world.raycastManager.targets.filter((target) => target !== this.tower.model)
+        this.experience.world.raycastManager.targets =
+            this.experience.world.raycastManager.targets.filter(
+                (target) => target !== this.tower.model
+            )
     }
 
     setModel() {

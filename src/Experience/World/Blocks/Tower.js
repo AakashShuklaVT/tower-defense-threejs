@@ -3,6 +3,7 @@ import Experience from '../../Experience.js'
 import Grass from './Ground.js'
 import Wizard from '../Defenses/Wizard.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
+
 export default class Tower {
     static allTowers = [] // store all created towers
 

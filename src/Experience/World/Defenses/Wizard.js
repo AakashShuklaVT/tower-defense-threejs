@@ -223,9 +223,7 @@ export default class Wizard {
     }
 
     removeEnemyFromTarget(target) {
-        //('before remove', Wizard.enemies);
         Wizard.enemies.splice(Wizard.enemies.indexOf(target), 1)
-        //('after remove', Wizard.enemies);
     }
 
     updateFireballParticles(fireball) {
