@@ -55,7 +55,7 @@ export default class RedPantherEnemy {
             camera: this.experience.camera.instance,
             scene: this.scene,
             target: this.model,
-            offset: new THREE.Vector3(0, 1, 0) 
+            offset: new THREE.Vector3(0, 1, 0)
         });
 
         // initialize UI with full health
@@ -82,6 +82,27 @@ export default class RedPantherEnemy {
         }
     }
 
+    freeze(duration = 2000) {
+        if (this.isFrozen) return;
+        this.isFrozen = true;
+        // Pause all GSAP tweens linked to this model
+        gsap.getTweensOf(this.model.position).forEach(tween => tween.pause());
+        gsap.getTweensOf(this.model.rotation).forEach(tween => tween.pause());
+
+        // Resume after "duration"
+        setTimeout(() => {
+            this.unfreeze()
+        }, duration);
+    }
+
+    unfreeze() {
+        if (!this.isFrozen) return;
+        this.isFrozen = false;
+
+        // Resume tweens
+        gsap.getTweensOf(this.model.position).forEach(tween => tween.resume());
+        gsap.getTweensOf(this.model.rotation).forEach(tween => tween.resume());
+    }
 
     die() {
         this.killTweens()
@@ -280,9 +301,10 @@ export default class RedPantherEnemy {
     }
 
     update() {
-        if (this.animation && this.animation.mixer) {
+        if (this.animation && this.animation.mixer && !this.isFrozen) {
             this.animation.mixer.update(this.time.delta * 0.001)
         }
+
         if (this.healthBar) {
             this.healthBar.updateHealthBarUI()
         }

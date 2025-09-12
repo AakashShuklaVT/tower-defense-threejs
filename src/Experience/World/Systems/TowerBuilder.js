@@ -26,6 +26,9 @@ export default class TowerBuilder {
             case TOWER_TYPES.XBOW:
                 this.buildXBowTower(foundation)
                 break
+            case TOWER_TYPES.FREEZE:
+                this.buildFreezeTower(foundation)
+                break
             default:
                 console.warn(`[TowerBuilder] Unknown tower type: ${towerType}`)
         }
@@ -50,6 +53,14 @@ export default class TowerBuilder {
     buildXBowTower(foundation) {
         const tower = new Tower({
             type: TOWER_TYPES.XBOW,
+            position: { x: foundation.position.x, y: 0, z: foundation.position.z },
+        })
+        foundation.setTower(tower)
+    }
+
+    buildFreezeTower(foundation) {
+        const tower = new Tower({
+            type: TOWER_TYPES.FREEZE,
             position: { x: foundation.position.x, y: 0, z: foundation.position.z },
         })
         foundation.setTower(tower)

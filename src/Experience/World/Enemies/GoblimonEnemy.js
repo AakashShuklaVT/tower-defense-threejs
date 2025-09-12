@@ -13,7 +13,7 @@ export default class GoblimonEnemy {
         this.speed = speed
         this.health = 100
         this.isDead = false
-
+        this.isFreezed = false
         // Debug
         if (this.debug.active) {
             this.debugFolder = this.debug.ui.addFolder('goblimon enemy')
@@ -43,7 +43,6 @@ export default class GoblimonEnemy {
         this.healthBar.setHealth(this.health);
     }
 
-
     setInstance() {
         this.scriptInstance = this
     }
@@ -67,6 +66,27 @@ export default class GoblimonEnemy {
         }
     }
 
+    freeze(duration = 2000) {
+        if (this.isFrozen) return;
+        this.isFrozen = true;
+        // Pause all GSAP tweens linked to this model
+        gsap.getTweensOf(this.model.position).forEach(tween => tween.pause());
+        gsap.getTweensOf(this.model.rotation).forEach(tween => tween.pause());
+
+        // Resume after "duration"
+        setTimeout(() => {
+            this.unfreeze()
+        }, duration);
+    }
+
+    unfreeze() {
+        if (!this.isFrozen) return;
+        this.isFrozen = false;
+
+        // Resume tweens
+        gsap.getTweensOf(this.model.position).forEach(tween => tween.resume());
+        gsap.getTweensOf(this.model.rotation).forEach(tween => tween.resume());
+    }
 
     die() {
         this.killTweens()
@@ -226,7 +246,6 @@ export default class GoblimonEnemy {
 
     startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
-
         const offsetX = levelData.width / 2;
         const offsetZ = levelData.height / 2;
 
@@ -282,9 +301,10 @@ export default class GoblimonEnemy {
     }
 
     update() {
-        if (this.animation && this.animation.mixer) {
+        if (this.animation && this.animation.mixer && !this.isFrozen) {
             this.animation.mixer.update(this.time.delta * 0.001)
         }
+
         if (this.healthBar) {
             this.healthBar.updateHealthBarUI()
         }

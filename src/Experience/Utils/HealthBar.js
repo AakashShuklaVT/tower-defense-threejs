@@ -1,17 +1,16 @@
-// HealthBar.js
 import * as THREE from "three";
 
 export default class HealthBar {
-    constructor({ width = 0.5, height = 0.1, offset = new THREE.Vector3(0, 1, 0), maxHealth = 100, camera, scene, target}) {
-        this.width = width;
-        this.height = height;
+    constructor({ width = 0.5, height = 0.1, offset = new THREE.Vector3(0, 1, 0), maxHealth = 100, camera, scene, target, scale = 1}) {
+        this.scale = scale
+        this.width = width * scale;
+        this.height = height * scale;
         this.offset = offset.clone();
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.camera = camera;
         this.scene = scene;
         this.target = target; 
-
         // Group
         this.group = new THREE.Group();
         this.scene.add(this.group);

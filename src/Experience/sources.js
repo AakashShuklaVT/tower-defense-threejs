@@ -118,9 +118,9 @@ export default [
         path: 'textures/water/water-normals.jpg'
     },
     {
-        name: 'cannon1',
+        name: 'cannon',
         type: 'gltfModel',
-        path: 'models/Defenses/cannon-1.glb'
+        path: 'models/Defenses/cannon.glb'
     },
     {
         name: 'xbow1',
@@ -128,8 +128,8 @@ export default [
         path: 'models/Defenses/xbow-1.glb'
     },
     {
-        name: 'cannonBall',
+        name: 'freeze1',
         type: 'gltfModel',
-        path: 'models/Defenses/cannon-ball.glb'
+        path: 'models/Defenses/freeze-1.glb'
     },
 ]

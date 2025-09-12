@@ -2,6 +2,7 @@ export const TOWER_TYPES = {
     WIZARD: 'wizard',
     CANNON: 'cannon',
     XBOW: 'xbow',
+    FREEZE: 'freeze',
 }
 
 export const BlockType = {
