@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import Experience from '../../Experience.js'
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"
 import HealthBar from '../../Utils/HealthBar.js'
+
 export default class GoblimonEnemy {
     constructor({ resourceName = 'goblimon', position = { x: 0, y: 0, z: 0 }, scale = 0.15, movePath, speed, levelData }) {
         this.experience = new Experience()
@@ -13,7 +14,7 @@ export default class GoblimonEnemy {
         this.speed = speed
         this.health = 100
         this.isDead = false
-        this.isFreezed = false
+        this.isFrozen = false
         // Debug
         if (this.debug.active) {
             this.debugFolder = this.debug.ui.addFolder('goblimon enemy')
@@ -67,25 +68,21 @@ export default class GoblimonEnemy {
     }
 
     freeze(duration = 2000) {
-        if (this.isFrozen) return;
-        this.isFrozen = true;
-        // Pause all GSAP tweens linked to this model
-        gsap.getTweensOf(this.model.position).forEach(tween => tween.pause());
-        gsap.getTweensOf(this.model.rotation).forEach(tween => tween.pause());
+        if (this.isFrozen) return
+        this.isFrozen = true
 
-        // Resume after "duration"
+        if (this.moveTimeline) this.moveTimeline.pause()
+
         setTimeout(() => {
             this.unfreeze()
-        }, duration);
+        }, duration)
     }
 
     unfreeze() {
-        if (!this.isFrozen) return;
-        this.isFrozen = false;
+        if (!this.isFrozen) return
+        this.isFrozen = false
 
-        // Resume tweens
-        gsap.getTweensOf(this.model.position).forEach(tween => tween.resume());
-        gsap.getTweensOf(this.model.rotation).forEach(tween => tween.resume());
+        if (this.moveTimeline) this.moveTimeline.resume()
     }
 
     die() {
@@ -246,9 +243,10 @@ export default class GoblimonEnemy {
 
     startMoving(pathPoints, levelData) {
         if (!pathPoints || pathPoints.length === 0) return;
+    
         const offsetX = levelData.width / 2;
         const offsetZ = levelData.height / 2;
-
+    
         // Convert grid coords → world coords
         const points = pathPoints.map(p => ({
             x: p.x - offsetX + 0.5,
@@ -256,49 +254,50 @@ export default class GoblimonEnemy {
             angle: p.angle,
             number: p.number,
         }));
-
-        // Start position
+        
+        // Start position + initial facing
         this.model.position.set(points[0].x, this.model.position.y, points[0].z);
         this.model.rotation.y = THREE.MathUtils.degToRad(points[0].angle);
-
-        let i = 0;
-
-        const moveToNext = () => {
-            if (i >= points.length - 1) return;
-
+    
+        // ✅ Kill old timeline if exists
+        if (this.moveTimeline) this.moveTimeline.kill();
+    
+        // ✅ Create GSAP timeline
+        this.moveTimeline = gsap.timeline({ 
+            paused: false, 
+            onComplete: () => {
+                if (!this.isDead) {
+                    this.animation.play('play_arrowspecial01');
+                }
+        } });
+    
+        for (let i = 0; i < points.length - 1; i++) {
             const current = points[i];
             const next = points[i + 1];
-
+    
             const dx = next.x - current.x;
             const dz = next.z - current.z;
             const distance = Math.sqrt(dx * dx + dz * dz);
             const duration = distance / this.speed;
-
-
-
-            // Move toward next point
-            gsap.to(this.model.position, {
+    
+            // ✅ 1. Move first
+            this.moveTimeline.to(this.model.position, {
                 x: next.x,
                 z: next.z,
                 duration,
-                ease: 'none',
-                onComplete: () => {
-                    i++;
-                    moveToNext();
-                    if (next.angle !== undefined) {
-                        // Rotate toward next direction first
-                        gsap.to(this.model.rotation, {
-                            y: THREE.MathUtils.degToRad(next.angle),
-                            duration: 0.2,
-                            ease: 'power2.inOut',
-                        });
-                    }
-                }
+                ease: "none",
             });
-        };
-
-        moveToNext();
-    }
+    
+            // ✅ 2. Then rotate (at the destination)
+            if (next.angle !== undefined) {
+                this.moveTimeline.to(this.model.rotation, {
+                    y: THREE.MathUtils.degToRad(next.angle),
+                    duration: 0.2,
+                    ease: "power2.inOut",
+                });
+            }
+        }
+    } 
 
     update() {
         if (this.animation && this.animation.mixer && !this.isFrozen) {

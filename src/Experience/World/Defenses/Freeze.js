@@ -17,8 +17,8 @@ export default class Freeze {
         this.position = position
         this.scale = scale
         this.range = attackRange
-        this.freezeDuration = 2000 // ms
-        this.iceballInterval = 3000 // 3s between shots
+        this.freezeDuration = 1000 // ms
+        this.iceballInterval = 2000 // 2s between shots
         this.lastShot = 0
         this.iceballs = []
 
@@ -150,12 +150,19 @@ export default class Freeze {
 
         this.scene.add(splash)
 
-        // ❄️ Freeze enemies in splash radius (3D distance, includes Y)
+        // ❄️ Freeze enemies in splash radius based on type (y-axis check)
         Freeze.enemies.forEach(enemy => {
             if (!enemy?.model) return
             const dist = splash.position.distanceTo(enemy.model.position)
             if (dist <= splashRadius) {
-                enemy.freeze(this.freezeDuration)
+                const enemyY = enemy.model.position.y
+
+                if (type === "ground" && enemyY <= 2) {
+                    enemy.freeze(this.freezeDuration)
+                } 
+                else if (type === "air" && enemyY > 2) {
+                    enemy.freeze(this.freezeDuration)
+                }
             }
         })
 
